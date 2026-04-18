@@ -1,6 +1,7 @@
 import { hoverClass } from "@/utils/classes";
 import { joinClasses } from "@/utils/misc/classes";
-import { useState } from "react";
+import { type RefObject, useRef, useState } from "react";
+import { useDebounceCallback, useOnClickOutside } from "usehooks-ts";
 import ItemContainer from "./ItemContainer";
 
 type userContainerProps = {
@@ -8,13 +9,18 @@ type userContainerProps = {
 };
 
 export default function UserContainer({ username }: userContainerProps) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpenPlain] = useState(false);
+    const setOpen = useDebounceCallback(setOpenPlain, 100);
+    const ref = useRef<HTMLElement>(null) as RefObject<HTMLElement>;
 
     async function logoutUser() {
         await fetch("/api/auth/logout");
 
         window.location.href = "/auth/login";
     }
+
+    useDebounceCallback;
+    useOnClickOutside(ref, () => (open ? setOpen(false) : null));
 
     return (
         <ItemContainer
@@ -33,7 +39,7 @@ export default function UserContainer({ username }: userContainerProps) {
                     hoverClass,
                     open ? "rounded-b-none!" : "rounded-b-md",
                 )}
-                onClick={() => setOpen(!open)}
+                onClick={() => (open ? null : setOpen(true))}
             >
                 <div className="rounded-sm bg-blue-500 aspect-square w-5 md:w-7 flex items-center justify-center text-sm">
                     {username[0]?.toUpperCase().trimEnd()}
@@ -43,7 +49,7 @@ export default function UserContainer({ username }: userContainerProps) {
             <ItemContainer
                 hoverClassName={false}
                 onClick={logoutUser}
-                as="button"
+                ref={ref}
                 className={`${open ? "opacity-100 cursor-pointer" : "opacity-0"} absolute top-full left-0 -mt-0.5 rounded-b-md border-t-2 border-slate-700 w-full flex rounded-none items-center gap-2 text-sm font-bold`}
             >
                 Logout

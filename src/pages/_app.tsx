@@ -6,6 +6,7 @@ import type { MyProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { textColor } from "@/utils/classes";
 import { pages } from "@/utils/data/pages";
+import { capitaliseFirstLetter } from "@/utils/misc/caps";
 import { joinClasses } from "@/utils/misc/classes";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/router";
@@ -56,7 +57,13 @@ export default function App({ Component, pageProps }: MyProps) {
           <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
             {loggedIn ? <Navigation loggedIn={loggedIn} /> : null}
             <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
-              <TopBar pageName={currentPage?.name} />
+              <TopBar
+                pageName={
+                  currentPage?.name ??
+                  capitaliseFirstLetter(router.asPath.replace("/", ""))
+                }
+                user={user}
+              />
               <div className={joinClasses("p-4 h-full w-full", textColor)}>
                 <Component {...pageProps} user={user} userLoading={loading} />
               </div>

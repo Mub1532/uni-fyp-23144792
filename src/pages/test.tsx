@@ -1,12 +1,11 @@
 "use client";
 
 import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
-import { format, getDay, parse, startOfWeek } from "date-fns";
-import enGB from "date-fns/locale/en-GB";
+import moment from "moment";
 import { useState } from "react";
 import {
     Calendar,
-    dateFnsLocalizer,
+    momentLocalizer,
     type SlotInfo,
     type View,
 } from "react-big-calendar";
@@ -16,14 +15,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(Calendar);
 
-const locales = { "en-GB": enGB };
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek: (date) => startOfWeek(date, { locale: enGB }),
-    getDay,
-    locales,
-});
+const localiser = momentLocalizer(moment);
 
 type ModalState = {
     open: boolean;
@@ -90,7 +82,7 @@ export default function TestPage() {
             </div>
 
             <DnDCalendar
-                localizer={localizer}
+                localizer={localiser}
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
