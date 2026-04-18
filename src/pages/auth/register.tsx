@@ -1,9 +1,10 @@
+import { USER_CODES } from "@/types/user";
+import { hashEmailPass } from "@/utils/auth/jwt";
 import Link from "next/link";
 import type { SubmitEvent } from "react";
 import { useState } from "react";
 import { MdEmail, MdLock, MdPerson } from "react-icons/md";
-import { USER_CODES } from "@/types/user";
-import { hashEmailPass } from "@/utils/auth/jwt";
+import { LoginInput } from "./login";
 
 export default function RegisterPage() {
   const [currentMessage, setMessage] = useState("");
@@ -86,25 +87,25 @@ export default function RegisterPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <InputField
+          <LoginInput
             icon={<MdEmail />}
             type="email"
             name="email"
             placeholder="Email"
           />
-          <InputField
+          <LoginInput
             icon={<MdPerson />}
             type="username"
             name="username"
             placeholder="Username"
           />
-          <InputField
+          <LoginInput
             icon={<MdLock />}
             type="password"
             name="password"
             placeholder="Password"
           />
-          <InputField
+          <LoginInput
             icon={<MdLock />}
             type="password"
             name="confirmPassword"
@@ -134,22 +135,6 @@ export default function RegisterPage() {
           </Link>
         </p>
       </div>
-    </div>
-  );
-}
-
-function InputField({
-  icon,
-  ...props
-}: { icon: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-blue-400 transition-colors">
-      <span className="text-gray-400 text-lg shrink-0">{icon}</span>
-      <input
-        {...props}
-        required
-        className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400"
-      />
     </div>
   );
 }

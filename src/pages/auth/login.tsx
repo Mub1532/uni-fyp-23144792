@@ -1,13 +1,22 @@
-import Link from "next/link";
-import type { SubmitEvent } from "react";
-import { useState } from "react";
-import { MdEmail, MdLock } from "react-icons/md";
 import { USER_CODES } from "@/types/user";
 import { hashEmailPass } from "@/utils/auth/jwt";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import type { SubmitEvent } from "react";
+import { useEffect, useState } from "react";
+import { MdEmail, MdLock } from "react-icons/md";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [currentMessage, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (Number(router.query.code) === USER_CODES.NOT_LOGGED_IN) {
+      toast.warn("Please login or sign up first.");
+    }
+  }, [router.query.code]);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -70,13 +79,13 @@ export default function LoginPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <InputField
+          <LoginInput
             icon={<MdEmail />}
             type="email"
             name="email"
             placeholder="Email"
           />
-          <InputField
+          <LoginInput
             icon={<MdLock />}
             type="password"
             name="password"
@@ -96,7 +105,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-xs text-gray-400 text-center mt-5">
+        <p className="text-xs text-gray-400 dark:text-slate-300 text-center mt-5">
           No account?{" "}
           <Link
             href="/auth/register"
@@ -110,17 +119,17 @@ export default function LoginPage() {
   );
 }
 
-function InputField({
+export function LoginInput({
   icon,
   ...props
 }: { icon: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-blue-400 transition-colors">
+    <div className="text-white placeholder:text-white flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-blue-400 transition-colors">
       <span className="text-gray-400 text-lg shrink-0">{icon}</span>
       <input
         {...props}
         required
-        className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400"
+        className="flex-1 outline-none text-sm text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder:text-slate-300"
       />
     </div>
   );

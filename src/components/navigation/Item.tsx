@@ -24,7 +24,7 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
         "h-fit! w-fit md:w-full p-4 py-2",
         currentPath === path
           ? "hover:bg-blue-400! hover:dark:bg-slate-600!"
-          : "bg-transparent! hover:bg-blue-200! hover:dark:bg-slate-600!",
+          : "bg-transparent! hover:bg-blue-300! hover:dark:bg-slate-600!",
       )}
     >
       <Link
