@@ -70,9 +70,9 @@ export default function RegisterPage() {
           body: JSON.stringify({ email, password: hashedPassword }),
         });
 
-        // setTimeout(() => {
-        //   window.location.href = "/";
-        // }, 1000);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
       }
     } catch (_) {
       setMessage("Unknown error.");
@@ -80,7 +80,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex items-center justify-center h-full min-h-0 mb-36">
+    <div className="flex items-center justify-center h-full min-h-0 pb-36">
       <div className="border-2 inset-shadow-amber-950 border-blue-300 rounded-xl p-8 w-full max-w-sm">
         <h1 className="text-xl font-semibold text-blue-400 mb-6 text-center">
           Register

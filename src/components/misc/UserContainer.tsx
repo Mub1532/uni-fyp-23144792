@@ -1,6 +1,5 @@
 import { hoverClass } from "@/utils/classes";
 import { joinClasses } from "@/utils/misc/classes";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import ItemContainer from "./ItemContainer";
 
@@ -10,12 +9,11 @@ type userContainerProps = {
 
 export default function UserContainer({ username }: userContainerProps) {
     const [open, setOpen] = useState(false);
-    const router = useRouter();
 
     async function logoutUser() {
         await fetch("/api/auth/logout");
 
-        router.push("/auth/login");
+        window.location.href = "/auth/login";
     }
 
     return (

@@ -60,11 +60,11 @@ export default function LoginPage() {
         setSubmitting(false);
       } else if (status === USER_CODES.LOGGED_IN) {
         setSubmitting(false);
-        setMessage("User Logged in Successfully.");
+        setMessage("Logged in Successfully.");
 
-        // setTimeout(() => {
-        //   window.location.href = "/";
-        // }, 1000);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
       }
     } catch (_) {
       setMessage("Unknown error.");
@@ -72,8 +72,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center h-full min-h-0 mb-36">
-      <div className="border-2 border-blue-300 rounded-xl p-8 w-full max-w-sm">
+    <div className="flex items-center justify-evenly h-full min-h-0 pb-42">
+      <div className="border-2 border-blue-300 rounded-xl p-10 w-full max-w-sm">
         <h1 className="text-xl font-semibold text-blue-400 mb-6 text-center">
           Login
         </h1>
