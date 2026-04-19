@@ -71,7 +71,7 @@ export default function TestPage() {
     };
 
     return (
-        <div className="h-full w-full p-4 flex flex-col gap-3">
+        <div className="h-full w-full p-4 flex flex-col gap-3 overflow-hidden">
             <div className="flex justify-end">
                 <button
                     onClick={() => openCreate()}
@@ -86,7 +86,7 @@ export default function TestPage() {
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
-                className="h-full! w-full"
+                className="h-full! w-full overflow-hidden! min-h-0 max-h-[78vh]! sm:max-h-[75vh]! md:max-h-[80vh]!"
                 messages={{ agenda: "List" }}
                 view={view}
                 onView={setView}
@@ -113,7 +113,6 @@ export default function TestPage() {
                 }
                 resizable
             />
-
             <EventModal
                 open={modal.open}
                 mode={modal.mode}

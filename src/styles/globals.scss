@@ -1,84 +1,70 @@
 @import "tailwindcss";
-@import 'react-big-calendar/lib/sass/styles';
-@import 'react-big-calendar/lib/addons/dragAndDrop/styles';
+@plugin "@tailwindcss/typography";
+@plugin 'tailwind-scrollbar';
+@import 'highlight.js/styles/atom-one-dark';
+
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-$primary:         theme('colors.blue.500');
-$primary-hover:   theme('colors.blue.400');
-$primary-active:  theme('colors.blue.600');
-$primary-light:   theme('colors.blue.50');
-$primary-dark:    theme('colors.slate.700');
-$primary-border:  theme('colors.blue.300');
-$primary-text:    theme('colors.blue.500');
-
-$dark-bg:         theme('colors.slate.900');
-$dark-bg-soft:    theme('colors.slate.600');
-$dark-bg-hover:   theme('colors.slate.700');
-$dark-border:     theme('colors.slate.600');
-$dark-text:       theme('colors.slate.300');
-$dark-text-muted: theme('colors.slate.400');
-$dark-text-btn:   theme('colors.slate.300');
-$dark-border-btn: theme('colors.slate.600');
-$dark-off-range:  theme('colors.slate.800');
 
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-.rbc-day-bg:hover {
-  cursor: pointer;
-  opacity: 80%;
-  transition: all;
-  background-color: $primary-hover;
+.prose p {
+    @apply leading-0.5;
+}
+
+.prose hr {
+    @apply border-slate-300 border! dark:border-slate-600 my-8!;
+}
+
+::-webkit-scrollbar {
+    height: 4px;
+}
+
+@keyframes scroll-hint {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-400px); }
+    100% { transform: translateX(0); }
 }
 
 .rbc-calendar {
-  .rbc-toolbar {
-    button {
-      @apply rounded-md px-3 py-1.5 text-sm cursor-pointer;
-      border: 1px solid $primary-border;
-      color: $primary-text;
-      background: white;
-      &:hover { background-color: $primary-hover; color: white; }
-      &.rbc-active { background-color: $primary !important; color: white; border-color: $primary; }
-    }
-    .rbc-toolbar-label { @apply text-base font-medium; }
-  }
+  @apply p-4 rounded-lg border-2 border-blue-300 dark:border-slate-500 dark:bg-slate-700 text-blue-900! dark:text-slate-200! font-semibold;
+}
 
-  .rbc-today { background-color: $primary-light !important; }
-  .rbc-current-time-indicator { background-color: $primary; }
+.rbc-calendar * {
+  @apply border-blue-300! dark:border-slate-500! text-blue-900! dark:text-slate-200! transition-all! ease-in duration-100;
+}
 
-  .rbc-event {
-    background-color: $primary !important;
-    border: none !important;
-    color: white;
-    &:hover { background-color: $primary-hover !important; }
-    &.rbc-selected { background-color: $primary-active !important; }
-  }
+.rbc-off-range-bg {
+  @apply bg-slate-300! dark:bg-slate-600! dark:text-blue-400! hover:opacity-80 transition-opacity! ease-in duration-100;
+}
 
-  .dark & {
-    background-color: $dark-bg;
-    color: $dark-text;
+.rbc-day-bg, .rbc-timeslot-group {
+  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors ease-in duration-100; 
+}
 
-    .rbc-toolbar button {
-      background-color: $dark-bg-soft;
-      border-color: $dark-border-btn;
-      color: $dark-text-btn;
-      &:hover { background-color: $dark-bg-hover; }
-      &.rbc-active { background-color: $primary !important; color: white; }
-    }
-    .rbc-today { background-color: $primary-dark !important; }
-    .rbc-off-range-bg { background-color: $dark-off-range; }
-    .rbc-header { border-color: $dark-border; color: $dark-text-muted; }
-    .rbc-day-bg {
-      background-color: $dark-bg;
-      & + .rbc-day-bg { border-color: $dark-border; }
-    }
-    .rbc-month-row + .rbc-month-row { border-color: $dark-border; }
-    .rbc-timeslot-group { border-color: $dark-border; }
-    .rbc-time-content { border-color: $dark-border; }
-    .rbc-agenda-date-cell,
-    .rbc-agenda-time-cell { color: $dark-text-muted; border-color: $dark-border; }
-  }
+.rbc-today {
+  @apply dark:bg-slate-600! bg-blue-200 hover:opacity-80 transition-opacity! ease-in duration-100;
+}
+
+/*  buttons calendar */
+
+.rbc-btn-group button {
+  @apply dark:bg-slate-700! hover:dark:bg-blue-400! bg-slate-200! hover:bg-blue-200!;
+}
+
+button.rbc-active {
+  @apply bg-blue-300! dark:bg-blue-500!;
+}
+
+/* Event pill */
+
+.rbc-event-content, .rbc-event-label {
+  @apply text-slate-300!;
+}
+
+.rbc-event {
+  @apply hover:opacity-80 transition-opacity! ease-in duration-100;
 }

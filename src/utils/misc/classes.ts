@@ -6,3 +6,9 @@ export function joinClasses(...classes: (ClassName | ClassName[])[]) {
     .filter((c) => c && typeof c === "string")
     .join(" ");
 }
+
+export const defaultScrollbar =
+  "scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-transparent scrollbar-thumb-rounded-full [&::-webkit-scrollbar-button]:hidden! animate-none!";
+
+export const scrollHint =
+  "[&>*]:animate-[scroll-hint_1.5s_ease-in-out_0.5s_1] [&>*]:lg:animate-none";

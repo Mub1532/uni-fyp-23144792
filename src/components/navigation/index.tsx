@@ -19,7 +19,6 @@ export default function Navigation({ loggedIn }: NavigationProps) {
       className={joinClasses(
         "bg-blue-200 dark:bg-slate-700 h-fit md:h-full md:min-w-fit md:w-fit md:max-w-42 py-1 md:pt-2 md:text-center px-4",
         textColor,
-        "transition-all duration-300 ease-in-out",
       )}
     >
       <div className="h-fit md:h-full w-full flex-row flex md:flex-col justify-evenly items-center md:mt-16 gap-4">

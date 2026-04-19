@@ -64,7 +64,12 @@ export default function App({ Component, pageProps }: MyProps) {
                 }
                 user={user}
               />
-              <div className={joinClasses("p-4 h-full w-full", textColor)}>
+              <div
+                className={joinClasses(
+                  "p-4 px-1 md:px-2 h-full w-full",
+                  textColor,
+                )}
+              >
                 <Component {...pageProps} user={user} userLoading={loading} />
               </div>
             </div>
