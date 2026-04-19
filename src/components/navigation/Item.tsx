@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: needed for nav links */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: needed for nav links */
 
-import type { PageDataProps } from "@/utils/data/pages";
-import { joinClasses } from "@/utils/misc/classes";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { PageDataProps } from "@/utils/data/pages";
+import { joinClasses } from "@/utils/misc/classes";
 import ItemContainer from "../misc/ItemContainer";
 import NavIcon from "./Icon";
 

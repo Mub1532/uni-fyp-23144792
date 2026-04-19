@@ -1,6 +1,6 @@
-import { joinClasses } from "@/utils/misc/classes";
 import type { NextRouter } from "next/router";
 import type { IconType } from "react-icons";
+import { joinClasses } from "@/utils/misc/classes";
 
 interface NavIconProps {
   icon: IconType;
