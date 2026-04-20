@@ -22,7 +22,7 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
     <ItemContainer
       as="button"
       className={joinClasses(
-        "h-fit! w-fit md:w-full p-4 py-2",
+        "h-fit! w-fit md:w-full p-0!",
         isActive
           ? "hover:bg-blue-400! hover:dark:bg-slate-600!"
           : "bg-transparent! hover:bg-blue-300! hover:dark:bg-slate-600!",
@@ -32,7 +32,7 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
         href={path}
         passHref
         aria-label={name}
-        className="flex flex-col md:flex-row items-center sm:gap-2 font-semibold md:ml-1"
+        className="flex flex-col md:flex-row items-center sm:gap-2 font-semibold p-2"
       >
         {icon && (
           <div className="text-sm">
