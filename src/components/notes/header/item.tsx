@@ -10,6 +10,8 @@ export default function NoteHeaderItem({
     editor,
     extraClass,
     defaultText = true,
+    onClick,
+    spinIcon = false
 }: NoteHeaderItemProps) {
     return (
         <>
@@ -29,14 +31,14 @@ export default function NoteHeaderItem({
                         : "",
                     extraClass,
                 )}
-                onClick={() => {
+                onClick={onClick ?? (() => {
                     const selectedText = window.getSelection()?.toString() ?? "";
                     formatCommands[command](editor, selectedText);
-                }}
+                })}
                 type="button"
             >
                 {icon({
-                    className: joinClasses("text-sm!"),
+                    className: joinClasses("text-sm!", spinIcon ? 'animate-spin!' : ''),
                 })}
                 <div
                     className={joinClasses(

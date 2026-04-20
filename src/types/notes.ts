@@ -6,6 +6,9 @@ export interface NoteHeaderItemProps extends NoteHeaderItemPropsPlain {
   editor: Editor;
   extraClass?: string;
   defaultText?: boolean;
+  onClick?: () => unknown;
+  saveLoading?: boolean;
+  spinIcon?: boolean;
 }
 
 export type NoteHeaderItemPropsPlain = {

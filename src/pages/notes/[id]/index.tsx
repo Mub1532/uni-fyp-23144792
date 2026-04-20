@@ -8,7 +8,7 @@ import type { JSONContent } from "@tiptap/react";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useDebounceCallback, useEventListener } from "usehooks-ts";
 
@@ -23,11 +23,11 @@ export default function Notes({ initialContent, noteID, errorCode }: Props) {
     const router = useRouter();
 
     useEffect(() => {
-        if (errorCode === NOTE_CODES.NOT_FOUND || !initialContent) {
+        if (errorCode === NOTE_CODES.NOT_FOUND) {
             toast.error("That note was not found.");
             router.push("/notes");
         }
-    }, [errorCode, initialContent, router]);
+    }, [errorCode, router]);
 
     const { id } = router.query as { id: string };
 
@@ -40,31 +40,57 @@ export default function Notes({ initialContent, noteID, errorCode }: Props) {
 
     const editor = useNoteEditor(initialContent);
     const lastSaved = useRef(editor?.getJSON());
+    const [saveLoading, setSaveLoading] = useState(false);
 
     const debouncedSave = useDebounceCallback(async () => {
         const currentNote = editor?.getJSON();
         if (JSON.stringify(currentNote) === JSON.stringify(lastSaved.current))
             return;
 
-        const noteSaved = await fetch(`/api/notes/save`, {
-            method: "POST",
-            body: JSON.stringify({
-                noteID: noteID,
-                note: currentNote,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        setSaveLoading(true);
 
-        const response = await noteSaved.json();
+        let responseFetch: Response;
+
+        if (id !== "create") {
+            responseFetch = await fetch(`/api/notes/save`, {
+                method: "POST",
+                body: JSON.stringify({
+                    noteID: noteID,
+                    note: currentNote,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        } else {
+            responseFetch = await fetch(`/api/notes/create`, {
+                method: "POST",
+                body: JSON.stringify({
+                    note: currentNote,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
+
+        const response = await responseFetch.json();
+
+        setSaveLoading(false);
 
         switch (response?.code) {
             case USER_CODES.NOT_LOGGED_IN:
                 toast.warn("Please login or sign up first.");
                 break;
             case NOTE_CODES.SAVE_SUCCESS:
-                toast.info("Note Saved Successfully.");
+                toast.info(
+                    id === "create"
+                        ? "Created Note Successfully."
+                        : "Note Saved Successfully.",
+                );
+                if (id === "create") {
+                    router.push(`/notes/${response?.noteID}`);
+                }
                 lastSaved.current = currentNote;
                 break;
             case NOTE_CODES.SAVE_FAIL:
@@ -88,7 +114,13 @@ export default function Notes({ initialContent, noteID, errorCode }: Props) {
 
     useEventListener("keydown", handleKeyDown);
 
-    return <NoteContent editor={editor} />;
+    return (
+        <NoteContent
+            saveLoading={saveLoading}
+            saveFunction={debouncedSave}
+            editor={editor}
+        />
+    );
 }
 
 export async function getServerSideProps({
@@ -116,6 +148,15 @@ export async function getServerSideProps({
             },
         };
     }
+
+    if (id === "create")
+        return {
+            props: {
+                initialContent: null,
+                noteID: "create",
+            },
+        };
+
     const connection = await getDBConnection();
 
     const [[rows]] = await connection.query<RowDataPacket[]>(

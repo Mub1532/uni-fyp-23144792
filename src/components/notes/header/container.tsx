@@ -5,15 +5,24 @@ import {
     scrollHint,
 } from "@/utils/misc/classes";
 import type { Editor } from "@tiptap/react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaSave } from "react-icons/fa";
+import type { DebouncedState } from "usehooks-ts";
 import NoteHeaderItem from "./item";
 
 type props = {
     items: NoteHeaderItemClass[];
     editor: Editor;
+    saveFunction: DebouncedState<() => Promise<void>>;
+    saveLoading?: boolean;
 };
 
-export default function NoteHeaderItems({ items, editor }: props) {
+export default function NoteHeaderItems({
+    items,
+    editor,
+    saveFunction,
+    saveLoading,
+}: props) {
     return (
         <div
             className={joinClasses(
@@ -23,7 +32,7 @@ export default function NoteHeaderItems({ items, editor }: props) {
         >
             <div
                 className={joinClasses(
-                    "w-full h-full flex items-center overflow-x-auto overflow-y-hidden gap-1 my-2",
+                    "w-full h-full flex animate-spin items-center overflow-x-auto overflow-y-hidden gap-1 my-2",
                     defaultScrollbar,
                     scrollHint,
                 )}
@@ -34,11 +43,14 @@ export default function NoteHeaderItems({ items, editor }: props) {
             </div>
             <NoteHeaderItem
                 editor={editor}
-                icon={FaSave}
+                icon={saveLoading ? AiOutlineLoading3Quarters : FaSave}
                 title="Save"
                 command="saveNote"
-                extraClass="mr-0 ml-auto bg-blue-500 rounded-sm px-2 text-slate-200!"
+                extraClass={"mr-0 ml-auto bg-blue-500 rounded-sm px-2 text-slate-200!"}
                 defaultText={false}
+                onClick={saveFunction}
+                saveLoading={saveLoading}
+                spinIcon={saveLoading}
             />
         </div>
     );
