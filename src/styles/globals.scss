@@ -1,7 +1,8 @@
-@import "tailwindcss";
+@use "tailwindcss";
+@use 'highlight.js/styles/atom-one-dark';
+
 @plugin "@tailwindcss/typography";
 @plugin 'tailwind-scrollbar';
-@import 'highlight.js/styles/atom-one-dark';
 
 
 @custom-variant dark (&:where(.dark, .dark *));

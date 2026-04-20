@@ -31,7 +31,7 @@ export default function Notes({ notes }: NotesProps) {
             </ItemContainer>
             <div
                 className={
-                    "px-2 h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(10rem,max-content))] justify-start overflow-y-auto overflow-x-hidden rounded-lg gap-y-4 gap-2.5"
+                    "px-2 h-fit w-full min-w-full grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] auto-rows-[11rem] overflow-y-auto overflow-x-hidden rounded-lg gap-y-4 gap-2.5"
                 }
             >
                 {notes.map((item, i) => {
@@ -62,7 +62,7 @@ function StickyNote({ noteID, title, content }: StickyProps) {
             href={`/notes/${noteID}`}
             passHref
             aria-label={noteID as string}
-            className="cursor-pointer hover:opacity-80 transition-opacity! ease-in duration-100 h-fit aspect-square w-40 dark:bg-blue-600/20 bg-yellow-200 flex flex-col gap-2 dark:text-slate-100 text-slate-700"
+            className="cursor-pointer hover:opacity-80 transition-opacity! ease-in duration-100 h-full aspect-square w-full dark:bg-blue-600/20 bg-yellow-200 flex flex-col gap-2 dark:text-slate-100 text-slate-700"
         >
             <div className="items-center dark:bg-blue-500/30 bg-yellow-300 p-1 font-semibold h-fit truncate w-full">
                 {title}
