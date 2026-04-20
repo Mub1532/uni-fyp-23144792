@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: needed for nav links */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: needed for nav links */
 
-import Link from "next/link";
-import { useRouter } from "next/router";
 import type { PageDataProps } from "@/utils/data/pages";
 import { joinClasses } from "@/utils/misc/classes";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import ItemContainer from "../misc/ItemContainer";
 import NavIcon from "./Icon";
 
@@ -16,13 +16,14 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
   const router = useRouter();
 
   const currentPath = router.pathname;
+  const isActive = currentPath === path || currentPath.startsWith(path + "/");
 
   return (
     <ItemContainer
       as="button"
       className={joinClasses(
         "h-fit! w-fit md:w-full p-4 py-2",
-        currentPath === path
+        isActive
           ? "hover:bg-blue-400! hover:dark:bg-slate-600!"
           : "bg-transparent! hover:bg-blue-300! hover:dark:bg-slate-600!",
       )}

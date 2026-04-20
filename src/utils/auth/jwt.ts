@@ -1,7 +1,7 @@
-import crypto from "node:crypto";
+import type { userInfo } from "@/types/user";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
-import type { userInfo } from "@/types/user";
+import crypto from "node:crypto";
 
 /**
  * Function to verify user properly
@@ -11,6 +11,8 @@ import type { userInfo } from "@/types/user";
 export default async function verifyUser(
   rawCookie: string,
 ): Promise<userInfo | undefined> {
+  if (!rawCookie) return;
+
   const { userInfo } = cookie.parse(rawCookie || "");
   const token = userInfo;
 

@@ -2,16 +2,16 @@ import Navigation from "@/components/navigation/index";
 import TopBar from "@/components/navigation/Top";
 import { useUser } from "@/hooks/useUser";
 import "@/styles/globals.scss";
-import { Montserrat } from "next/font/google";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { Bounce, ToastContainer } from "react-toastify";
 import type { MyProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { textColor } from "@/utils/classes";
 import { pages } from "@/utils/data/pages";
 import { capitaliseFirstLetter } from "@/utils/misc/caps";
 import { joinClasses } from "@/utils/misc/classes";
+import { Montserrat } from "next/font/google";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const font = Montserrat({
   subsets: ["latin"],
@@ -21,7 +21,10 @@ export default function App({ Component, pageProps }: MyProps) {
   const { user, loading, loggedIn } = useUser();
 
   const router = useRouter();
-  const currentPage = pages.find((x) => x.path === router.pathname);
+  const currentPage = pages.find(
+    (x) =>
+      router.pathname === x.path || router.pathname.startsWith(`${x.path}/`),
+  );
 
   // If user is not logged in and the page needs auth, direct to login
   useEffect(() => {
