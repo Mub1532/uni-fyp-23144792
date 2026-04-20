@@ -18,13 +18,13 @@ export default function NoteHeaderItem({
             {newSection && (
                 <div
                     className={joinClasses(
-                        "h-4/6 w-0.5 dark:bg-slate-600 bg-slate-400 mx-1 shrink-0",
+                        "h-1/2 w-0.5 dark:bg-slate-600 bg-blue-300 mx-1 shrink-0",
                     )}
                 />
             )}
             <button
                 className={joinClasses(
-                    "shrink-0 h-fit min-h-8 w-fit text-blue px-1 text-sm flex items-center gap-1 hover:bg-blue-200 hover:dark:bg-slate-600 dark:hover:text-slate-200! cursor-pointer hover:rounded-sm hover:border-transparent!",
+                    "shrink-0 h-fit min-h-8 w-fit text-blue px-1 text-sm flex items-center gap-1 hover:bg-slate-500 dark:hover:text-slate-200! cursor-pointer hover:rounded-sm hover:border-transparent!",
                     "group/noteHeaderBar md:animate-none",
                     editor?.isActive(command)
                         ? "bg-blue-200 dark:bg-slate-600 rounded-md"
