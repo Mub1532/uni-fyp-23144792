@@ -1,6 +1,6 @@
-import type { MyProps } from "@/types/props";
+import type { MyPageProps } from "@/types/props";
 
-export default function index(props: MyProps) {
+export default function index(props: MyPageProps) {
   console.log(props);
 
   return <div>index</div>;

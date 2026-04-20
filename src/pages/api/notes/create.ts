@@ -1,7 +1,7 @@
 import { NOTE_CODES } from "@/types/notes";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
+import { getDBConnection, insertHelper } from "@/utils/database";
 import type { ResultSetHeader } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>,
 ) {
-  const { noteID, note } = req.body;
+  const { note } = req.body;
 
   const rawCookie = req.headers.cookie;
   const user = await verifyUser(rawCookie as string);
@@ -22,18 +22,23 @@ export default async function handler(
   const connection = await getDBConnection();
 
   try {
-    const [result] = await connection.query<ResultSetHeader>(
-      "UPDATE notes SET note = ? WHERE id = ? AND user_id = ?",
-      [JSON.stringify(note), noteID, user?.id],
-    );
+    const { sql, values } = insertHelper("notes", {
+      user_id: user?.id,
+      note: JSON.stringify(note),
+    });
+
+    const [result] = await connection.query<ResultSetHeader>(sql, values);
 
     const success = result.affectedRows === 1;
 
-    if (success)
+    if (success) {
+      const noteID = result?.insertId;
+
       return res.status(200).send({
         code: NOTE_CODES.SAVE_SUCCESS,
+        noteID,
       });
-    else
+    } else
       return res.status(200).send({
         code: NOTE_CODES.SAVE_FAIL,
       });

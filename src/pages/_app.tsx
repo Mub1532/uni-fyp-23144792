@@ -2,12 +2,12 @@ import Navigation from "@/components/navigation/index";
 import TopBar from "@/components/navigation/Top";
 import { useUser } from "@/hooks/useUser";
 import "@/styles/globals.scss";
-import type { MyProps } from "@/types/props";
+import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { textColor } from "@/utils/classes";
 import { pages } from "@/utils/data/pages";
 import { capitaliseFirstLetter } from "@/utils/misc/caps";
-import { joinClasses } from "@/utils/misc/classes";
+import { defaultScrollbar, joinClasses } from "@/utils/misc/classes";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -17,7 +17,7 @@ const font = Montserrat({
   subsets: ["latin"],
 });
 
-export default function App({ Component, pageProps }: MyProps) {
+export default function App({ Component, pageProps }: MyPageProps) {
   const { user, loading, loggedIn } = useUser();
 
   const router = useRouter();
@@ -69,8 +69,9 @@ export default function App({ Component, pageProps }: MyProps) {
               />
               <div
                 className={joinClasses(
-                  "p-4 px-1 md:px-2 h-full w-full",
+                  "p-4 px-1 md:px-2 h-full w-full overflow-x-hidden overflow-y-auto",
                   textColor,
+                  defaultScrollbar,
                 )}
               >
                 <Component {...pageProps} user={user} userLoading={loading} />

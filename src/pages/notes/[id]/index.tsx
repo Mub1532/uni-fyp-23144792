@@ -8,7 +8,7 @@ import type { JSONContent } from "@tiptap/react";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useDebounceCallback, useEventListener } from "usehooks-ts";
 
@@ -16,11 +16,19 @@ type Props = {
     initialContent: JSONContent;
     noteID: string;
     user: userInfo;
+    errorCode?: number;
 };
 
-export default function Notes({ initialContent, noteID }: Props) {
-    console.log("NOTE ID", noteID);
+export default function Notes({ initialContent, noteID, errorCode }: Props) {
     const router = useRouter();
+
+    useEffect(() => {
+        if (errorCode === NOTE_CODES.NOT_FOUND || !initialContent) {
+            toast.error("That note was not found.");
+            router.push("/notes");
+        }
+    }, [errorCode, initialContent, router]);
+
     const { id } = router.query as { id: string };
 
     if (!id) {
@@ -69,9 +77,9 @@ export default function Notes({ initialContent, noteID }: Props) {
     }, 200);
 
     const handleKeyDown = useCallback(
-        (e: KeyboardEvent) => {
-            if (e.ctrlKey && e.key === "s") {
-                e.preventDefault();
+        (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === "s") {
+                event.preventDefault();
                 debouncedSave();
             }
         },
@@ -117,19 +125,24 @@ export async function getServerSideProps({
 
     if (!rows) {
         return {
-            redirect: {
-                destination: `/notes?code=${NOTE_CODES.NOT_FOUND}`,
-                permanent: false,
+            props: {
+                initialContent: null,
+                noteID: id,
+                errorCode: NOTE_CODES.NOT_FOUND,
             },
         };
     }
 
     if (rows?.note)
         return {
-            props: { initialContent: rows?.note, noteID: id },
+            props: { initialContent: rows?.note ?? null, noteID: id },
         };
 
     return {
-        props: { initialContent: undefined, noteID: id },
+        props: {
+            initialContent: null,
+            noteID: id,
+            errorCode: NOTE_CODES.NOT_FOUND,
+        },
     };
 }
