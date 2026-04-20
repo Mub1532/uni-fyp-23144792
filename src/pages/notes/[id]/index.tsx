@@ -41,6 +41,7 @@ export default function Notes({ initialContent, noteID, errorCode }: Props) {
     const editor = useNoteEditor(initialContent);
     const lastSaved = useRef(editor?.getJSON());
     const [saveLoading, setSaveLoading] = useState(false);
+    const [delLoading, setDelLoading] = useState(false);
 
     const debouncedSave = useDebounceCallback(async () => {
         const currentNote = editor?.getJSON();
@@ -102,6 +103,40 @@ export default function Notes({ initialContent, noteID, errorCode }: Props) {
         }
     }, 200);
 
+    const debouncedDelete = useDebounceCallback(async () => {
+        setDelLoading(true);
+
+        const responseFetch = await fetch(`/api/notes/delete`, {
+            method: "POST",
+            body: JSON.stringify({
+                noteID: noteID,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const response = await responseFetch.json();
+
+        setDelLoading(false);
+
+        switch (response?.code) {
+            case USER_CODES.NOT_LOGGED_IN:
+                toast.warn("Please login or sign up first.");
+                break;
+            case NOTE_CODES.DELETE_SUCCESS:
+                toast.info("Note Deleted Successfully");
+                router.push(`/notes`);
+                break;
+            case NOTE_CODES.DELETE_FAIL:
+                toast.error("Failed to Delete Note.");
+                break;
+            default:
+                toast.error("Unknown error.");
+                break;
+        }
+    }, 200);
+
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
             if (event.ctrlKey && event.key === "s") {
@@ -118,6 +153,8 @@ export default function Notes({ initialContent, noteID, errorCode }: Props) {
         <NoteContent
             saveLoading={saveLoading}
             saveFunction={debouncedSave}
+            deleteFunction={debouncedDelete}
+            deleteLoading={delLoading}
             editor={editor}
         />
     );
@@ -143,7 +180,7 @@ export async function getServerSideProps({
     if (!id) {
         return {
             redirect: {
-                destination: "/notes?message=",
+                destination: "/notes",
                 permanent: false,
             },
         };

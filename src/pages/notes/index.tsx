@@ -31,10 +31,10 @@ export default function Notes({ notes }: NotesProps) {
             </ItemContainer>
             <div
                 className={
-                    "px-2 h-fit w-full min-w-full grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] auto-rows-[11rem] overflow-y-auto overflow-x-hidden rounded-lg gap-y-4 gap-2.5"
+                    "px-2 h-fit w-full min-w-full grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] auto-rows-[10.5rem] overflow-y-auto overflow-x-hidden rounded-lg gap-y-4 gap-2.5"
                 }
             >
-                {notes.map((item, i) => {
+                {notes.map((item) => {
                     const { title, content } = extractNoteInfo(item.note);
                     return (
                         <StickyNote

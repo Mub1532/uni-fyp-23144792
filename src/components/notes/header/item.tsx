@@ -24,7 +24,7 @@ export default function NoteHeaderItem({
             )}
             <button
                 className={joinClasses(
-                    "shrink-0 h-fit min-h-8 w-fit text-blue px-1 text-sm flex items-center gap-1 hover:bg-slate-500 dark:hover:text-slate-200! cursor-pointer hover:rounded-sm hover:border-transparent!",
+                    "shrink-0 h-fit min-h-8 w-fit text-blue px-1 text-sm flex items-center gap-1 hover:bg-blue-300 dark:hover:bg-slate-500 dark:hover:text-slate-200! cursor-pointer rounded-sm hover:border-transparent!",
                     "group/noteHeaderBar md:animate-none",
                     editor?.isActive(command)
                         ? "bg-blue-200 dark:bg-slate-600 rounded-md"
@@ -32,8 +32,7 @@ export default function NoteHeaderItem({
                     extraClass,
                 )}
                 onClick={onClick ?? (() => {
-                    const selectedText = window.getSelection()?.toString() ?? "";
-                    formatCommands[command](editor, selectedText);
+                    formatCommands[command as keyof typeof formatCommands](editor);
                 })}
                 type="button"
             >

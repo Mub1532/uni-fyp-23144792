@@ -20,6 +20,10 @@
     @apply border-slate-300 border! dark:border-slate-600 my-8!;
 }
 
+.prose a {
+  @apply cursor-pointer hover:opacity-60 transition-opacity! ease-in duration-100;
+}
+
 ::-webkit-scrollbar {
     height: 4px;
 }

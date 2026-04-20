@@ -7,11 +7,15 @@ type props = {
     editor: Editor;
     saveFunction: DebouncedState<() => Promise<void>>;
     saveLoading?: boolean;
+    deleteFunction: DebouncedState<() => Promise<void>>;
+    deleteLoading?: boolean;
 };
 
 export default function NoteContent({
     editor,
     saveFunction,
+    deleteFunction,
+    deleteLoading,
     saveLoading,
 }: props) {
     return (
@@ -21,6 +25,8 @@ export default function NoteContent({
                 editor={editor}
                 items={noteEditorHeaderItems}
                 saveLoading={saveLoading}
+                deleteFunction={deleteFunction}
+                deleteLoading={deleteLoading}
             />
             <div className="border-x-2 border-slate-500/20 w-full md:w-3/4 lg:w-1/2  h-full flex px-4 overflow-auto">
                 <EditorContent

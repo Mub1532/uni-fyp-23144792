@@ -1,4 +1,4 @@
-import type { Editor, JSONContent } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 
 export const formatCommands = {
   title: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
@@ -26,23 +26,4 @@ export const formatCommands = {
       .setLink({ href: url, title: url ?? "Url Goes Here" })
       .run();
   },
-  saveNote: (note: JSONContent, noteID: string) => saveNote(note, noteID),
-} satisfies Record<
-  string,
-  (editor: Editor, selectedText: string, ...params: any) => void
->;
-
-export async function saveNote(note: JSONContent, noteID: string) {
-  console.log(note);
-  const noteSaved = await fetch(`/api/notes/save`, {
-    method: "POST",
-    body: JSON.stringify({
-      noteID: noteID,
-      note: note,
-    }),
-  });
-
-  const response = noteSaved.json();
-
-  return response;
-}
+} satisfies Record<string, (editor: Editor, ...params: any) => void>;

@@ -15,14 +15,14 @@ export type NoteHeaderItemPropsPlain = {
   icon: IconType;
   title: string;
   newSection?: boolean;
-  command: keyof typeof formatCommands;
+  command: keyof typeof formatCommands | "saveCommand" | "delCommand";
 };
 
 export class NoteHeaderItemClass {
   title: string;
   icon: IconType;
   newSection: boolean;
-  command: keyof typeof formatCommands;
+  command: keyof typeof formatCommands | "saveCommand" | "delCommand";
 
   constructor(options: NoteHeaderItemPropsPlain) {
     this.title = options.title;
@@ -36,4 +36,6 @@ export enum NOTE_CODES {
   NOT_FOUND,
   SAVE_SUCCESS,
   SAVE_FAIL,
+  DELETE_SUCCESS,
+  DELETE_FAIL,
 }
