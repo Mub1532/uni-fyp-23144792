@@ -10,7 +10,8 @@ import { capitaliseFirstLetter } from "@/utils/misc/caps";
 import { defaultScrollbar, joinClasses } from "@/utils/misc/classes";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import ProgressBar from "nextjs-progressbar";
+import { useEffect, useState } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 
 const font = Montserrat({
@@ -35,9 +36,15 @@ export default function App({ Component, pageProps }: MyPageProps) {
     }
   }, [loading, loggedIn, currentPage, router.push]);
 
-  if (loading) return null; // or a proper spinner
+  const [pageName, setPageName] = useState("");
 
-  if (currentPage?.needAuth && !loggedIn) return null;
+  useEffect(() => {
+    if (!router.isReady) return;
+    setPageName(
+      currentPage?.name ??
+      capitaliseFirstLetter(router.asPath.replace("/", "")),
+    );
+  }, [router.asPath, currentPage, router.isReady]);
 
   return (
     <main className={font.className}>
@@ -58,15 +65,9 @@ export default function App({ Component, pageProps }: MyPageProps) {
       <div className="fixed h-full mb-auto w-full overflow-hidden bg-blue-50 dark:bg-slate-800 dark:text-slate-300 text-blue-500">
         <div className="h-full w-full relative overflow-hidden">
           <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
-            {loggedIn ? <Navigation loggedIn={loggedIn} /> : null}
+            <Navigation loggedIn={loggedIn} />
             <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
-              <TopBar
-                pageName={
-                  currentPage?.name ??
-                  capitaliseFirstLetter(router.asPath.replace("/", ""))
-                }
-                user={user}
-              />
+              <TopBar pageName={pageName} user={user} />
               <div
                 className={joinClasses(
                   "p-4 px-1 md:px-2 h-full w-full overflow-x-hidden overflow-y-auto",
@@ -74,6 +75,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
                   defaultScrollbar,
                 )}
               >
+                <ProgressBar color="#3b82f6" />
                 <Component {...pageProps} user={user} userLoading={loading} />
               </div>
             </div>
