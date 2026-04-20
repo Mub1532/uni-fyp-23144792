@@ -32,7 +32,12 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
         href={path}
         passHref
         aria-label={name}
-        className="flex flex-col md:flex-row items-center sm:gap-2 font-semibold p-2"
+        className={
+          joinClasses(
+            "flex flex-col md:flex-row items-center sm:gap-2 font-semibold p-2",
+            !showText ? 'justify-center' : ''
+          )
+        }
       >
         {icon && (
           <div className="text-sm">
