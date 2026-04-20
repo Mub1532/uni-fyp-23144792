@@ -10,6 +10,7 @@ import { capitaliseFirstLetter } from "@/utils/misc/caps";
 import { defaultScrollbar, joinClasses } from "@/utils/misc/classes";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/router";
+import Script from "next/script";
 import ProgressBar from "nextjs-progressbar";
 import { useEffect, useState } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
@@ -47,41 +48,44 @@ export default function App({ Component, pageProps }: MyPageProps) {
   }, [router.asPath, currentPage, router.isReady]);
 
   return (
-    <main className={font.className}>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Bounce}
-        stacked
-      />
-      <div className="fixed h-full mb-auto w-full overflow-hidden bg-blue-50 dark:bg-slate-800 dark:text-slate-300 text-blue-500">
-        <div className="h-full w-full relative overflow-hidden">
-          <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
-            <Navigation loggedIn={loggedIn} />
-            <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
-              <TopBar pageName={pageName} user={user} />
-              <div
-                className={joinClasses(
-                  "p-4 px-1 md:px-2 h-full w-full overflow-x-hidden overflow-y-auto",
-                  textColor,
-                  defaultScrollbar,
-                )}
-              >
-                <ProgressBar color="#3b82f6" />
-                <Component {...pageProps} user={user} userLoading={loading} />
+    <>
+      <Script src="/theme.js" strategy="beforeInteractive" />
+      <main className={font.className}>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Bounce}
+          stacked
+        />
+        <div className="fixed h-full mb-auto w-full overflow-hidden bg-blue-50 dark:bg-slate-800 dark:text-slate-300 text-blue-500">
+          <div className="h-full w-full relative overflow-hidden">
+            <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
+              <Navigation loggedIn={loggedIn} />
+              <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
+                <TopBar pageName={pageName} user={user} />
+                <div
+                  className={joinClasses(
+                    "p-4 px-1 md:px-2 h-full w-full overflow-x-hidden overflow-y-auto",
+                    textColor,
+                    defaultScrollbar,
+                  )}
+                >
+                  <ProgressBar color="#3b82f6" />
+                  <Component {...pageProps} user={user} userLoading={loading} />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
