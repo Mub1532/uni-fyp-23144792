@@ -1,6 +1,6 @@
+import type { formatCommands } from "@/utils/data/notes/commands";
 import type { Editor } from "@tiptap/react";
 import type { IconType } from "react-icons";
-import type { formatCommands } from "@/utils/data/notes/commands";
 
 export interface NoteHeaderItemProps extends NoteHeaderItemPropsPlain {
   editor: Editor;
@@ -15,14 +15,24 @@ export type NoteHeaderItemPropsPlain = {
   icon: IconType;
   title: string;
   newSection?: boolean;
-  command: keyof typeof formatCommands | "saveCommand" | "delCommand";
+  command:
+    | keyof typeof formatCommands
+    | "saveCommand"
+    | "delCommand"
+    | "deleteNote"
+    | "saveNote";
 };
 
 export class NoteHeaderItemClass {
   title: string;
   icon: IconType;
   newSection: boolean;
-  command: keyof typeof formatCommands | "saveCommand" | "delCommand";
+  command:
+    | keyof typeof formatCommands
+    | "saveCommand"
+    | "delCommand"
+    | "deleteNote"
+    | "saveNote";
 
   constructor(options: NoteHeaderItemPropsPlain) {
     this.title = options.title;
