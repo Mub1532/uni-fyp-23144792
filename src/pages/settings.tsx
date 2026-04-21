@@ -44,7 +44,6 @@ export default function Settings({ user, userCreated }: SettingsProps) {
     console.log("date");
     console.log(data);
 
-    //@ts-expect-error
     switch (data?.code) {
       case USER_CODES.NOT_LOGGED_IN:
         toast.warn("Please login or sign up first.");
