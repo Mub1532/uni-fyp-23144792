@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>,
 ) {
-  const { noteID, note } = req.body;
+  const { calendarID, title, description, start, end } = req.body;
 
   const rawCookie = req.headers.cookie;
   const user = await verifyUser(rawCookie as string);
@@ -23,8 +23,15 @@ export default async function handler(
 
   try {
     const [result] = await connection.query<ResultSetHeader>(
-      "UPDATE notes SET note = ? WHERE id = ? AND user_id = ?",
-      [JSON.stringify(note), noteID, user?.id],
+      "UPDATE calendar_items SET title = ?, description = ?, start_time = ?, end_time = ? WHERE id = ? AND user_id = ?",
+      [
+        title,
+        description,
+        new Date(start),
+        new Date(end),
+        calendarID,
+        user?.id,
+      ],
     );
 
     const success = result.affectedRows === 1;

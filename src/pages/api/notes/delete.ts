@@ -1,9 +1,9 @@
-import { NOTE_CODES } from "@/types/notes";
+import type { ResultSetHeader } from "mysql2";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { NOTE_CAL_CODES } from "@/types/notes";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
-import type { ResultSetHeader } from "mysql2";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,15 +31,15 @@ export default async function handler(
 
     if (success)
       return res.status(200).send({
-        code: NOTE_CODES.DELETE_SUCCESS,
+        code: NOTE_CAL_CODES.DELETE_SUCCESS,
       });
     else
       return res.status(200).send({
-        code: NOTE_CODES.DELETE_FAIL,
+        code: NOTE_CAL_CODES.DELETE_FAIL,
       });
   } catch (_) {
     return res.status(200).send({
-      code: NOTE_CODES.DELETE_FAIL,
+      code: NOTE_CAL_CODES.DELETE_FAIL,
     });
   }
 }

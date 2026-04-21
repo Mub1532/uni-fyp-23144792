@@ -1,4 +1,3 @@
-import { NoteHeaderItemClass } from "@/types/notes";
 import {
   FaBold,
   FaCode,
@@ -11,6 +10,7 @@ import {
   FaQuoteRight,
   FaUnderline,
 } from "react-icons/fa";
+import { NoteHeaderItemClass } from "@/types/notes";
 
 export const noteEditorHeaderItems = [
   new NoteHeaderItemClass({

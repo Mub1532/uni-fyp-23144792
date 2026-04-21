@@ -1,7 +1,7 @@
-import type { userInfo } from "@/types/user";
+import crypto from "node:crypto";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
-import crypto from "node:crypto";
+import type { userInfo } from "@/types/user";
 
 /**
  * Function to verify user properly

@@ -1,9 +1,9 @@
-import { USER_CODES } from "@/types/user";
-import { hashEmailPass } from "@/utils/auth/jwt";
 import Link from "next/link";
 import type { SubmitEvent } from "react";
 import { useState } from "react";
 import { MdEmail, MdLock, MdPerson } from "react-icons/md";
+import { USER_CODES } from "@/types/user";
+import { hashEmailPass } from "@/utils/auth/jwt";
 import { LoginInput } from "./login";
 
 export default function RegisterPage() {

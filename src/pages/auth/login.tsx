@@ -1,11 +1,11 @@
-import { USER_CODES } from "@/types/user";
-import { hashEmailPass } from "@/utils/auth/jwt";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { SubmitEvent } from "react";
 import { useEffect, useState } from "react";
 import { MdEmail, MdLock } from "react-icons/md";
 import { toast } from "react-toastify";
+import { USER_CODES } from "@/types/user";
+import { hashEmailPass } from "@/utils/auth/jwt";
 
 export default function LoginPage() {
   const [currentMessage, setMessage] = useState("");

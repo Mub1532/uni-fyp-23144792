@@ -64,6 +64,10 @@ button.rbc-active {
   @apply bg-blue-300! dark:bg-blue-500!;
 }
 
+.rbc-events-container {
+  @apply mr-0!;
+}
+
 /* Event pill */
 
 .rbc-event-content, .rbc-event-label {
@@ -73,3 +77,4 @@ button.rbc-active {
 .rbc-event {
   @apply hover:opacity-80 transition-opacity! ease-in duration-100;
 }
+

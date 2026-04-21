@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>,
 ) {
-  const { noteID, note } = req.body;
+  const { calendarID } = req.body;
 
   const rawCookie = req.headers.cookie;
   const user = await verifyUser(rawCookie as string);
@@ -23,23 +23,23 @@ export default async function handler(
 
   try {
     const [result] = await connection.query<ResultSetHeader>(
-      "UPDATE notes SET note = ? WHERE id = ? AND user_id = ?",
-      [JSON.stringify(note), noteID, user?.id],
+      "DELETE FROM calendar_items WHERE id = ? AND user_id = ?",
+      [calendarID, user?.id],
     );
 
     const success = result.affectedRows === 1;
 
     if (success)
       return res.status(200).send({
-        code: NOTE_CAL_CODES.SAVE_SUCCESS,
+        code: NOTE_CAL_CODES.DELETE_SUCCESS,
       });
     else
       return res.status(200).send({
-        code: NOTE_CAL_CODES.SAVE_FAIL,
+        code: NOTE_CAL_CODES.DELETE_FAIL,
       });
   } catch (_) {
     return res.status(200).send({
-      code: NOTE_CAL_CODES.SAVE_FAIL,
+      code: NOTE_CAL_CODES.DELETE_FAIL,
     });
   }
 }

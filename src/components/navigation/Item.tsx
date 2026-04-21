@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: needed for nav links */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: needed for nav links */
 
-import type { PageDataProps } from "@/utils/data/pages";
-import { joinClasses } from "@/utils/misc/classes";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { PageDataProps } from "@/utils/data/pages";
+import { joinClasses } from "@/utils/misc/classes";
 import ItemContainer from "../misc/ItemContainer";
 import NavIcon from "./Icon";
 
@@ -32,12 +32,10 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
         href={path}
         passHref
         aria-label={name}
-        className={
-          joinClasses(
-            "flex flex-col md:flex-row items-center sm:gap-2 font-semibold p-2",
-            !showText ? 'justify-center' : ''
-          )
-        }
+        className={joinClasses(
+          "flex flex-col md:flex-row items-center sm:gap-2 font-semibold p-2",
+          !showText ? "justify-center" : "",
+        )}
       >
         {icon && (
           <div className="text-sm">
