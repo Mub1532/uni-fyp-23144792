@@ -13,7 +13,7 @@ export default function useNoteEditor(initialContent?: JSONContent) {
     ],
     content:
       initialContent ??
-      `<h2>Note Title Goes Here</h2><p>Click the text to edit...</p><p>You can format the text how you want, with <strong>bold</strong> <em>italic</em> <u>underlined</u> words....</p><pre><code>print("Or You could have code blocks")</code></pre><p>And more options above</p><p>All the options can be chosen by clicking them above</p>`,
+      `<h2>Note Title Goes Here</h2><p>Click the text to edit...</p><p>You can format the text how you want, with <strong>bold</strong> <em>italic</em> <u>underlined</u> words....</p><pre><code>print("Or You could have code blocks")</code></pre><p>And more options above</p><p>All the options can be chosen by clicking them above</p><p>Keyboard shortcuts also work, such as <strong>Ctrl+S</strong> to save, <strong>Ctrl+A</strong> to select all etc</p>`,
     immediatelyRender: false,
     editorProps: {
       attributes: {
