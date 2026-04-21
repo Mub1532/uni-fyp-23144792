@@ -1,18 +1,33 @@
-import { useRouter } from "next/router";
 import ItemContainer from "@/components/misc/ItemContainer";
+import { USER_CODES } from "@/types/user";
+import { joinClasses } from "@/utils/misc/classes";
+import { useRouter } from "next/router";
 
-export default function LoginButton() {
+type LoginButtonProps = {
+  type?: "login" | "logout";
+  extraClass?: string;
+};
+
+export default function LoginButton({
+  type = "login",
+  extraClass,
+}: LoginButtonProps) {
   const router = useRouter();
 
   return (
     <ItemContainer
       as="button"
-      onClick={() => {
-        router.push("/auth/login");
+      onClick={async () => {
+        if (type === "login") {
+          router.push("/auth/login");
+        } else if (type === "logout") {
+          await fetch("/api/auth/logout");
+          window.location.href = `/auth/login?code=${USER_CODES.LOGGED_OUT}`;
+        }
       }}
-      className="text-sm md:text-lg font-medium px-4"
+      className={joinClasses("text-sm md:text-lg font-medium px-4", extraClass)}
     >
-      Login
+      {type === "logout" ? "Logout" : "Login"}
     </ItemContainer>
   );
 }

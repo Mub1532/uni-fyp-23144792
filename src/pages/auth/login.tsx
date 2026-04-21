@@ -1,11 +1,11 @@
+import { USER_CODES } from "@/types/user";
+import { hashEmailPass } from "@/utils/auth/jwt";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { SubmitEvent } from "react";
 import { useEffect, useState } from "react";
 import { MdEmail, MdLock } from "react-icons/md";
 import { toast } from "react-toastify";
-import { USER_CODES } from "@/types/user";
-import { hashEmailPass } from "@/utils/auth/jwt";
 
 export default function LoginPage() {
   const [currentMessage, setMessage] = useState("");
@@ -15,6 +15,8 @@ export default function LoginPage() {
   useEffect(() => {
     if (Number(router.query.code) === USER_CODES.NOT_LOGGED_IN) {
       toast.warn("Please login or sign up first.");
+    } else if (Number(router.query.code) === USER_CODES.LOGGED_OUT) {
+      toast.info("Successfully Logged out.");
     }
   }, [router.query.code]);
 
