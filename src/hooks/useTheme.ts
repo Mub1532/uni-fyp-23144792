@@ -26,6 +26,7 @@ export function useTheme() {
         toast.info("Change color scheme by clicking the icon in the top right");
       }, 500);
     }
+    localStorage.setItem("theme", isDark ? "dark" : "light");
   }, []);
 
   function toggleTheme() {

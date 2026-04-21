@@ -4,19 +4,24 @@ import { createPool, type Pool } from "mysql2/promise";
  * Function to connect to MySQL Database
  * @returns mysql.Pool
  */
-let connectionPool: Pool;
+declare global {
+  var connectionPool: Pool | undefined;
+}
 
 export async function getDBConnection() {
-  if (!connectionPool) {
-    connectionPool = createPool({
+  if (!global.connectionPool) {
+    global.connectionPool = createPool({
       host: process.env.MYSQL_HOST,
       port: parseInt(process.env.MYSQL_PORT as string, 10),
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
+      connectionLimit: 10,
+      waitForConnections: true,
+      queueLimit: 0,
     });
   }
-  return connectionPool;
+  return global.connectionPool;
 }
 
 /**

@@ -27,9 +27,11 @@ export default async function handler(
     const cryptPass = await bcrypt.hash(hashedPassword, 12);
 
     const [result] = await connection.query<ResultSetHeader>(
-      "UPDATE users SET email = ?, username = ?, password = ?, WHERE id = ?",
-      [hashedEmail, username, cryptPass],
+      "UPDATE users SET email = ?, username = ?, password = ? WHERE id = ?;",
+      [hashedEmail, username, cryptPass, user?.id],
     );
+
+    console;
 
     const success = result.affectedRows === 1;
 
@@ -41,7 +43,8 @@ export default async function handler(
       return res.status(200).send({
         code: USER_CODES.SAVE_FAIL,
       });
-  } catch (_) {
+  } catch (err) {
+    console.log(err);
     return res.status(200).send({
       code: USER_CODES.SAVE_FAIL,
     });

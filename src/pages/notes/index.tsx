@@ -41,7 +41,7 @@ export default function Notes({ notes }: NotesProps) {
               key={item.id}
               noteID={item.id}
               title={title}
-              content={content.repeat(1000)}
+              content={content}
             />
           );
         })}
