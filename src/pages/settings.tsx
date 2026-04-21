@@ -24,9 +24,12 @@ export default function Settings({ user, userCreated }: SettingsProps) {
     setEmail(user?.email);
   }, [user]);
 
-  console.log(email, username);
-
   async function updateUser() {
+    if (!username && !email && password)
+      return toast.warn(
+        "Please change at least 1 setting to update the user info.",
+      );
+
     const responseFetch = await fetch(`/api/auth/update`, {
       method: "POST",
       body: JSON.stringify({
@@ -41,12 +44,15 @@ export default function Settings({ user, userCreated }: SettingsProps) {
 
     const data = await responseFetch.json();
 
-    console.log("date");
-    console.log(data);
-
     switch (data?.code) {
       case USER_CODES.NOT_LOGGED_IN:
         toast.warn("Please login or sign up first.");
+        break;
+      case USER_CODES.USER_EXISTS:
+        toast.warn("User with that email already exists.");
+        break;
+      case USER_CODES.INFO_NOT_ENTERED:
+        toast.warn("Please change at least 1 setting to update the user info.");
         break;
       case USER_CODES.SAVE_FAIL:
         toast.error("Failed to save User.");
@@ -70,7 +76,7 @@ export default function Settings({ user, userCreated }: SettingsProps) {
         </div>
         <div className="flex flex-col gap-1 h-full w-full justify-center">
           <div className="text-xl font-semibold text-blue-500 dark:text-slate-300">
-            {user?.username}
+            {username}
           </div>
           <div className="text-md font-medium text-blue-500 dark:text-slate-300">
             User Since:{" "}
