@@ -56,7 +56,7 @@ type StickyProps = {
   content: string;
 };
 
-function StickyNote({ noteID, title, content }: StickyProps) {
+export function StickyNote({ noteID, title, content }: StickyProps) {
   return (
     <Link
       href={`/notes/${noteID}`}
@@ -111,7 +111,7 @@ export async function getServerSideProps({
   };
 }
 
-function extractNoteInfo(note: JSONContent): {
+export function extractNoteInfo(note: JSONContent): {
   title: string;
   content: string;
 } {
