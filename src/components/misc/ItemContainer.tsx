@@ -1,11 +1,11 @@
+import { hoverClass } from "@/utils/classes";
+import { joinClasses } from "@/utils/misc/classes";
 import type {
   ComponentPropsWithoutRef,
   ElementType,
   ReactNode,
   RefObject,
 } from "react";
-import { hoverClass } from "@/utils/classes";
-import { joinClasses } from "@/utils/misc/classes";
 
 type ItemContainerProps<T extends ElementType> = {
   as?: T;
@@ -27,7 +27,7 @@ function ItemContainer<T extends ElementType = "div">({
 }: ItemContainerProps<T> & { className?: string }) {
   const Component = as || "div";
   const classNameDefault =
-    "h-full px-2 rounded-md transition-all bg-blue-300 dark:bg-slate-600 text-blue-900 dark:text-slate-300";
+    "h-full px-2 rounded-md transition-all! ease-in duration-100 bg-blue-300 dark:bg-slate-600 text-blue-900 dark:text-slate-300";
 
   return (
     <Component

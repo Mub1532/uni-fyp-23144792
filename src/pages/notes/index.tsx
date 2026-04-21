@@ -1,14 +1,14 @@
+import ItemContainer from "@/components/misc/ItemContainer";
+import type { MyPageProps } from "@/types/props";
+import { USER_CODES } from "@/types/user";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 import type { JSONContent } from "@tiptap/react";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiStickyNoteAddLine } from "react-icons/ri";
-import ItemContainer from "@/components/misc/ItemContainer";
-import type { MyPageProps } from "@/types/props";
-import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
 
 interface NotesProps extends MyPageProps {
   notes: (RowDataPacket & { note: JSONContent; id: number })[];
@@ -62,7 +62,7 @@ function StickyNote({ noteID, title, content }: StickyProps) {
       href={`/notes/${noteID}`}
       passHref
       aria-label={noteID as string}
-      className="cursor-pointer hover:opacity-80 transition-opacity! ease-in duration-100 h-full aspect-square w-full dark:bg-blue-600/20 bg-yellow-200 flex flex-col gap-2 dark:text-slate-100 text-slate-700"
+      className="cursor-pointer hover:opacity-80 transition-all! ease-in duration-300 h-full aspect-square w-full dark:bg-blue-600/20 bg-yellow-200 flex flex-col gap-2 dark:text-slate-100 text-slate-700"
     >
       <div className="items-center dark:bg-blue-500/30 bg-yellow-300 p-1 font-semibold h-fit truncate w-full">
         {title}

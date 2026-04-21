@@ -1,7 +1,7 @@
-import { type RefObject, useRef, useState } from "react";
-import { useDebounceCallback, useOnClickOutside } from "usehooks-ts";
 import { hoverClass } from "@/utils/classes";
 import { joinClasses } from "@/utils/misc/classes";
+import { type RefObject, useRef, useState } from "react";
+import { useDebounceCallback, useOnClickOutside } from "usehooks-ts";
 import ItemContainer from "./ItemContainer";
 
 type userContainerProps = {
@@ -51,7 +51,7 @@ export default function UserContainer({ username }: userContainerProps) {
         hoverClassName={false}
         onClick={logoutUser}
         ref={ref}
-        className={`${open ? "opacity-100 cursor-pointer" : "opacity-0"} absolute top-full left-0 -mt-0.5 rounded-b-md border-t-2 border-slate-700 w-full flex rounded-none items-center gap-2 text-sm font-bold dark:hover:bg-slate-700 hover:bg-blue-400 transition-colors! ease-in duration-100`}
+        className={`${open ? "opacity-100 cursor-pointer" : "opacity-0"} absolute top-full left-0 -mt-0.5 rounded-b-md border-t-2 border-slate-700 w-full flex rounded-none items-center gap-2 text-sm font-bold dark:hover:bg-slate-700 hover:bg-blue-400 transition-all! ease-in duration-300`}
       >
         Logout
       </ItemContainer>

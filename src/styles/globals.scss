@@ -9,7 +9,7 @@
 
 
 * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  @apply transition-all! ease-in! duration-300!;
 }
 
 .prose p {
@@ -21,7 +21,7 @@
 }
 
 .prose a {
-  @apply cursor-pointer hover:opacity-60 transition-opacity! ease-in duration-100;
+  @apply cursor-pointer hover:opacity-60 transition-all! ease-in duration-300;
 }
 
 ::-webkit-scrollbar {
@@ -39,19 +39,19 @@
 }
 
 .rbc-calendar * {
-  @apply border-blue-300! dark:border-slate-500! text-blue-900! dark:text-slate-200! transition-all! ease-in duration-100;
+  @apply border-blue-300! dark:border-slate-500! text-blue-900! dark:text-slate-200! transition-all! ease-in duration-300;
 }
 
 .rbc-off-range-bg {
-  @apply bg-slate-300! dark:bg-slate-600! dark:text-blue-400! hover:opacity-80 transition-opacity! ease-in duration-100;
+  @apply bg-slate-300! dark:bg-slate-600! dark:text-blue-400! hover:opacity-80 transition-all! ease-in duration-300;
 }
 
 .rbc-day-bg, .rbc-timeslot-group {
-  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors ease-in duration-100; 
+  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-all ease-in duration-300; 
 }
 
 .rbc-today {
-  @apply dark:bg-slate-600! bg-blue-200 hover:opacity-80 transition-opacity! ease-in duration-100;
+  @apply dark:bg-slate-600! bg-blue-200! hover:opacity-80 transition-all! ease-in duration-300;
 }
 
 /*  buttons calendar */
@@ -75,6 +75,6 @@ button.rbc-active {
 }
 
 .rbc-event {
-  @apply hover:opacity-80 transition-opacity! ease-in duration-100;
+  @apply hover:opacity-80 transition-all! ease-in duration-300;
 }
 
