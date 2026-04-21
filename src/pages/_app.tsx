@@ -2,18 +2,18 @@ import Navigation from "@/components/navigation/index";
 import TopBar from "@/components/navigation/Top";
 import { useUser } from "@/hooks/useUser";
 import "@/styles/globals.scss";
-import { Montserrat } from "next/font/google";
-import { useRouter } from "next/router";
-import Script from "next/script";
-import ProgressBar from "nextjs-progressbar";
-import { useEffect, useState } from "react";
-import { Bounce, ToastContainer } from "react-toastify";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { textColor } from "@/utils/classes";
 import { pages } from "@/utils/data/pages";
 import { capitaliseFirstLetter } from "@/utils/misc/caps";
 import { defaultScrollbar, joinClasses } from "@/utils/misc/classes";
+import { Montserrat } from "next/font/google";
+import { useRouter } from "next/router";
+import Script from "next/script";
+import ProgressBar from "nextjs-progressbar";
+import { useEffect, useState } from "react";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const font = Montserrat({
   subsets: ["latin"],
@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
     if (!router.isReady) return;
     setPageName(
       currentPage?.name ??
-        capitaliseFirstLetter(router.asPath.replace("/", "")),
+      capitaliseFirstLetter(router.asPath.replace("/", "")),
     );
   }, [router.asPath, currentPage, router.isReady]);
 
@@ -63,7 +63,6 @@ export default function App({ Component, pageProps }: MyPageProps) {
           pauseOnHover
           theme="colored"
           transition={Bounce}
-          stacked
         />
         <div className="fixed h-full mb-auto w-full overflow-hidden bg-blue-50 dark:bg-slate-800 dark:text-slate-300 text-blue-500">
           <div className="h-full w-full relative overflow-hidden">
