@@ -1,13 +1,13 @@
+import moment from "moment";
+import type { RowDataPacket } from "mysql2";
+import type { GetServerSidePropsContext } from "next";
+import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 import { toDateTimeLocal } from "@/components/calendar/modal";
 import LoginButton from "@/components/misc/LoginButton";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
-import moment from "moment";
-import type { RowDataPacket } from "mysql2";
-import type { GetServerSidePropsContext } from "next";
-import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 
 interface SettingsProps extends MyPageProps {
   userCreated: string;

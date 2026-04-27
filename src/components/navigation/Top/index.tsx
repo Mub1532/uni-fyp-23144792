@@ -1,8 +1,8 @@
 import LoginButton from "@/components/misc/LoginButton";
 import UserContainer from "@/components/misc/UserContainer";
+import NotifContainer from "@/components/notifs/container";
 import type { userInfo } from "@/types/user";
 import ThemeToggle from "../../misc/themeToggle";
-import NotifContainer from "@/components/notifs/container";
 
 type TopBarProps = {
   pageName?: string;

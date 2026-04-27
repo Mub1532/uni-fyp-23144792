@@ -1,8 +1,8 @@
+import { useRouter } from "next/router";
+import { FaUserCog } from "react-icons/fa";
 import ItemContainer from "@/components/misc/ItemContainer";
 import { USER_CODES } from "@/types/user";
 import { joinClasses } from "@/utils/misc/classes";
-import { useRouter } from "next/router";
-import { FaUserCog } from "react-icons/fa";
 
 type LoginButtonProps = {
   type?: "login" | "logout";

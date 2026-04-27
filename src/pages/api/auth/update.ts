@@ -1,11 +1,11 @@
-import { USER_CODES } from "@/types/user";
-import verifyUser, { hashEmailPass } from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
 import bcrypt from "bcrypt";
 import { serialize } from "cookie";
 import jwt from "jsonwebtoken";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { USER_CODES } from "@/types/user";
+import verifyUser, { hashEmailPass } from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
   req: NextApiRequest,

@@ -1,14 +1,14 @@
-import ItemContainer from "@/components/misc/ItemContainer";
-import type { MyPageProps } from "@/types/props";
-import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
 import type { JSONContent } from "@tiptap/react";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiStickyNoteAddLine } from "react-icons/ri";
+import ItemContainer from "@/components/misc/ItemContainer";
+import type { MyPageProps } from "@/types/props";
+import { USER_CODES } from "@/types/user";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 
 interface NotesProps extends MyPageProps {
   notes: (RowDataPacket & { note: JSONContent; id: number })[];

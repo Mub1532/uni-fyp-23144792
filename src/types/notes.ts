@@ -1,6 +1,6 @@
-import type { formatCommands } from "@/utils/data/notes/commands";
 import type { Editor } from "@tiptap/react";
 import type { IconType } from "react-icons";
+import type { formatCommands } from "@/utils/data/notes/commands";
 
 export interface NoteHeaderItemProps extends NoteHeaderItemPropsPlain {
   editor: Editor;
