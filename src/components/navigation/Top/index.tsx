@@ -2,6 +2,7 @@ import LoginButton from "@/components/misc/LoginButton";
 import UserContainer from "@/components/misc/UserContainer";
 import type { userInfo } from "@/types/user";
 import ThemeToggle from "../../misc/themeToggle";
+import NotifContainer from "@/components/notifs/container";
 
 type TopBarProps = {
   pageName?: string;
@@ -15,12 +16,14 @@ export default function TopBar({ pageName, user }: TopBarProps) {
         {pageName}
       </div>
       <div className="mr-0 w-full h-full flex flex-row-reverse gap-2 items-center">
-        <ThemeToggle />
         {user?.id ? (
           <UserContainer username={user.username} />
         ) : (
-          <LoginButton />
+          <LoginButton extraClass="ml-2" />
         )}
+
+        <ThemeToggle />
+        {user?.id ? <NotifContainer /> : null}
       </div>
     </div>
   );
