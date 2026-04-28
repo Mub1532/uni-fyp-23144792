@@ -1,23 +1,36 @@
 @use 'highlight.js/styles/atom-one-dark';
+
 @use "tailwindcss";
 
 @plugin "@tailwindcss/typography";
+
 @plugin 'tailwind-scrollbar';
 
-
 @custom-variant dark (&:where(.dark, .dark *));
-
 
 * {
   @apply transition-all! ease-in! duration-300!;
 }
 
+.tiptap {
+  h2.is-empty::before,
+  h3.is-empty::before,
+  h4.is-empty::before,
+  hr + p.is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    pointer-events: none;
+
+    @apply text-slate-500! dark:text-slate-300! h-0!;
+  }
+}
+
 .prose p {
-    @apply my-1;
+  @apply my-1;
 }
 
 .prose hr {
-    @apply border-blue-200 border! dark:border-slate-600 my-6!;
+  @apply border-blue-200 border! dark:border-slate-600 my-6!;
 }
 
 .prose h2 + hr {
@@ -29,13 +42,21 @@
 }
 
 ::-webkit-scrollbar {
-    height: 4px;
+  height: 4px;
 }
 
 @keyframes scroll-hint {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(-400px); }
-    100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-400px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .rbc-calendar {
@@ -50,8 +71,9 @@
   @apply bg-slate-300! dark:bg-slate-600! dark:text-blue-400! hover:opacity-80 transition-all! ease-in duration-300;
 }
 
-.rbc-day-bg, .rbc-timeslot-group {
-  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-all ease-in duration-300; 
+.rbc-day-bg,
+.rbc-timeslot-group {
+  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-all ease-in duration-300;
 }
 
 .rbc-today {
@@ -74,11 +96,11 @@ button.rbc-active {
 
 /* Event pill */
 
-.rbc-event-content, .rbc-event-label {
+.rbc-event-content,
+.rbc-event-label {
   @apply text-slate-300!;
 }
 
 .rbc-event {
   @apply hover:opacity-80 transition-all! ease-in duration-300;
 }
-

@@ -1,8 +1,8 @@
 import type { Editor } from "@tiptap/react";
 
 export const formatCommands = {
-  title: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
-  subtitle: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
+  title: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
+  subtitle: (e) => e.chain().focus().toggleHeading({ level: 4 }).run(),
   bold: (e) => e.chain().focus().toggleBold().run(),
   italic: (e) => e.chain().focus().toggleItalic().run(),
   underline: (e) => e.chain().focus().toggleUnderline().run(),
