@@ -1,5 +1,5 @@
-@use "tailwindcss";
 @use 'highlight.js/styles/atom-one-dark';
+@use "tailwindcss";
 
 @plugin "@tailwindcss/typography";
 @plugin 'tailwind-scrollbar';
@@ -17,7 +17,11 @@
 }
 
 .prose hr {
-    @apply border-slate-300 border! dark:border-slate-600 my-8!;
+    @apply border-blue-200 border! dark:border-slate-600 my-6!;
+}
+
+.prose h2 + hr {
+  @apply -mt-3! mb-4! border-2!;
 }
 
 .prose a {
