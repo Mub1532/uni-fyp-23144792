@@ -1,5 +1,6 @@
 import LoginButton from "@/components/misc/LoginButton";
 import UserContainer from "@/components/misc/UserContainer";
+import NotifContainer from "@/components/notifs/container";
 import type { userInfo } from "@/types/user";
 import ThemeToggle from "../../misc/themeToggle";
 
@@ -22,7 +23,7 @@ export default function TopBar({ pageName, user }: TopBarProps) {
         )}
 
         <ThemeToggle />
-        {/* {user?.id ? <NotifContainer /> : null} */}
+        {user?.id ? <NotifContainer /> : null}
       </div>
     </div>
   );
