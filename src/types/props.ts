@@ -7,4 +7,5 @@ export interface MyPageProps extends AppProps {
   loggedIn: boolean;
   googleUser?: string;
   googlePic?: string;
+  useGooglePic: boolean;
 }

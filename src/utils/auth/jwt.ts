@@ -41,7 +41,7 @@ export default async function verifyUser(
 
   if (getGoogle && dbConnection && currentUser?.id) {
     const [rows] = await dbConnection.query<RowDataPacket[]>(
-      "SELECT googleAccessToken, googleRefreshToken, googleName, googlePic FROM users WHERE id = ?",
+      "SELECT googleAccessToken, googleRefreshToken, googleName, googlePic, useGooglePic FROM users WHERE id = ?",
       [currentUser?.id],
     );
 

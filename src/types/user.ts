@@ -10,6 +10,7 @@ export type loginUser = {
   user?: userInfo;
   googleUsername?: string;
   googlePic?: string;
+  useGooglePic?: boolean;
 };
 
 export type userContext = {
@@ -37,4 +38,5 @@ export type GoogleAuthInfo = {
   googleAccessToken: string;
   googleRefreshToken: string;
   googlePic: string;
+  useGooglePic: 0 | 1;
 };

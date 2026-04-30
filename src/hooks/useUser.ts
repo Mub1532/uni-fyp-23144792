@@ -31,5 +31,6 @@ export function useUser() {
     loggedIn: userInfo.loggedIn,
     googleUsername: userInfo.googleUsername,
     googlePic: userInfo.googlePic,
+    useGooglePic: userInfo?.useGooglePic,
   };
 }

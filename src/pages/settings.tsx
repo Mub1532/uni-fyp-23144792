@@ -4,13 +4,13 @@ import type { GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { toDateTimeLocal } from "@/components/calendar/modal";
 import LoginButton from "@/components/misc/LoginButton";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
-import { joinClasses } from "@/utils/misc/classes";
 
 interface SettingsProps extends MyPageProps {
   userCreated: string;
@@ -21,10 +21,12 @@ export default function Settings({
   userCreated,
   googlePic,
   googleUser,
+  useGooglePic,
 }: SettingsProps) {
   const [email, setEmail] = useState<string | undefined>(user?.email);
   const [username, setUsername] = useState<string | undefined>(user?.username);
   const [password, setPassword] = useState<string | undefined>();
+  const [showGooglePic, setShowGooglePic] = useState(useGooglePic);
 
   const router = useRouter();
 
@@ -32,7 +34,8 @@ export default function Settings({
     if (!user) return;
     setUsername(user?.username);
     setEmail(user?.email);
-  }, [user]);
+    setShowGooglePic(useGooglePic);
+  }, [user, useGooglePic]);
 
   async function updateUser() {
     if (!username && !email && password)
@@ -78,7 +81,41 @@ export default function Settings({
 
   const debouncedSave = useDebounceCallback(updateUser, 500);
 
-  const [testToggle, setToggle] = useState(false);
+  const [lastToggledPic, setLastToggledPic] = useState<number | null>(null);
+
+  async function toggleGooglePicPref() {
+    if (lastToggledPic && Date.now() - lastToggledPic < 60000) {
+      toast.warning("Please wait a minute before toggling again.");
+      return;
+    }
+
+    const res = await fetch("/api/google/togglePicPref", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ newValue: !showGooglePic }),
+    });
+
+    const { success, code } = await res.json();
+
+    if (success) {
+      toast.info("Successfully toggled preference.");
+      setShowGooglePic(!showGooglePic);
+      setLastToggledPic(Date.now());
+      return;
+    }
+
+    switch (code) {
+      case USER_CODES.NOT_LOGGED_IN:
+        toast.error("Could not verify login, please refresh.");
+        break;
+      case USER_CODES.SAVE_FAIL:
+        toast.error("Could not toggle, please refresh & try again.");
+        break;
+      default:
+        toast.error("Unknown error, please try again later.");
+        break;
+    }
+  }
 
   const [_googleSync, _setSync] = useState("TODO: ADD THIS");
 
@@ -96,13 +133,20 @@ export default function Settings({
   const debouncedSyncGoogle = useDebounceCallback(syncGoogle, 500);
 
   return (
-    <div className="h-full w-full flex md:flex-row gap-2 px-1 md:px-4 flex-col overflow-x-auto overflow-y-hidden">
+    <div className="h-full w-full flex md:flex-row gap-6 px-1 md:px-4 flex-col overflow-x-auto overflow-y-hidden">
       {/* first section, user settings etc */}
       <div className="h-fit! w-full lg:mr-12">
         <div className="flex gap-2 h-fit w-full text-slate-200">
-          <div className="rounded-md bg-blue-500 aspect-square w-24 flex items-center justify-center text-6xl font-bold">
-            {user?.username[0].toUpperCase().trimEnd()}
-          </div>
+          {useGooglePic && googlePic ? (
+            <GooglePic
+              pic={googlePic}
+              size="w-24 border-4 rounded-md! border-blue-500"
+            />
+          ) : (
+            <div className="rounded-md bg-blue-500 aspect-square w-24 flex items-center justify-center text-6xl font-bold">
+              {user?.username[0].toUpperCase().trimEnd()}
+            </div>
+          )}
           <div className="flex flex-col gap-1 h-full w-full justify-center">
             <div className="text-xl font-semibold text-blue-500 dark:text-slate-300">
               {username}
@@ -149,11 +193,11 @@ export default function Settings({
               className="w-fit h-full p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-lg rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
             >
               <FaSave className="text-2xl text-slate-100!" />
-              <div>Save Account Settings</div>
+              <div className="text-sm md:text-lg">Save Account Settings</div>
             </button>
             <LoginButton
               type="logout"
-              extraClass="p-2 w-fit text-xl!"
+              extraClass="p-2 w-fit text-sm! md:text-lg!"
               extraIconClass="text-2xl dark:text-slate-300 text-slate-100"
             />
           </div>
@@ -166,22 +210,10 @@ export default function Settings({
           <div className="text-lg font-bold text-blue-400 ">
             Reminders & Notification Settings
           </div>
-          <div className="h-fit w-full gap-2 flex">
+          {/* <div className="h-fit w-full gap-2 flex">
             <div>test toggle</div>
-            <button
-              onClick={() => setToggle(!testToggle)}
-              title="Toggle Theme"
-              className="w-12 h-6 rounded-full p-1 bg-slate-400 dark:bg-slate-500 relative transition-colors duration-300 ease-in cursor-pointer"
-            >
-              <div
-                id="toggle"
-                className={joinClasses(
-                  "rounded-full w-4 h-4 bg-blue-600 dark:bg-blue-300 relative pointer-events-none transition-all duration-300 ease-out",
-                  testToggle ? "ml-6" : "ml-0! mr-auto!",
-                )}
-              />
-            </button>
-          </div>
+            <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
+          </div> */}
         </div>
 
         <div className="mt-2 flex flex-col gap-2">
@@ -189,10 +221,10 @@ export default function Settings({
             Calendar Sync Settings
           </div>
           {googleUser && (
-            <div className="">
+            <>
               <div>Currently Signed in as: </div>
               <div className="flex h-fit w-full gap-2 items-center">
-                <div className="relative aspect-square w-14!">
+                <div className="relative aspect-square w-20!">
                   <Image
                     src={googlePic ?? ""}
                     alt="Google Profile Pic"
@@ -200,15 +232,17 @@ export default function Settings({
                     className="rounded-md border-3 border-blue-500"
                   />
                 </div>
-                <span className="font-bold">{googleUser}</span>
+                <div>
+                  <span className="font-bold">{googleUser}</span>
+                  <div className="font-medium">
+                    Auto Syncs every 24h
+                    <br />
+                    <span className="font-bold">Calendar Last Synced:</span> 23
+                    April 15:35pm
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
-          {googleUser && (
-            <div className="font-medium">
-              {" "}
-              Last Synced: 23 April 15:35pm - Auto Syncs every 24h
-            </div>
+            </>
           )}
           <button
             onClick={debouncedSyncGoogle}
@@ -216,8 +250,12 @@ export default function Settings({
             className="w-fit h-fit p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-md rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
           >
             <FaGoogle className="text-2xl text-slate-100!" />
-            <div>{googleUser ? "Manually Sync" : "Login to Sync"}</div>
+            <div>{googleUser ? "Manual Sync" : "Login to Sync"}</div>
           </button>
+          <div className="w-fit max-w-full flex items-center h-fit">
+            <div className="mr-2">Use Google PFP as Profile Pic:</div>
+            <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
+          </div>
         </div>
 
         <div className="text-lg font-bold text-blue-400 mt-2">AI Settings</div>
@@ -259,8 +297,9 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 import type { IconType } from "react-icons";
 import { FaGoogle, FaLock, FaSave, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { toast } from "react-toastify";
 import { useDebounceCallback } from "usehooks-ts";
+import GooglePic from "@/components/misc/GooglePic";
+import Toggle from "@/components/misc/Toggle";
 
 interface FormInputProps {
   title: string;

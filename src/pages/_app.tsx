@@ -20,7 +20,8 @@ const font = Montserrat({
 });
 
 export default function App({ Component, pageProps }: MyPageProps) {
-  const { user, loading, loggedIn, googleUsername, googlePic } = useUser();
+  const { user, loading, loggedIn, googleUsername, googlePic, useGooglePic } =
+    useUser();
 
   const router = useRouter();
   const currentPage = pages.find(
@@ -69,7 +70,12 @@ export default function App({ Component, pageProps }: MyPageProps) {
             <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
               <Navigation loggedIn={loggedIn} />
               <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
-                <TopBar pageName={pageName} user={user} />
+                <TopBar
+                  pageName={pageName}
+                  user={user}
+                  useGooglePic={useGooglePic}
+                  googlePic={googlePic}
+                />
                 <div
                   className={joinClasses(
                     "p-4 px-1 md:px-2 h-full w-full overflow-x-hidden overflow-y-auto",
@@ -84,6 +90,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
                     userLoading={loading}
                     googleUser={googleUsername}
                     googlePic={googlePic}
+                    useGooglePic={useGooglePic}
                   />
                 </div>
               </div>
