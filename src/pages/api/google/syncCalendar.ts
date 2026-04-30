@@ -32,11 +32,11 @@ export default async function handler(
   const connection = await getDBConnection();
 
   const [rows] = await connection.query<RowDataPacket[]>(
-    "SELECT google_last_synced FROM users WHERE id = ?",
+    "SELECT googleLastSync FROM users WHERE id = ?",
     [currentUser.id],
   );
 
-  const lastSynced = rows[0]?.google_last_synced;
+  const lastSynced = rows[0]?.googleLastSync;
 
   const shouldSync =
     !lastSynced ||
@@ -86,7 +86,7 @@ export default async function handler(
   const amountUpdated = result.affectedRows;
 
   const [userResult] = await connection.query<ResultSetHeader>(
-    "UPDATE users SET google_last_synced = ? WHERE id = ?;",
+    "UPDATE users SET googleLastSync = ? WHERE id = ?;",
     [new Date(), currentUser.id],
   );
 

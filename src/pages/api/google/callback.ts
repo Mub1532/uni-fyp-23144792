@@ -41,7 +41,7 @@ export default async function handler(
   const connection = await getDBConnection();
 
   const [result] = await connection.query<ResultSetHeader>(
-    "UPDATE users SET google_access_token = ?, google_refresh_token = ?, google_name = ?, google_pic = ? WHERE id = ?",
+    "UPDATE users SET googleAccessToken = ?, googleRefreshToken = ?, googleName = ?, googlePic = ? WHERE id = ?",
     [
       tokens.access_token,
       tokens.refresh_token,

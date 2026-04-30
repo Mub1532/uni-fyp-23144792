@@ -249,7 +249,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const rawCookie = req.headers.cookie;
   const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (currentUser?.id) {
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
