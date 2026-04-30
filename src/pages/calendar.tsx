@@ -1,5 +1,10 @@
 "use client";
 
+import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
+import { NOTE_CAL_CODES } from "@/types/notes";
+import { USER_CODES } from "@/types/user";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
@@ -11,13 +16,10 @@ import {
   type View,
 } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
-import { NOTE_CAL_CODES } from "@/types/notes";
-import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { FaGoogle } from "react-icons/fa";
+import { FaUserPen } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(Calendar);
@@ -36,12 +38,12 @@ type props = {
   calendar?: string;
 };
 
-type CalendarItem = {
+type CalendarItemRaw = {
   id: string;
   user_id: number;
   date: string;
   type: string;
-  imported_type: any;
+  imported_type: "GOOGLE";
   title: string;
   description: string;
   start_time: string;
@@ -52,7 +54,7 @@ type CalendarItem = {
 
 export default function TestPage({ calendar }: props) {
   const calendarItems = calendar
-    ? (JSON.parse(calendar) as CalendarItem[])
+    ? (JSON.parse(calendar) as CalendarItemRaw[])
     : [];
 
   const mappedCalendar = calendarItems.map((x) => ({
@@ -61,6 +63,7 @@ export default function TestPage({ calendar }: props) {
     start: new Date(x.start_time),
     end: new Date(x.end_time),
     description: x.description,
+    imported_type: x.imported_type,
   }));
 
   const [view, setView] = useState<View>("month");
@@ -202,6 +205,24 @@ export default function TestPage({ calendar }: props) {
           )
         }
         resizable
+        components={{
+          event: ({ event }) => (
+            <span className="flex items-center gap-1 text-md h-fit! w-full overflow-hidden gap-1 text-white!">
+              {event.imported_type === "GOOGLE" ? (
+                <FaGoogle className="text-xl text-white!" />
+              ) : (
+                <FaUserPen className="text-xl" />
+              )}
+              <div>{event.title}</div>
+            </span>
+          ),
+        }}
+        eventPropGetter={(event) => ({
+          className:
+            event.imported_type === "GOOGLE"
+              ? "!bg-[#4285F4]/60 dark:!bg-[#4285F4]/50"
+              : "!bg-sky-500/60 dark:!bg-sky-500/80",
+        })}
       />
       <EventModal
         open={modal.open}

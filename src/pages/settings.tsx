@@ -1,7 +1,3 @@
-import moment from "moment";
-import type { RowDataPacket } from "mysql2";
-import type { GetServerSidePropsContext } from "next";
-import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 import { toDateTimeLocal } from "@/components/calendar/modal";
 import LoginButton from "@/components/misc/LoginButton";
 import type { MyPageProps } from "@/types/props";
@@ -9,6 +5,12 @@ import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 import { joinClasses } from "@/utils/misc/classes";
+import moment from "moment";
+import type { RowDataPacket } from "mysql2";
+import type { GetServerSidePropsContext } from "next";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 
 interface SettingsProps extends MyPageProps {
   userCreated: string;
@@ -23,6 +25,8 @@ export default function Settings({
   const [email, setEmail] = useState<string | undefined>(user?.email);
   const [username, setUsername] = useState<string | undefined>(user?.username);
   const [password, setPassword] = useState<string | undefined>();
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
@@ -75,6 +79,21 @@ export default function Settings({
   const debouncedSave = useDebounceCallback(updateUser, 500);
 
   const [testToggle, setToggle] = useState(false);
+
+  const [googleSync, setSync] = useState("TODO: ADD THIS");
+
+  async function syncGoogle() {
+    if (!googleUser) {
+      router.push("/api/google/auth");
+    } else {
+      const res = await fetch("/api/google/syncCalendar?isManual=true");
+      const data = await res.json();
+
+      console.log(data);
+    }
+  }
+
+  const debouncedSyncGoogle = useDebounceCallback(syncGoogle, 500);
 
   return (
     <div className="h-full w-full flex md:flex-row gap-2 px-1 md:px-4 flex-col overflow-x-auto overflow-y-hidden">
@@ -165,10 +184,38 @@ export default function Settings({
           </div>
         </div>
 
-        <div className="text-lg font-bold text-blue-400 mt-2">
-          Sync Settings
-          {googleUser}
-          {googlePic}
+        <div className="mt-2 flex flex-col gap-2">
+          <div className="text-lg font-bold text-blue-400">Sync Settings</div>
+          {googleUser && (
+            <div className="">
+              <div>Currently Signed in as: </div>
+              <div className="flex h-fit w-full gap-2 items-center">
+                <div className="relative aspect-square w-14!">
+                  <Image
+                    src={googlePic ?? ""}
+                    alt="Google Profile Pic"
+                    fill
+                    className="rounded-md border-3 border-blue-500"
+                  />
+                </div>
+                <span className="font-bold">{googleUser}</span>
+              </div>
+            </div>
+          )}
+          {googleUser && (
+            <div className="font-medium">
+              {" "}
+              Last Synced: 23 April 15:35pm - Auto Syncs every 24h
+            </div>
+          )}
+          <button
+            onClick={debouncedSyncGoogle}
+            type="button"
+            className="w-fit h-fit p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-md rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
+          >
+            <FaGoogle className="text-2xl text-slate-100!" />
+            <div>{googleUser && "Manually"} Sync With Google Calendar</div>
+          </button>
         </div>
 
         <div className="text-lg font-bold text-blue-400 mt-2">AI Settings</div>
@@ -208,7 +255,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 }
 
 import type { IconType } from "react-icons";
-import { FaLock, FaSave, FaUser } from "react-icons/fa";
+import { FaGoogle, FaLock, FaSave, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useDebounceCallback } from "usehooks-ts";

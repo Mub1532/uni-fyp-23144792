@@ -39,7 +39,7 @@ export function insertHelper(
   const values = Object.values(data);
   const valuesAmount = values.map(() => "?").join(",");
 
-  const sql = `INSERT INTO ${tableName} (${names.join(`,`)}) VALUES (${valuesAmount}) ${extra};`;
+  const sql = `INSERT INTO ${tableName} (${names.join(`,`)}) VALUES (${valuesAmount}) ${extra ?? ``};`;
 
   return {
     sql,
@@ -65,7 +65,7 @@ export function insertHelperBulk(
     .join(", ");
   const values = data.flatMap((row) => Object.values(row));
 
-  const sql = `INSERT ${ignoreDuplicates ? `IGNORE` : ``} INTO ${tableName} (${names.join(",")}) VALUES ${placeholders} ${extra ?? ""};`;
+  const sql = `INSERT ${ignoreDuplicates ? `IGNORE` : ``} INTO ${tableName} (${names.join(",")}) VALUES ${placeholders} ${extra ?? ``};`;
 
   return { sql, values };
 }

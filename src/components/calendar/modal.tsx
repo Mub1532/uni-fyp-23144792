@@ -8,6 +8,8 @@ export interface CalendarEvent {
   start: Date;
   end: Date;
   description?: string;
+  type?: 'IMPORTED' | 'AI' | 'MANUAL';
+  imported_type?: 'GOOGLE';
 }
 
 interface EventModalProps {

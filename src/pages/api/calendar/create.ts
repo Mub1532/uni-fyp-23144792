@@ -1,9 +1,9 @@
-import type { ResultSetHeader } from "mysql2";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NOTE_CAL_CODES } from "@/types/notes";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection, insertHelper } from "@/utils/database";
+import type { ResultSetHeader } from "mysql2";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,6 +33,8 @@ export default async function handler(
 
     const [result] = await connection.query<ResultSetHeader>(sql, values);
 
+    console.log(result);
+
     const success = result.affectedRows === 1;
 
     if (success) {
@@ -46,7 +48,8 @@ export default async function handler(
       return res.status(200).send({
         code: NOTE_CAL_CODES.SAVE_FAIL,
       });
-  } catch (_) {
+  } catch (err) {
+    console.log(err);
     return res.status(200).send({
       code: NOTE_CAL_CODES.SAVE_FAIL,
     });

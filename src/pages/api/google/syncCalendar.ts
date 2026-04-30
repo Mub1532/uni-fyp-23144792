@@ -1,8 +1,8 @@
+import verifyUser, { verifyGoogleAuth } from "@/utils/auth/jwt";
+import { getDBConnection, insertHelperBulk } from "@/utils/database";
 import { google } from "googleapis";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
-import verifyUser, { verifyGoogleAuth } from "@/utils/auth/jwt";
-import { getDBConnection, insertHelperBulk } from "@/utils/database";
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -60,7 +60,7 @@ export default async function handler(
 
   const formattedEvents = data.items?.map((x) => ({
     user_id: payloadUser?.id,
-    title: "Google: " + (x.summary ?? "No Title"),
+    title: x.summary ?? "No Title",
     description: x?.description?.startsWith(
       "Changes made to the title, description, or attachments will not be saved. To make edits, please go to:",
     )
