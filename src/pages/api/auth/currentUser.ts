@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import verifyUser from "@/utils/auth/jwt";
+import verifyUser, { verifyGoogleAuth } from "@/utils/auth/jwt";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,5 +13,12 @@ export default async function handler(
 
   if (!payload) return res.status(401).json({ loggedIn: false });
 
-  res.status(200).json({ loggedIn: true, user: payload });
+  const payloadGoogle = await verifyGoogleAuth(payload.id);
+
+  res.status(200).json({
+    loggedIn: true,
+    user: payload,
+    googleUsername: payloadGoogle?.googleName,
+    googlePic: payloadGoogle?.googlePic,
+  });
 }

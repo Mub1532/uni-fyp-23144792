@@ -8,6 +8,8 @@ export type userInfo = {
 export type loginUser = {
   loggedIn: boolean;
   user?: userInfo;
+  googleUsername?: string;
+  googlePic?: string;
 };
 
 export type userContext = {
@@ -27,4 +29,12 @@ export enum USER_CODES {
   NOT_LOGGED_IN,
   SAVE_SUCCESS,
   SAVE_FAIL,
+  GOOGLE_INFO_NOT_GRANTED,
 }
+
+export type GoogleAuthInfo = {
+  googleName: string;
+  googleAccessToken: string;
+  googleRefreshToken: string;
+  googlePic: string;
+};

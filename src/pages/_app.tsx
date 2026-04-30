@@ -20,7 +20,7 @@ const font = Montserrat({
 });
 
 export default function App({ Component, pageProps }: MyPageProps) {
-  const { user, loading, loggedIn } = useUser();
+  const { user, loading, loggedIn, googleUsername, googlePic } = useUser();
 
   const router = useRouter();
   const currentPage = pages.find(
@@ -78,7 +78,13 @@ export default function App({ Component, pageProps }: MyPageProps) {
                   )}
                 >
                   <ProgressBar color="#3b82f6" />
-                  <Component {...pageProps} user={user} userLoading={loading} />
+                  <Component
+                    {...pageProps}
+                    user={user}
+                    userLoading={loading}
+                    googleUser={googleUsername}
+                    googlePic={googlePic}
+                  />
                 </div>
               </div>
             </div>

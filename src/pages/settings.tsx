@@ -1,3 +1,7 @@
+import moment from "moment";
+import type { RowDataPacket } from "mysql2";
+import type { GetServerSidePropsContext } from "next";
+import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 import { toDateTimeLocal } from "@/components/calendar/modal";
 import LoginButton from "@/components/misc/LoginButton";
 import type { MyPageProps } from "@/types/props";
@@ -5,16 +9,17 @@ import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 import { joinClasses } from "@/utils/misc/classes";
-import moment from "moment";
-import type { RowDataPacket } from "mysql2";
-import type { GetServerSidePropsContext } from "next";
-import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 
 interface SettingsProps extends MyPageProps {
   userCreated: string;
 }
 
-export default function Settings({ user, userCreated }: SettingsProps) {
+export default function Settings({
+  user,
+  userCreated,
+  googlePic,
+  googleUser,
+}: SettingsProps) {
   const [email, setEmail] = useState<string | undefined>(user?.email);
   const [username, setUsername] = useState<string | undefined>(user?.username);
   const [password, setPassword] = useState<string | undefined>();
@@ -162,6 +167,8 @@ export default function Settings({ user, userCreated }: SettingsProps) {
 
         <div className="text-lg font-bold text-blue-400 mt-2">
           Sync Settings
+          {googleUser}
+          {googlePic}
         </div>
 
         <div className="text-lg font-bold text-blue-400 mt-2">AI Settings</div>

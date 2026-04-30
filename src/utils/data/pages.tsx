@@ -81,4 +81,18 @@ export const pages = [
     hidden: true,
     needAuth: false,
   }),
+  new Page({
+    name: "Privacy Policy",
+    path: "/privacy",
+    icon: FaCog,
+    hidden: true,
+    needAuth: false,
+  }),
+  new Page({
+    name: "Terms Of Service",
+    path: "/tos",
+    icon: FaCog,
+    hidden: true,
+    needAuth: false,
+  }),
 ];

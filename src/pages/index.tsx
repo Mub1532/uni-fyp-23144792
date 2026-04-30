@@ -1,8 +1,3 @@
-import type { CalendarEvent } from "@/components/calendar/modal";
-import type { MyPageProps } from "@/types/props";
-import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
 import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
@@ -10,6 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaClock, FaStickyNote } from "react-icons/fa";
 import { TypeAnimation } from "react-type-animation";
+import type { CalendarEvent } from "@/components/calendar/modal";
+import type { MyPageProps } from "@/types/props";
+import { USER_CODES } from "@/types/user";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 import { extractNoteInfo, StickyNote } from "./notes";
 
 interface HomeProps extends MyPageProps {
@@ -80,13 +80,13 @@ export default function index({ user, notes, calendar }: HomeProps) {
 
             <p className="text-sm font-semibold leading-relaxed">
               <span className="block">
-                Calendar: {" "}
+                Calendar:{" "}
                 {todayEvents.length === 0
                   ? "nothing on today"
                   : `${todayEvents.length} event${todayEvents.length !== 1 ? "s" : ""} lined up${upcomingEvents.length > 0 ? `, ${upcomingEvents.length} more coming` : ""}`}
               </span>
               <span className="block">
-                Notes: {" "}
+                Notes:{" "}
                 {notes.length === 0
                   ? "nothing recent"
                   : `${notes.length} note${notes.length !== 1 ? "s" : ""} to catch up on`}
@@ -167,7 +167,10 @@ export default function index({ user, notes, calendar }: HomeProps) {
                   <Link href="/calendar" key={e.id}>
                     <div className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer">
                       <div className="flex gap-2 items-center">
-                        <span className="text-xs text-slate-400 w-16 shrink-0">
+                        <span
+                          suppressHydrationWarning
+                          className="text-xs text-slate-400 w-16 shrink-0"
+                        >
                           {moment(e.start).format("DD MMM")}
                         </span>
                         <span className="text-sm truncate">{e.title}</span>
@@ -190,7 +193,7 @@ export default function index({ user, notes, calendar }: HomeProps) {
                 <Link href="/calendar" key={e.id}>
                   <div className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer">
                     <div className="flex gap-2 items-center">
-                      <span className="text-xs w-fit">
+                      <span suppressHydrationWarning className="text-xs w-fit">
                         {moment(e.start).format("HH:mm")}
                       </span>
                       <span className="text-sm truncate">{e.title}</span>

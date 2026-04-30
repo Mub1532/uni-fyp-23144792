@@ -30,15 +30,42 @@ export async function getDBConnection() {
  * @param data
  * @returns
  */
-export function insertHelper(tableName: string, data: Record<string, unknown>) {
+export function insertHelper(
+  tableName: string,
+  data: Record<string, unknown>,
+  extra?: string,
+) {
   const names = Object.keys(data);
   const values = Object.values(data);
   const valuesAmount = values.map(() => "?").join(",");
 
-  const sql = `INSERT INTO ${tableName} (${names.join(`,`)}) VALUES (${valuesAmount});`;
+  const sql = `INSERT INTO ${tableName} (${names.join(`,`)}) VALUES (${valuesAmount}) ${extra};`;
 
   return {
     sql,
     values,
   };
+}
+
+/**
+ * Helper function to insert stuff into database in bulk
+ * @param tableName
+ * @param data
+ * @returns
+ */
+export function insertHelperBulk(
+  tableName: string,
+  data: Record<string, unknown>[],
+  extra?: string,
+  ignoreDuplicates?: boolean,
+) {
+  const names = Object.keys(data[0]);
+  const placeholders = data
+    .map(() => `(${names.map(() => "?").join(",")})`)
+    .join(", ");
+  const values = data.flatMap((row) => Object.values(row));
+
+  const sql = `INSERT ${ignoreDuplicates ? `IGNORE` : ``} INTO ${tableName} (${names.join(",")}) VALUES ${placeholders} ${extra ?? ""};`;
+
+  return { sql, values };
 }

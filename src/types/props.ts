@@ -5,4 +5,6 @@ export interface MyPageProps extends AppProps {
   user: userInfo;
   authLoading: boolean;
   loggedIn: boolean;
+  googleUser?: string;
+  googlePic?: string;
 }
