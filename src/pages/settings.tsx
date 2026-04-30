@@ -185,7 +185,9 @@ export default function Settings({
         </div>
 
         <div className="mt-2 flex flex-col gap-2">
-          <div className="text-lg font-bold text-blue-400">Sync Settings</div>
+          <div className="text-lg font-bold text-blue-400">
+            Calendar Sync Settings
+          </div>
           {googleUser && (
             <div className="">
               <div>Currently Signed in as: </div>
@@ -214,7 +216,7 @@ export default function Settings({
             className="w-fit h-fit p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-md rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
           >
             <FaGoogle className="text-2xl text-slate-100!" />
-            <div>{googleUser && "Manually"} Sync With Google Calendar</div>
+            <div>{googleUser ? "Manually Sync" : 'Login to Sync'}</div>
           </button>
         </div>
 
