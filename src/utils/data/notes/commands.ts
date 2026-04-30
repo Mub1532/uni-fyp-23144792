@@ -15,7 +15,7 @@ export const formatCommands = {
   link: (e) => {
     const selectedText = window.getSelection()?.toString() ?? "";
     const existingHref = e.getAttributes("link").href;
-    const url = prompt("URL", existingHref || selectedText);
+    const url = prompt("Type the url", existingHref || selectedText);
     if (url === null) return;
     if (url === "") {
       e.chain().focus().unsetLink().run();
@@ -26,4 +26,4 @@ export const formatCommands = {
       .setLink({ href: url, title: url ?? "Url Goes Here" })
       .run();
   },
-} satisfies Record<string, (editor: Editor, ...params: any) => void>;
+} satisfies Record<string, (editor: Editor) => unknown>;

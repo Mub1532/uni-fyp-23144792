@@ -1,8 +1,4 @@
-import type { CalendarEvent } from "@/components/calendar/modal";
-import type { MyPageProps } from "@/types/props";
-import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
+import type { JSONContent } from "@tiptap/react";
 import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
@@ -11,10 +7,15 @@ import { useState } from "react";
 import { FaClock, FaGoogle, FaStickyNote } from "react-icons/fa";
 import { FaUserPen } from "react-icons/fa6";
 import { TypeAnimation } from "react-type-animation";
+import type { CalendarEvent } from "@/components/calendar/modal";
+import type { MyPageProps } from "@/types/props";
+import { USER_CODES } from "@/types/user";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 import { extractNoteInfo, StickyNote } from "./notes";
 
 interface HomeProps extends MyPageProps {
-  notes: { id: string; note: any }[];
+  notes: { id: string; note: JSONContent }[];
   calendar: string;
 }
 
@@ -246,9 +247,9 @@ export default function index({ user, notes, calendar }: HomeProps) {
 
 export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user || !user?.id) {
+  if (currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -261,17 +262,17 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 
   const [notes] = await connection.query<RowDataPacket[]>(
     "SELECT note, id FROM notes WHERE user_id = ? ORDER BY id DESC LIMIT 5;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   const [calendar] = await connection.query<RowDataPacket[]>(
     "SELECT *, CAST(start_time AS DATETIME) as start_time, CAST(end_time AS DATETIME) as end_time FROM calendar_items WHERE user_id = ? ORDER BY start_time ASC;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   return {
     props: {
-      user,
+      user: currentUser,
       notes: notes ?? [],
       calendar: JSON.stringify(calendar ?? []),
     },

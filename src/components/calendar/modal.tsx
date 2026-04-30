@@ -8,8 +8,8 @@ export interface CalendarEvent {
   start: Date;
   end: Date;
   description?: string;
-  type?: 'IMPORTED' | 'AI' | 'MANUAL';
-  imported_type?: 'GOOGLE';
+  type?: "IMPORTED" | "AI" | "MANUAL";
+  imported_type?: "GOOGLE";
 }
 
 interface EventModalProps {
@@ -49,7 +49,7 @@ export default function EventModal({
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-200 ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
     >
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <button className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
           <h2 className="text-base font-medium text-gray-900 dark:text-gray-100">
@@ -69,7 +69,6 @@ export default function EventModal({
               Title *
             </label>
             <input
-              autoFocus
               type="text"
               value={event.title ?? ""}
               onChange={(e) => onChange({ title: e.target.value })}

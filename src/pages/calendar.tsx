@@ -1,10 +1,5 @@
 "use client";
 
-import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
-import { NOTE_CAL_CODES } from "@/types/notes";
-import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
-import { getDBConnection } from "@/utils/database";
 import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
@@ -16,6 +11,11 @@ import {
   type View,
 } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
+import { NOTE_CAL_CODES } from "@/types/notes";
+import { USER_CODES } from "@/types/user";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { FaGoogle } from "react-icons/fa";
@@ -239,9 +239,9 @@ export default function TestPage({ calendar }: props) {
 
 export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user || !user?.id) {
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -254,7 +254,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 
   const [rows] = await connection.query<RowDataPacket[]>(
     "SELECT *, CAST(start_time AS DATETIME) as start_time, CAST(end_time AS DATETIME) as end_time FROM calendar_items WHERE user_id = ?;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   if (rows)

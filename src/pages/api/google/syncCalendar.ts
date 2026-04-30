@@ -1,8 +1,8 @@
-import verifyUser, { verifyGoogleAuth } from "@/utils/auth/jwt";
-import { getDBConnection, insertHelperBulk } from "@/utils/database";
 import { google } from "googleapis";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
+import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection, insertHelperBulk } from "@/utils/database";
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -19,22 +19,21 @@ export default async function handler(
 
   if (!rawCookie) return res.status(401).json({ loggedIn: false });
 
-  const payloadUser = await verifyUser(rawCookie);
-  const payloadGoogle = await verifyGoogleAuth(payloadUser?.id);
+  const { currentUser, googleUser } = await verifyUser(rawCookie);
 
-  if (!payloadGoogle || !payloadUser)
+  if (!currentUser || !googleUser)
     return res.status(401).json({ loggedIn: false });
 
   oauth2Client.setCredentials({
-    access_token: payloadGoogle.googleAccessToken,
-    refresh_token: payloadGoogle.googleRefreshToken,
+    access_token: googleUser.googleAccessToken,
+    refresh_token: googleUser.googleRefreshToken,
   });
 
   const connection = await getDBConnection();
 
   const [rows] = await connection.query<RowDataPacket[]>(
     "SELECT google_last_synced FROM users WHERE id = ?",
-    [payloadUser.id],
+    [currentUser.id],
   );
 
   const lastSynced = rows[0]?.google_last_synced;
@@ -59,7 +58,7 @@ export default async function handler(
   });
 
   const formattedEvents = data.items?.map((x) => ({
-    user_id: payloadUser?.id,
+    user_id: currentUser?.id,
     title: x.summary ?? "No Title",
     description: x?.description?.startsWith(
       "Changes made to the title, description, or attachments will not be saved. To make edits, please go to:",
@@ -88,7 +87,7 @@ export default async function handler(
 
   const [userResult] = await connection.query<ResultSetHeader>(
     "UPDATE users SET google_last_synced = ? WHERE id = ?;",
-    [new Date(), payloadUser.id],
+    [new Date(), currentUser.id],
   );
 
   const success = userResult.affectedRows === 1;

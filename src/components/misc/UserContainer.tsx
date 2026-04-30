@@ -11,7 +11,7 @@ type userContainerProps = {
 export default function UserContainer({ username }: userContainerProps) {
   const [open, setOpenPlain] = useState(false);
   const setOpen = useDebounceCallback(setOpenPlain, 100);
-  const ref = useRef<HTMLElement>(null) as RefObject<HTMLElement>;
+  const ref = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
 
   async function logoutUser() {
     if (!open) return;

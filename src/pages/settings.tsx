@@ -1,3 +1,9 @@
+import moment from "moment";
+import type { RowDataPacket } from "mysql2";
+import type { GetServerSidePropsContext } from "next";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 import { toDateTimeLocal } from "@/components/calendar/modal";
 import LoginButton from "@/components/misc/LoginButton";
 import type { MyPageProps } from "@/types/props";
@@ -5,12 +11,6 @@ import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 import { joinClasses } from "@/utils/misc/classes";
-import moment from "moment";
-import type { RowDataPacket } from "mysql2";
-import type { GetServerSidePropsContext } from "next";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 
 interface SettingsProps extends MyPageProps {
   userCreated: string;
@@ -80,7 +80,7 @@ export default function Settings({
 
   const [testToggle, setToggle] = useState(false);
 
-  const [googleSync, setSync] = useState("TODO: ADD THIS");
+  const [_googleSync, _setSync] = useState("TODO: ADD THIS");
 
   async function syncGoogle() {
     if (!googleUser) {
@@ -216,7 +216,7 @@ export default function Settings({
             className="w-fit h-fit p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-md rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
           >
             <FaGoogle className="text-2xl text-slate-100!" />
-            <div>{googleUser ? "Manually Sync" : 'Login to Sync'}</div>
+            <div>{googleUser ? "Manually Sync" : "Login to Sync"}</div>
           </button>
         </div>
 
@@ -228,9 +228,9 @@ export default function Settings({
 
 export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user || !user?.id) {
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -243,7 +243,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 
   const [[rows]] = await connection.query<RowDataPacket[]>(
     "SELECT created_at from users WHERE id = ?;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   if (rows?.created_at)

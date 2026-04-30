@@ -166,9 +166,9 @@ export async function getServerSideProps({
 }: GetServerSidePropsContext) {
   const { id } = params as { id: string };
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user || !user?.id) {
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -198,7 +198,7 @@ export async function getServerSideProps({
 
   const [[rows]] = await connection.query<RowDataPacket[]>(
     "SELECT note from notes WHERE id = ? AND user_id = ?;",
-    [id, user?.id],
+    [id, currentUser?.id],
   );
 
   if (!rows) {

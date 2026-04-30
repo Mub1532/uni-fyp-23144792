@@ -9,14 +9,14 @@ import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any>,
+  res: NextApiResponse<unknown>,
 ) {
   const { email, username, password } = req.body;
 
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user)
+  if (!currentUser)
     return res.status(401).send({
       code: USER_CODES.NOT_LOGGED_IN,
     });
@@ -32,7 +32,7 @@ export default async function handler(
 
       const [rows] = await connection.query<RowDataPacket[]>(
         "SELECT email FROM users WHERE email = ? AND id != ?;",
-        [hashedEmail, user?.id],
+        [hashedEmail, currentUser?.id],
       );
       if (rows.length !== 0) {
         return res.status(409).send({
@@ -63,7 +63,7 @@ export default async function handler(
       });
     }
 
-    values.push(user?.id);
+    values.push(currentUser?.id);
 
     const [result] = await connection.query<ResultSetHeader>(
       `UPDATE users SET ${updates.join(", ")} WHERE id = ?;`,
@@ -75,7 +75,7 @@ export default async function handler(
     if (success) {
       const cookiePayload = {
         username: username,
-        id: user.id,
+        id: currentUser.id,
         email: email,
       };
 

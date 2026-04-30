@@ -78,14 +78,11 @@ export function StickyNote({ noteID, title, content }: StickyProps) {
   );
 }
 
-export async function getServerSideProps({
-  params,
-  req,
-}: GetServerSidePropsContext) {
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user || !user?.id) {
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -98,7 +95,7 @@ export async function getServerSideProps({
 
   const [rows] = await connection.query<RowDataPacket[]>(
     "SELECT note, id from notes  WHERE user_id = ?;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   if (rows)

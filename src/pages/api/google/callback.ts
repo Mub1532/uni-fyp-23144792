@@ -20,9 +20,9 @@ export default async function handler(
 
   if (!rawCookie) return res.status(401).json({ loggedIn: false });
 
-  const payload = await verifyUser(rawCookie);
+  const { currentUser } = await verifyUser(rawCookie);
 
-  if (!payload) return res.status(401).json({ loggedIn: false });
+  if (!currentUser) return res.status(401).json({ loggedIn: false });
 
   const { tokens } = await oauth2Client.getToken(code as string);
   const grantedScopes = tokens.scope?.split(" ") ?? [];
@@ -47,7 +47,7 @@ export default async function handler(
       tokens.refresh_token,
       data.name,
       data.picture,
-      payload.id,
+      currentUser.id,
     ],
   );
 

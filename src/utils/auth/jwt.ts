@@ -1,10 +1,13 @@
 import crypto from "node:crypto";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
-import type { RowDataPacket } from "mysql2";
+import type { Pool, RowDataPacket } from "mysql2/promise";
 import type { GoogleAuthInfo, userInfo } from "@/types/user";
-import { getDBConnection } from "../database";
 
+type userVerify = {
+  currentUser: userInfo | undefined;
+  googleUser: GoogleAuthInfo | undefined;
+};
 /**
  * Function to verify user properly
  * @param rawCookie
@@ -12,40 +15,42 @@ import { getDBConnection } from "../database";
  */
 export default async function verifyUser(
   rawCookie: string,
-): Promise<userInfo | undefined> {
-  if (!rawCookie) return;
+  dbConnection?: Pool,
+  getGoogle: boolean = false,
+): Promise<userVerify> {
+  if (!rawCookie)
+    return {
+      currentUser: undefined,
+      googleUser: undefined,
+    };
 
   const { userInfo } = cookie.parse(rawCookie || "");
   const token = userInfo;
 
-  if (!token) return;
+  if (!token)
+    return {
+      currentUser: undefined,
+      googleUser: undefined,
+    };
 
-  const payload = jwt.verify(token, process.env.JWT_TOKEN!) as
+  const currentUser = jwt.verify(token, process.env.JWT_TOKEN!) as
     | userInfo
     | undefined;
 
-  return payload;
-}
+  let googleUser: GoogleAuthInfo | undefined;
 
-export async function verifyGoogleAuth(
-  userID?: number,
-): Promise<GoogleAuthInfo | undefined> {
-  if (!userID) return;
+  if (getGoogle && dbConnection && currentUser?.id) {
+    const [rows] = await dbConnection.query<RowDataPacket[]>(
+      "SELECT google_access_token, google_refresh_token, google_name, google_pic FROM users WHERE id = ?",
+      [currentUser?.id],
+    );
 
-  const connection = await getDBConnection();
-  const [rows] = await connection.query<RowDataPacket[]>(
-    "SELECT google_access_token, google_refresh_token, google_name, google_pic FROM users WHERE id = ?",
-    [userID],
-  );
-
-  const user = rows[0];
-  if (!user?.google_access_token) return undefined;
+    googleUser = rows[0] as GoogleAuthInfo;
+  }
 
   return {
-    googleAccessToken: user.google_access_token,
-    googleRefreshToken: user.google_refresh_token,
-    googleName: user.google_name,
-    googlePic: user.google_pic,
+    currentUser,
+    googleUser,
   };
 }
 
