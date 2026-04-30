@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
-import { serialize } from "cookie";
-import jwt from "jsonwebtoken";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { USER_CODES } from "@/types/user";
-import verifyUser, { hashEmailPass } from "@/utils/auth/jwt";
+import verifyUser, {
+  createEncryptedCookie,
+  hashEmailPass,
+} from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
@@ -79,20 +80,14 @@ export default async function handler(
         email: email,
       };
 
-      // sign the token with my jwt token
-      const token = jwt.sign(cookiePayload, process.env.JWT_TOKEN!, {
-        expiresIn: "30d",
-      });
-
-      // create 30 days cookie
-      const cookie = serialize("userInfo", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/",
-      });
-
-      res.setHeader("Set-Cookie", cookie);
+      try {
+        await createEncryptedCookie(res, "userInfo", cookiePayload);
+      } catch (_) {
+        return res.status(500).json({
+          success: false,
+          code: USER_CODES.SAVE_FAIL,
+        });
+      }
 
       return res.status(200).send({
         code: USER_CODES.SAVE_SUCCESS,

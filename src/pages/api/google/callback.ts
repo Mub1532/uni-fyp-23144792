@@ -2,7 +2,7 @@ import { google } from "googleapis";
 import type { ResultSetHeader } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { USER_CODES } from "@/types/user";
-import verifyUser from "@/utils/auth/jwt";
+import verifyUser, { encryptData } from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 
 const oauth2Client = new google.auth.OAuth2(
@@ -43,8 +43,8 @@ export default async function handler(
   const [result] = await connection.query<ResultSetHeader>(
     "UPDATE users SET googleAccessToken = ?, googleRefreshToken = ?, googleName = ?, googlePic = ? WHERE id = ?",
     [
-      tokens.access_token,
-      tokens.refresh_token,
+      await encryptData(tokens.access_token as string),
+      await encryptData(tokens.refresh_token as string),
       data.name,
       data.picture,
       currentUser.id,

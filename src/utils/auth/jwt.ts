@@ -1,7 +1,8 @@
 import crypto from "node:crypto";
-import cookie from "cookie";
-import jwt from "jsonwebtoken";
+import cookie, { serialize } from "cookie";
+import { EncryptJWT, importJWK, jwtDecrypt } from "jose";
 import type { Pool, RowDataPacket } from "mysql2/promise";
+import type { NextApiResponse } from "next";
 import type { GoogleAuthInfo, userInfo } from "@/types/user";
 
 type userVerify = {
@@ -18,40 +19,99 @@ export default async function verifyUser(
   dbConnection?: Pool,
   getGoogle: boolean = false,
 ): Promise<userVerify> {
-  if (!rawCookie)
-    return {
-      currentUser: undefined,
-      googleUser: undefined,
-    };
+  if (!rawCookie) return { currentUser: undefined, googleUser: undefined };
 
   const { userInfo } = cookie.parse(rawCookie || "");
-  const token = userInfo;
 
-  if (!token)
-    return {
-      currentUser: undefined,
-      googleUser: undefined,
-    };
+  if (!userInfo) return { currentUser: undefined, googleUser: undefined };
 
-  const currentUser = jwt.verify(token, process.env.JWT_TOKEN!) as
-    | userInfo
-    | undefined;
+  let currentUser: userInfo | undefined;
+  try {
+    const secret = await importJWK(
+      { kty: "oct", k: process.env.JWT_TOKEN! },
+      "A256GCM",
+    );
+    const { payload } = await jwtDecrypt(userInfo, secret);
+    currentUser = payload as unknown as userInfo;
+  } catch {
+    return { currentUser: undefined, googleUser: undefined };
+  }
 
   let googleUser: GoogleAuthInfo | undefined;
 
   if (getGoogle && dbConnection && currentUser?.id) {
-    const [rows] = await dbConnection.query<RowDataPacket[]>(
+    const [[rows]] = await dbConnection.query<
+      (RowDataPacket & GoogleAuthInfo)[]
+    >(
       "SELECT googleAccessToken, googleRefreshToken, googleName, googlePic, useGooglePic FROM users WHERE id = ?",
       [currentUser?.id],
     );
 
-    googleUser = rows[0] as GoogleAuthInfo;
+    if (rows?.googleAccessToken && rows?.googleRefreshToken) {
+      const decryptedAccess = await decryptData(rows?.googleAccessToken ?? "");
+      const decryptedRefresh = await decryptData(
+        rows?.googleRefreshToken ?? "",
+      );
+
+      const decryptedGoogle: GoogleAuthInfo = {
+        ...rows,
+        googleAccessToken: decryptedAccess,
+        googleRefreshToken: decryptedRefresh,
+      };
+
+      googleUser = decryptedGoogle;
+    }
   }
 
   return {
     currentUser,
     googleUser,
   };
+}
+
+export async function createEncryptedCookie(
+  res: NextApiResponse,
+  cookieName: string,
+  payload: Record<string, unknown>,
+  maxAge: number = 60 * 60 * 24 * 30,
+) {
+  const secret = await importJWK(
+    { kty: "oct", k: process.env.JWT_TOKEN! },
+    "A256GCM",
+  );
+
+  const token = await new EncryptJWT(payload)
+    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .setExpirationTime(`${maxAge}s`)
+    .encrypt(secret);
+
+  const cookie = serialize(cookieName, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge,
+    path: "/",
+  });
+
+  res.setHeader("Set-Cookie", cookie);
+}
+
+export async function encryptData(value: string): Promise<string> {
+  const secret = await importJWK(
+    { kty: "oct", k: process.env.JWT_TOKEN! },
+    "A256GCM",
+  );
+  return await new EncryptJWT({ v: value })
+    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .encrypt(secret);
+}
+
+export async function decryptData(encrypted: string): Promise<string> {
+  const secret = await importJWK(
+    { kty: "oct", k: process.env.JWT_TOKEN! },
+    "A256GCM",
+  );
+  const { payload } = await jwtDecrypt(encrypted, secret);
+  return payload.v as string;
 }
 
 /**

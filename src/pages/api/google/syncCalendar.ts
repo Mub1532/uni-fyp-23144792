@@ -19,7 +19,13 @@ export default async function handler(
 
   if (!rawCookie) return res.status(401).json({ loggedIn: false });
 
-  const { currentUser, googleUser } = await verifyUser(rawCookie);
+  const connection = await getDBConnection();
+
+  const { currentUser, googleUser } = await verifyUser(
+    rawCookie,
+    connection,
+    true,
+  );
 
   if (!currentUser || !googleUser)
     return res.status(401).json({ loggedIn: false });
@@ -28,8 +34,6 @@ export default async function handler(
     access_token: googleUser.googleAccessToken,
     refresh_token: googleUser.googleRefreshToken,
   });
-
-  const connection = await getDBConnection();
 
   const [rows] = await connection.query<RowDataPacket[]>(
     "SELECT googleLastSync FROM users WHERE id = ?",
