@@ -104,3 +104,35 @@ button.rbc-active {
 .rbc-event {
   @apply hover:opacity-80 transition-all! ease-in duration-300;
 }
+
+.Toastify__toast--info {
+  @apply bg-blue-500! border-none! font-black!;
+}
+
+.Toastify__toast--error {
+  @apply bg-red-500/90! border-none! font-black!;
+}
+
+.Toastify__toast--warning {
+  @apply bg-amber-500/90! border-none! font-black!;
+}
+
+.Toastify__toast-icon {
+    @apply text-white! shadow-md! text-2xl!;
+}
+
+.Toastify__toast-container {
+  @apply px-4! py-4;
+}
+
+.Toastify__toast {
+  @apply rounded-sm! my-1! sm:my-0 hover:opacity-80!;
+}
+
+.Toastify__progress-bar--wrp {
+  @apply bg-transparent!;
+}
+
+.Toastify__progress-bar {
+  @apply bg-white! rounded-full!;
+}

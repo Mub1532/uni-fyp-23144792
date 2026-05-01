@@ -54,7 +54,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
       <main className={font.className}>
         <ToastContainer
           position="bottom-right"
-          autoClose={5000}
+          autoClose={10000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
