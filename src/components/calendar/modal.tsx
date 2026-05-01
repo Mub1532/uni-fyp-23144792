@@ -8,8 +8,8 @@ export interface CalendarEvent {
   start: Date;
   end: Date;
   description?: string;
-  type?: "IMPORTED" | "AI" | "MANUAL";
-  imported_type?: "GOOGLE";
+  type: "IMPORTED" | "AI" | "MANUAL";
+  imported_type: "GOOGLE" | "AI";
 }
 
 interface EventModalProps {
@@ -53,7 +53,7 @@ export default function EventModal({
       <div className="relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
           <h2 className="text-base font-medium text-gray-900 dark:text-gray-100">
-            {mode === "create" ? "New event" : "Edit event"}
+            {mode === "create" ? "New event" : "View/Edit Event Details"}
           </h2>
           <button
             onClick={onClose}

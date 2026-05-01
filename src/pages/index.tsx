@@ -3,15 +3,18 @@ import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaClock, FaGoogle, FaStickyNote } from "react-icons/fa";
 import { FaUserPen } from "react-icons/fa6";
+import { HiSparkles } from "react-icons/hi";
 import { TypeAnimation } from "react-type-animation";
 import type { CalendarEvent } from "@/components/calendar/modal";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
+import type { CalendarItemRaw } from "./calendar";
 import { extractNoteInfo, StickyNote } from "./notes";
 
 interface HomeProps extends MyPageProps {
@@ -19,21 +22,53 @@ interface HomeProps extends MyPageProps {
   calendar: string;
 }
 
-export default function index({ user, notes, calendar }: HomeProps) {
-  const events: CalendarEvent[] = JSON.parse(calendar ?? "[]");
+const homeEventIcons: Record<string, React.ReactNode> = {
+  GOOGLE: <FaGoogle className="text-xl text-[#174EA6] dark:text-[#4285F4]" />,
+  AI: <HiSparkles className="text-xl text-yellow-500 dark:text-yellow-400" />,
+};
+
+export default function index({
+  user,
+  notes,
+  calendar,
+  openCalItem,
+}: HomeProps) {
+  const rawEvents: CalendarItemRaw[] = JSON.parse(calendar ?? "[]");
   const [showDate, setShowDate] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
+  const router = useRouter();
+
+  const events: CalendarEvent[] = rawEvents.map((x) => ({
+    id: x.id,
+    title: x.title,
+    start: new Date(x.start_time),
+    end: new Date(x.end_time),
+    description: x.description,
+    imported_type: x.imported_type,
+    type: x.type,
+  }));
 
   const todayEvents = events.filter((e) =>
     moment(e.start).isSame(moment(), "day"),
   );
 
-  const upcomingEvents = events
-    .filter((e) => moment(e.start).isAfter(moment(), "day"))
-    .slice(0, 5);
+  const upcomingEvents = events.filter((e) =>
+    moment(e.start).isAfter(moment()),
+  );
+
+  const pastEvents = events.filter((e) =>
+    moment(e.start).isBefore(moment(), "day"),
+  );
+
+  console.log(events[0]);
+
+  async function onEventClick(event: CalendarEvent) {
+    openCalItem(event);
+    router.push("/calendar");
+  }
 
   return (
-    <div className="h-full w-full flex flex-col text-slate-600 dark:text-slate-300 px-2 gap-1">
+    <div className="h-full w-full flex flex-col text-slate-600 dark:text-slate-300 px-2 gap-1 overflow-y-auto overflow-x-hidden">
       {/* Header */}
       {user?.username && (
         <div className="border-b border-slate-200 dark:border-slate-700 pb-2">
@@ -68,16 +103,16 @@ export default function index({ user, notes, calendar }: HomeProps) {
       )}
 
       {/* Body */}
-      <div className="flex flex-col md:flex-row h-full w-full overflow-hidden">
+      <div className="flex flex-col md:flex-row h-fit md:h-full w-full overflow-hidden">
         {/* Main */}
-        <div className="overflow-y-auto pr-4 py-5 border-r border-slate-200 dark:border-slate-700 flex flex-col gap-5 h-full w-full">
+        <div className="overflow-y-auto pr-4 py-5 md:border-r border-slate-200 dark:border-slate-700 flex flex-col gap-5 h-fit md:h-full w-full">
           {/* AI Summary */}
           <div className="rounded-lg bg-blue-300 dark:bg-slate-700 p-4">
             <TypeAnimation
               sequence={["AI Summary"]}
               speed={10}
               cursor={false}
-              className="text-xs uppercase tracking-widest text-blue-900 dark:text-blue-300 font-bold mb-2"
+              className="text-xs uppercase tracking-widest text-yellow-700! dark:text-yellow-400! font-bold mb-2"
             />
 
             <p className="text-sm font-semibold leading-relaxed">
@@ -152,80 +187,19 @@ export default function index({ user, notes, calendar }: HomeProps) {
         <div className="overflow-y-auto px-4 py-5 flex flex-col gap-5 h-full w-full">
           {/* Today */}
           <div>
-            <div className="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3 flex items-center justify-center gap-1">
-              <FaClock className="text-blue-400" />
+            <div className="text-xs uppercase tracking-widest text-slate-800 dark:text-slate-300 font-semibold flex items-center justify-center gap-2">
+              <FaClock className="text-blue-400 text-lg" />
               Your Schedule
             </div>
           </div>
 
-          {/* Upcoming */}
-          {upcomingEvents.length > 0 && (
-            <div>
-              <div className="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3">
-                Upcoming
-              </div>
-              <div className="flex flex-col gap-1">
-                {upcomingEvents.map((e) => (
-                  <Link href="/calendar" key={e.id}>
-                    <div className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer">
-                      <div className="flex gap-2 items-center">
-                        <span
-                          suppressHydrationWarning
-                          className="text-xs text-slate-400 w-16 shrink-0"
-                        >
-                          {moment(e.start).format("DD MMM")}
-                        </span>
-                        <span className="text-sm truncate">{e.title}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {todayEvents.length === 0 ? (
-            <div className="text-sm text-slate-400">Nothing today</div>
-          ) : (
-            <div className="flex flex-col gap-1">
-              <div className="text-sm text-slate-400 font-semibold">
-                Todays Events
-              </div>
-              {todayEvents.map((e) => (
-                <Link href="/calendar" key={e.id}>
-                  <div className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer">
-                    <div className="flex gap-2 items-center">
-                      <span
-                        suppressHydrationWarning
-                        className="text-xs font-medium w-fit"
-                      >
-                        {moment(e.start).format("HH:mm")}
-                      </span>
-                      {e.imported_type === "GOOGLE" ? (
-                        <FaGoogle className="text-xl text-[#174EA6] dark:text-[#4285F4]" />
-                      ) : (
-                        <FaUserPen className="text-xl text-sky-400 dark:text-sky-500" />
-                      )}
-                      <span className="text-sm font-medium truncate">
-                        {e.title}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-
           {/* Stats */}
           <div>
-            <div className="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3">
-              This Week
-            </div>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: "today", val: todayEvents.length },
-                { label: "upcoming", val: upcomingEvents.length },
-                { label: "notes", val: notes.length },
+                { label: "Event Today", val: todayEvents.length },
+                { label: "Events Upcoming", val: upcomingEvents.length },
+                { label: "Notes Created", val: notes.length },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -238,6 +212,123 @@ export default function index({ user, notes, calendar }: HomeProps) {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <div className="text-sm text-slate-400 font-semibold">
+              Todays Events
+            </div>
+            {todayEvents.length === 0 ? (
+              <div className="text-sm text-slate-400 mt-2">Nothing Today</div>
+            ) : (
+              todayEvents.map((event) => (
+                <button
+                  onClick={() => {
+                    onEventClick(event);
+                  }}
+                  key={event.id}
+                  className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer"
+                >
+                  <div className="flex gap-2 items-center">
+                    <span
+                      suppressHydrationWarning
+                      className="text-xs font-medium w-fit"
+                    >
+                      {moment(event.start).format("HH:mm")} -{" "}
+                      {moment(event.end).format("HH:mm")}
+                    </span>
+                    {homeEventIcons[
+                      event.type === "IMPORTED"
+                        ? event.imported_type
+                        : event.type
+                    ] ?? (
+                      <FaUserPen className="text-xl text-sky-400 dark:text-sky-500" />
+                    )}
+                    <span className="text-sm font-medium truncate">
+                      {event.title}
+                    </span>
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <div className="text-sm text-slate-400 font-semibold">
+              Upcoming Events
+            </div>
+            {upcomingEvents.length === 0 ? (
+              <div className="text-sm text-slate-400 mt-2">
+                Nothing Upcoming
+              </div>
+            ) : (
+              upcomingEvents.map((event) => (
+                <button
+                  onClick={() => {
+                    onEventClick(event);
+                  }}
+                  key={event.id}
+                  className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer"
+                >
+                  <div className="flex gap-2 items-center">
+                    <span
+                      suppressHydrationWarning
+                      className="text-xs font-medium w-fit"
+                    >
+                      {moment(event.start).format("DD/MM/YY - hh:mm")}
+                    </span>
+                    {homeEventIcons[
+                      event.type === "IMPORTED"
+                        ? event.imported_type
+                        : event.type
+                    ] ?? (
+                      <FaUserPen className="text-xl text-sky-400 dark:text-sky-500" />
+                    )}
+                    <span className="text-sm font-medium truncate">
+                      {event.title}
+                    </span>
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1 opacity-70">
+            <div className="text-sm text-slate-400 font-semibold">
+              Past Events
+            </div>
+            {pastEvents.length === 0 ? (
+              <div className="text-sm text-slate-400 mt-2">No Past Events</div>
+            ) : (
+              pastEvents.map((event) => (
+                <button
+                  onClick={() => {
+                    onEventClick(event);
+                  }}
+                  key={event.id}
+                  className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer"
+                >
+                  <div className="flex gap-2 items-center">
+                    <span
+                      suppressHydrationWarning
+                      className="text-xs font-medium w-fit"
+                    >
+                      {moment(event.start).format("DD/MM/YY - hh:mm")}
+                    </span>
+                    {homeEventIcons[
+                      event.type === "IMPORTED"
+                        ? event.imported_type
+                        : event.type
+                    ] ?? (
+                      <FaUserPen className="text-xl text-sky-400 dark:text-sky-500" />
+                    )}
+                    <span className="text-sm font-medium truncate">
+                      {event.title}
+                    </span>
+                  </div>
+                </button>
+              ))
+            )}
           </div>
         </div>
       </div>

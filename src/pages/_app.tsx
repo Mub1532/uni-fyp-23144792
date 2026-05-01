@@ -8,6 +8,8 @@ import Script from "next/script";
 import ProgressBar from "nextjs-progressbar";
 import { useEffect, useState } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
+import type { CalendarEvent } from "@/components/calendar/modal";
+import { EMPTY_MODAL, type ModalState } from "@/types/calendar";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { textColor } from "@/utils/classes";
@@ -22,6 +24,12 @@ const font = Montserrat({
 export default function App({ Component, pageProps }: MyPageProps) {
   const { user, loading, loggedIn, googleUsername, googlePic, useGooglePic } =
     useUser();
+
+  // current selected calendar item
+  const [calModal, setCalModal] = useState<ModalState>(EMPTY_MODAL);
+
+  const openCalModal = (event: CalendarEvent) =>
+    setCalModal({ open: true, mode: "edit", event: { ...event } });
 
   const router = useRouter();
   const currentPage = pages.find(
@@ -54,7 +62,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
       <main className={font.className}>
         <ToastContainer
           position="bottom-right"
-          autoClose={10000}
+          autoClose={6000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -91,6 +99,9 @@ export default function App({ Component, pageProps }: MyPageProps) {
                     googleUser={googleUsername}
                     googlePic={googlePic}
                     useGooglePic={useGooglePic}
+                    openCalItem={openCalModal}
+                    currentCalModal={calModal}
+                    setCurrentCalModal={setCalModal}
                   />
                 </div>
               </div>
