@@ -56,7 +56,6 @@ export default async function handler(
   try {
     await createEncryptedCookie(res, "userInfo", cookiePayload);
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       success: false,
       code: USER_CODES.SAVE_FAIL,

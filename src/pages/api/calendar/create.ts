@@ -33,8 +33,6 @@ export default async function handler(
 
     const [result] = await connection.query<ResultSetHeader>(sql, values);
 
-    console.log(result);
-
     const success = result.affectedRows === 1;
 
     if (success) {
@@ -49,7 +47,6 @@ export default async function handler(
         code: NOTE_CAL_CODES.SAVE_FAIL,
       });
   } catch (err) {
-    console.log(err);
     return res.status(200).send({
       code: NOTE_CAL_CODES.SAVE_FAIL,
     });

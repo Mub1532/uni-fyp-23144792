@@ -30,8 +30,6 @@ export default async function handler(
     [newValue ? 1 : 0, currentUser?.id],
   );
 
-  console.log(result, newValue ? 1 : 0);
-
   const success = result.affectedRows === 1;
 
   if (!success)

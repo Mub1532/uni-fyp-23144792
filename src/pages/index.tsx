@@ -60,8 +60,6 @@ export default function index({
     moment(e.start).isBefore(moment(), "day"),
   );
 
-  console.log(events[0]);
-
   async function onEventClick(event: CalendarEvent) {
     openCalItem(event);
     router.push("/calendar");

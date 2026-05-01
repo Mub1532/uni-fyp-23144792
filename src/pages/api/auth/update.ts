@@ -97,7 +97,6 @@ export default async function handler(
         code: USER_CODES.SAVE_FAIL,
       });
   } catch (err) {
-    console.log(err);
     return res.status(200).send({
       code: USER_CODES.SAVE_FAIL,
     });

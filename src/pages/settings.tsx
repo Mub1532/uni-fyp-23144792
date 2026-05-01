@@ -117,20 +117,24 @@ export default function Settings({
     }
   }
 
-  const [_googleSync, _setSync] = useState("TODO: ADD THIS");
+  const [googleSyncLoading, setSyncLoading] = useState(false);
 
   async function syncGoogle() {
     if (!googleUser) {
       router.push("/api/google/auth");
     } else {
+      setSyncLoading(true);
       const res = await fetch("/api/google/syncCalendar?isManual=true");
       const data = await res.json();
 
-      console.log(data);
+      if (data?.success === true) {
+        toast.success("Successfully Synced Calendar.");
+      } else {
+        toast.error("Could not Sync Calendar.");
+      }
+      setSyncLoading(false);
     }
   }
-
-  const debouncedSyncGoogle = useDebounceCallback(syncGoogle, 500);
 
   return (
     <div className="h-full w-full flex md:flex-row gap-6 px-1 md:px-4 flex-col overflow-x-auto overflow-y-hidden">
@@ -245,11 +249,15 @@ export default function Settings({
             </>
           )}
           <button
-            onClick={debouncedSyncGoogle}
+            onClick={syncGoogle}
             type="button"
             className="w-fit h-fit p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-md rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
           >
-            <FaGoogle className="text-2xl text-slate-100!" />
+            {googleSyncLoading ? (
+              <AiOutlineLoading3Quarters className="text-2xl text-slate-100! animate-spin" />
+            ) : (
+              <FaGoogle className="text-2xl text-slate-100!" />
+            )}
             <div>{googleUser ? "Manual Sync" : "Login to Sync"}</div>
           </button>
           <div className="w-fit max-w-full flex items-center h-fit">
@@ -295,6 +303,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 }
 
 import type { IconType } from "react-icons";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaGoogle, FaLock, FaSave, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useDebounceCallback } from "usehooks-ts";
