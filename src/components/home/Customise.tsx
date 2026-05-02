@@ -53,6 +53,7 @@ export default function CustomiseBackground({
         onClick={() => setOpen(true)}
         className="text-xs md:text-sm"
         extraIconClass="text-sm md:text-md"
+        showText="onlyMd"
       />
 
       <EventModal

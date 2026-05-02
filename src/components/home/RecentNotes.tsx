@@ -32,7 +32,7 @@ export function RecentNotes({ notes }: RecentNotesProps) {
       {notes.length !== 0 ? (
         <StickyNoteContainer notes={notes} size="small" />
       ) : (
-        <div className="flex flex-col items-center justify-center gap-2 p-6 rounded-lg dark:bg-slate-700 bg-blue-300">
+        <div className="flex flex-col items-center justify-center gap-2 p-6 md:rounded-lg dark:bg-slate-700 bg-blue-300">
           <FaStickyNote className="text-3xl text-yellow-400 dark:text-yellow-500" />
           <p className="text-sm dark:text-slate-400 font-bold">No notes yet</p>
           <Link
