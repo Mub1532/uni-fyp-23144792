@@ -120,7 +120,7 @@ export default function Test({
             Your Schedule
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(100px,1fr))]">
             {[
               { name: "Events Today", amount: todayEvents.length },
               { name: "Events Upcoming", amount: upcomingEvents.length },
