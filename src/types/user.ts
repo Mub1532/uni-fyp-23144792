@@ -3,6 +3,7 @@ export type userInfo = {
   password: string;
   email: string;
   id: number;
+  background_image?: string | null;
 };
 
 export type loginUser = {
@@ -31,6 +32,7 @@ export enum USER_CODES {
   SAVE_SUCCESS,
   SAVE_FAIL,
   GOOGLE_INFO_NOT_GRANTED,
+  NOT_VALID_IMG,
 }
 
 export type GoogleAuthInfo = {

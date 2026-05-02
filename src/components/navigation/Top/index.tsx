@@ -2,6 +2,7 @@ import LoginButton from "@/components/misc/LoginButton";
 import UserContainer from "@/components/misc/UserContainer";
 import NotifContainer from "@/components/notifs/container";
 import type { userInfo } from "@/types/user";
+import { joinClasses } from "@/utils/misc/classes";
 import ThemeToggle from "../../misc/themeToggle";
 
 type TopBarProps = {
@@ -9,6 +10,7 @@ type TopBarProps = {
   user?: userInfo;
   useGooglePic?: boolean;
   googlePic?: string | undefined;
+  useBG: boolean;
 };
 
 export default function TopBar({
@@ -16,6 +18,7 @@ export default function TopBar({
   user,
   useGooglePic = false,
   googlePic = undefined,
+  useBG = false,
 }: TopBarProps) {
   return (
     <div className="flex gap-2 title-page text-2xl bg-slate-20 h-12 md:h-16 p-2 md:p-3 w-full items-center border-b-2 border-blue-200 dark:border-slate-600">
@@ -30,10 +33,16 @@ export default function TopBar({
             useGooglePic={useGooglePic}
           />
         ) : (
-          <LoginButton extraClass="ml-2" />
+          <LoginButton
+            extraClass={joinClasses(
+              user?.id ? "ml-2" : "",
+              "text-sm font-bold! w-fit!",
+            )}
+            extraIconClass="text-lg"
+          />
         )}
 
-        <ThemeToggle />
+        <ThemeToggle useBG={useBG} />
         {user?.id ? <NotifContainer /> : null}
       </div>
     </div>

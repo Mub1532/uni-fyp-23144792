@@ -1,0 +1,73 @@
+import moment from "moment";
+import { getEventIcon } from "@/utils/calendar/eventIcon";
+import { joinClasses } from "@/utils/misc/classes";
+import type { CalendarEvent } from "../calendar/modal";
+
+type EventSection = "Today" | "Upcoming" | "Past";
+
+interface EventListSectionProps {
+  type: EventSection;
+  events: CalendarEvent[];
+  onClick: (event: CalendarEvent) => void;
+}
+
+const labelMap: Record<EventSection, string> = {
+  Today: "Todays Events",
+  Upcoming: "Upcoming Events",
+  Past: "Past Events",
+};
+
+const emptyMap: Record<EventSection, string> = {
+  Today: "Nothing Today",
+  Upcoming: "Nothing Upcoming",
+  Past: "No Past Events",
+};
+
+const dateFormatMap: Record<EventSection, string> = {
+  Today: "HH:mm",
+  Upcoming: "DD/MM/YY - HH:mm",
+  Past: "DD/MM/YY - HH:mm",
+};
+
+export function EventLists({ type, events, onClick }: EventListSectionProps) {
+  return (
+    <div
+      className={joinClasses(
+        "flex flex-col gap-2",
+        type === "Past" ? "opacity-70" : "",
+      )}
+    >
+      <div className="text-md text-slate-400 font-semibold text-center md:text-start">
+        {labelMap[type]}
+      </div>
+      {events.length === 0 ? (
+        <div className="text-sm font-medium text-green-600 mt-2">
+          {emptyMap[type]}
+        </div>
+      ) : (
+        events.map((event) => (
+          <button
+            onClick={() => onClick(event)}
+            key={event.id}
+            className="flex items-center justify-between py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:text-blue-400 transition-colors cursor-pointer"
+          >
+            <div className="flex gap-2 items-center">
+              <span
+                suppressHydrationWarning
+                className="text-xs font-medium w-fit"
+              >
+                {type === "Today"
+                  ? `${moment(event.start).format("HH:mm")} - ${moment(event.end).format("HH:mm")}`
+                  : moment(event.start).format(dateFormatMap[type])}
+              </span>
+              {getEventIcon(event)}
+              <span className="text-sm font-medium truncate">
+                {event.title}
+              </span>
+            </div>
+          </button>
+        ))
+      )}
+    </div>
+  );
+}

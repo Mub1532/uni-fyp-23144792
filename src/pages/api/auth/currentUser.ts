@@ -26,5 +26,6 @@ export default async function handler(
     googleUsername: googleUser?.googleName,
     googlePic: googleUser?.googlePic,
     useGooglePic: !!googleUser?.useGooglePic,
+    backgroundImage: currentUser?.background_image,
   });
 }

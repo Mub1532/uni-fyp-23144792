@@ -1,5 +1,5 @@
 {
-  "tailwindCSS.experimental.configFile": "src/styles/globals.scss",
+  // "tailwindCSS.experimental.configFile": "src/styles/globals.scss",
 
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "biomejs.biome",
@@ -27,5 +27,7 @@
   },
 
   "editor.formatOnPaste": false,
-  "editor.formatOnType": false
+  "editor.formatOnType": false,
+
+  "tailwindCSS.experimental.configFile": "src/styles/tailwind.css"
 }

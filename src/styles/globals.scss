@@ -77,7 +77,58 @@
 }
 
 .rbc-today {
-  @apply dark:bg-slate-600! bg-blue-200! hover:opacity-80 transition-all! ease-in duration-300;
+  @apply dark:bg-slate-900/60! bg-blue-300! cursor-pointer!;
+}
+
+
+.rbc-month-view .rbc-today, .rbc-agenda-event-cell {
+  @apply hover:opacity-60  transition-all! ease-in duration-100 cursor-pointer!;
+}
+
+.rbc-agenda-time-cell {
+  @apply border;
+}
+
+.rbc-agenda-date-cell, .rbc-agenda-time-cell {
+  @apply bg-blue-50! dark:bg-slate-700!;
+}
+
+.rbc-row,
+.rbc-addons-dnd-row-body,
+.rbc-row-content {
+  pointer-events: none;
+}
+
+
+.rbc-event,
+.rbc-show-more,
+.rbc-date-cell,
+.rbc-button-link {
+  pointer-events: all;
+}
+
+
+.rbc-current-time-indicator::before {
+  content: '';
+  @apply block w-0 h-0 absolute -top-1.5 border-t-8 border-b-8 border-l-16 border-t-transparent border-b-transparent border-l-blue-700;
+}
+
+.rbc-agenda-event-cell .event-time {
+  @apply hidden!;
+}
+.rbc-event-label {
+  @apply hidden!;
+}
+.dark .rbc-current-time-indicator::before {
+  @apply border-l-blue-300;
+}
+
+.rbc-events-container {
+  pointer-events: none;
+}
+
+.rbc-event {
+  pointer-events: all;
 }
 
 /*  buttons calendar */
@@ -101,8 +152,12 @@ button.rbc-active {
   @apply text-slate-300!;
 }
 
-.rbc-event {
-  @apply hover:opacity-80 transition-all! ease-in duration-300;
+.rbc-current-time-indicator {
+  @apply bg-blue-500! h-1!;
+}
+
+.rbc-event, .rbc-time-slot {
+  @apply hover:opacity-80 transition-all! ease-in duration-100;
 }
 
 .Toastify__toast--info {
@@ -136,3 +191,7 @@ button.rbc-active {
 .Toastify__progress-bar {
   @apply bg-white! rounded-full!;
 }
+
+.user-bg {
+  @apply bg-cover bg-center;
+background-image: linear-gradient(to top left, rgba(15,23,42,0.8), rgba(15,23,42,0.9), rgba(15,23,42,0.8)), var(--bg-url);}

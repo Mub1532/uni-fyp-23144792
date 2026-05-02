@@ -74,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-evenly h-full min-h-0 pb-42">
+    <div className="flex items-center justify-center h-full min-h-0 pb-42">
       <div className="border-2 border-blue-300 rounded-xl p-10 w-full max-w-sm">
         <h1 className="text-xl font-semibold text-blue-400 mb-6 text-center">
           Login

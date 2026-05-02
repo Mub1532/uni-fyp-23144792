@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { FaUserCog } from "react-icons/fa";
-import ItemContainer from "@/components/misc/ItemContainer";
 import { USER_CODES } from "@/types/user";
 import { joinClasses } from "@/utils/misc/classes";
+import { QuickButton } from "../home/QuickButton";
 
 type LoginButtonProps = {
   type?: "login" | "logout";
@@ -18,8 +18,7 @@ export default function LoginButton({
   const router = useRouter();
 
   return (
-    <ItemContainer
-      as="button"
+    <QuickButton
       onClick={async () => {
         if (type === "login") {
           router.push("/auth/login");
@@ -29,12 +28,12 @@ export default function LoginButton({
         }
       }}
       className={joinClasses(
-        "text-sm md:text-lg font-medium px-4 flex items-center gap-2",
+        "font-medium px-4 flex items-center gap-2",
         extraClass,
       )}
-    >
-      <FaUserCog className={extraIconClass} />
-      {type === "logout" ? "Logout" : "Login"}
-    </ItemContainer>
+      label={type === "logout" ? "Logout" : "Login"}
+      icon={FaUserCog}
+      extraIconClass={extraIconClass}
+    />
   );
 }

@@ -7,15 +7,14 @@ import {
   type View,
 } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { FaGoogle } from "react-icons/fa";
-import { FaUserPen } from "react-icons/fa6";
-import { HiSparkles } from "react-icons/hi";
 import { toast } from "react-toastify";
 import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
 import { EMPTY_MODAL, type ModalState } from "@/types/calendar";
 import { NOTE_CAL_CODES } from "@/types/notes";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { CalendarEventItem } from "./CalendarEvent";
+import { CalendarToolbar } from "./Toolbar";
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(Calendar);
 const localiser = momentLocalizer(moment);
@@ -26,11 +25,6 @@ interface CalendarViewProps {
   setCurrentCalModal: Dispatch<SetStateAction<ModalState>>;
   openCalItem: (event: CalendarEvent) => void;
 }
-
-export const eventIcons: Record<string, React.ReactNode> = {
-  GOOGLE: <FaGoogle className="text-xl text-white! shrink-0" />,
-  AI: <HiSparkles className="text-xl text-yellow-400! shrink-0" />,
-};
 
 export default function CalendarContainer({
   initialEvents,
@@ -119,7 +113,7 @@ export default function CalendarContainer({
   };
 
   return (
-    <div className="h-full w-full p-4 flex flex-col relative gap-3 overflow-hidden">
+    <div className="h-full w-full p-1 md:p-4 flex flex-col relative gap-3 overflow-hidden">
       <div className="flex justify-end">
         <button
           type="button"
@@ -135,8 +129,11 @@ export default function CalendarContainer({
         events={events}
         startAccessor="start"
         endAccessor="end"
-        className="h-full! w-full overflow-hidden! min-h-0 max-h-[78vh]! sm:max-h-[75vh]! md:max-h-[80vh]!"
-        messages={{ agenda: "List" }}
+        className="h-full w-full overflow-hidden!"
+        messages={{
+          agenda: "List",
+          noEventsInRange: "No events in the selected time period.",
+        }}
         view={view}
         onView={setView}
         selectable
@@ -162,14 +159,8 @@ export default function CalendarContainer({
         }
         resizable
         components={{
-          event: ({ event }) => (
-            <span className="flex items-center gap-1 text-md h-fit! w-full overflow-hidden text-white!">
-              {eventIcons[
-                event.type === "IMPORTED" ? event.imported_type : event.type
-              ] ?? <FaUserPen className="text-xl shrink-0" />}
-              <div>{event.title}</div>
-            </span>
-          ),
+          event: CalendarEventItem,
+          toolbar: CalendarToolbar,
         }}
         eventPropGetter={(event) => {
           const type =

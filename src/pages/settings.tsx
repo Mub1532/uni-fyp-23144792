@@ -38,7 +38,10 @@ export default function Settings({
   }, [user, useGooglePic]);
 
   async function updateUser() {
-    if (!username && !email && password)
+    if (
+      (!username && !email && password) ||
+      (username === user?.username && email === user?.email && !password)
+    )
       return toast.warn(
         "Please change at least 1 setting to update the user info.",
       );
@@ -137,9 +140,9 @@ export default function Settings({
   }
 
   return (
-    <div className="h-full w-full flex md:flex-row gap-6 px-1 md:px-4 flex-col overflow-x-auto overflow-y-hidden">
+    <div className="h-full w-full flex md:flex-row gap-6 px-1 md:px-4 flex-col">
       {/* first section, user settings etc */}
-      <div className="h-fit! w-full lg:mr-12">
+      <div className="h-full w-full lg:mr-12">
         <div className="flex gap-2 h-fit w-full text-slate-200">
           {useGooglePic && googlePic ? (
             <GooglePic
@@ -260,10 +263,12 @@ export default function Settings({
             )}
             <div>{googleUser ? "Manual Sync" : "Login to Sync"}</div>
           </button>
-          <div className="w-fit max-w-full flex items-center h-fit">
-            <div className="mr-2">Use Google PFP as Profile Pic:</div>
-            <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
-          </div>
+          {googleUser && (
+            <div className="w-fit max-w-full flex items-center h-fit">
+              <div className="mr-2">Use Google PFP as Profile Pic:</div>
+              <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
+            </div>
+          )}
         </div>
 
         <div className="text-lg font-bold text-blue-400 mt-2">AI Settings</div>

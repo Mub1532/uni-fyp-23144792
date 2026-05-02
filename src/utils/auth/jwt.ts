@@ -63,8 +63,19 @@ export default async function verifyUser(
     }
   }
 
+  let bg: string | null = null;
+
+  if (dbConnection) {
+    const [[image]] = await dbConnection.query<RowDataPacket[]>(
+      `SELECT background_image FROM users WHERE id = ?`,
+      [currentUser.id],
+    );
+
+    bg = image?.background_image;
+  }
+
   return {
-    currentUser,
+    currentUser: { ...currentUser, background_image: bg },
     googleUser,
   };
 }
