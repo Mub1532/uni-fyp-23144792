@@ -48,7 +48,7 @@ export function insertHelper(
 }
 
 /**
- * Helper function to insert stuff into database in bulk
+ * Helper function to insert stuff into database in bulk and replace if unique keys are like same
  * @param tableName
  * @param data
  * @returns
@@ -57,7 +57,7 @@ export function insertHelperBulk(
   tableName: string,
   data: Record<string, unknown>[],
   extra?: string,
-  ignoreDuplicates?: boolean,
+  duplicateStuff?: "ignore" | "replace" | "skip",
 ) {
   const names = Object.keys(data[0]);
   const placeholders = data
@@ -65,7 +65,17 @@ export function insertHelperBulk(
     .join(", ");
   const values = data.flatMap((row) => Object.values(row));
 
-  const sql = `INSERT ${ignoreDuplicates ? `IGNORE` : ``} INTO ${tableName} (${names.join(",")}) VALUES ${placeholders} ${extra ?? ``};`;
+  const insertMethod =
+    duplicateStuff === "ignore" || duplicateStuff === "skip"
+      ? "INSERT IGNORE"
+      : "INSERT";
+
+  const onDuplicate =
+    duplicateStuff === "replace"
+      ? ` ON DUPLICATE KEY UPDATE ${names.map((n) => `${n}=VALUES(${n})`).join(", ")}`
+      : "";
+
+  const sql = `${insertMethod} INTO ${tableName} (${names.join(",")}) VALUES ${placeholders}${onDuplicate} ${extra ?? ""};`;
 
   return { sql, values };
 }

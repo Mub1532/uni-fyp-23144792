@@ -82,7 +82,7 @@ export default async function handler(
     "calendar_items",
     formattedEvents,
     undefined,
-    true,
+    "replace",
   );
 
   const [result] = await connection.query<ResultSetHeader>(sql, values);
