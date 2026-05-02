@@ -10,14 +10,9 @@ import NavItem from "./Item";
 type NavigationProps = {
   loggedIn: boolean;
   className?: string;
-  useBG?: boolean;
 };
 
-export default function Navigation({
-  loggedIn,
-  className,
-  useBG = true,
-}: NavigationProps) {
+export default function Navigation({ loggedIn, className }: NavigationProps) {
   const [showText, setText] = useState(true);
 
   return (
@@ -26,9 +21,7 @@ export default function Navigation({
         "h-fit md:h-full md:min-w-fit md:w-fit md:max-w-42 py-1 md:pt-2 md:text-center px-4",
         textColor,
         className,
-        useBG
-          ? "bg-blue-200/40 dark:bg-slate-700/40"
-          : "bg-blue-200 dark:bg-slate-700",
+        "bg-blue-300/40 dark:bg-slate-700/40",
       )}
     >
       <div

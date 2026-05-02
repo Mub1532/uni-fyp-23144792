@@ -12,7 +12,7 @@ export function AISummary({
   notes,
 }: AISummaryCardProps) {
   return (
-    <div className="md:rounded-md bg-blue-300 dark:bg-slate-700 py-2 px-2 md:p-4 mr-2 h-fit w-full text-center md:text-start">
+    <div className="md:rounded-md bg-blue-400/60 dark:bg-slate-600/60 py-2 px-2 md:p-4 mr-2 h-fit w-full text-center md:text-start">
       <TypeAnimation
         sequence={["AI Summary"]}
         speed={10}

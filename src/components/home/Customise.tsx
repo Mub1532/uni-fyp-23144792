@@ -57,7 +57,7 @@ export default function CustomiseBackground({
         label="Customise"
         onClick={() => setOpen(true)}
         className="text-xs md:text-sm"
-        extraIconClass="text-sm md:text-md"
+        extraIconClass="text-xs! sm:text-sm! md:text-md!"
         showText="onlyMd"
       />
 

@@ -11,7 +11,7 @@ export default function Toggle({ toggle, onToggle }: ToggleProps) {
     <button
       onClick={onToggle}
       title="Toggle Theme"
-      className="w-12 h-6 rounded-full p-1 bg-slate-400 dark:bg-slate-500 relative transition-colors duration-300 ease-in cursor-pointer"
+      className="w-12 h-6 rounded-full p-1 bg-blue-300 dark:bg-slate-500 relative transition-colors duration-300 ease-in cursor-pointer"
     >
       <div
         id="toggle"

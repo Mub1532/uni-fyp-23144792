@@ -23,7 +23,7 @@ interface HomeProps extends MyPageProps {
   calendar: string;
 }
 
-export default function Test({
+export default function Home({
   user,
   notes,
   calendar,
@@ -62,12 +62,12 @@ export default function Test({
   }
 
   return (
-    <div className="h-full w-full flex flex-col text-slate-600 dark:text-slate-300 gap-1">
+    <div className="h-full w-full flex flex-col text-slate-600 dark:text-slate-300 gap-1 -mt-4 md:-mt-2">
       <div className="h-fit w-full border-b-2 px-2 dark:border-slate-500 border-blue-400 pb-2">
         {/* Welcome part */}
         {user?.username && (
           <>
-            <div className="text-xl font-semibold dark:text-slate-100 flex gap-1">
+            <div className="text-sm sm:text-lg md:text-xl font-semibold dark:text-slate-100 flex items-center gap-1">
               <TypeAnimation
                 key={user.username}
                 sequence={["Welcome, ", 0, () => setShowWelcome(true)]}
@@ -88,7 +88,7 @@ export default function Test({
               />
             </div>
             {showDate && (
-              <div className="text-sm text-slate-400 ">
+              <div className="text-xs sm:text-sm text-slate-400 -mt-1 md:mt-0">
                 <TypeAnimation
                   sequence={[
                     `It is currently ${moment().format("dddd Do MMMM [-] HH:mm")}`,
@@ -128,7 +128,7 @@ export default function Test({
             ].map((s) => (
               <div
                 key={s.name}
-                className="rounded-lg bg-blue-300 dark:bg-slate-700 p-2 text-center"
+                className="rounded-lg bg-blue-400/60 dark:bg-slate-600/60 p-2 text-center"
               >
                 <div className="text-base font-semibold text-slate-700 dark:text-slate-200">
                   {s.amount}

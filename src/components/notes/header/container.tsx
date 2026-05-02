@@ -33,7 +33,7 @@ export default function NoteHeaderItems({
   return (
     <div
       className={joinClasses(
-        "w-full h-max min-h-12 rounded-md flex items-center px-2 bg-blue-100 dark:bg-slate-700 gap-1 overflow-hidden",
+        "w-full h-max min-h-12 rounded-md flex items-center px-2 bg-blue-200/60 dark:bg-slate-800/70 gap-1 overflow-hidden",
         defaultScrollbar,
       )}
     >
