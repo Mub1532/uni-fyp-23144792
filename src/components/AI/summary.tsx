@@ -1,5 +1,3 @@
-import { TypeAnimation } from "react-type-animation";
-
 interface AISummaryCardProps {
   todayEvents: unknown[];
   upcomingEvents: unknown[];
@@ -13,12 +11,9 @@ export function AISummary({
 }: AISummaryCardProps) {
   return (
     <div className="md:rounded-md bg-blue-400/60 dark:bg-slate-600/60 py-2 px-2 md:p-4 mr-2 h-fit w-full text-center md:text-start">
-      <TypeAnimation
-        sequence={["AI Summary"]}
-        speed={10}
-        cursor={false}
-        className="text-xs text-center uppercase tracking-widest text-yellow-700! dark:text-yellow-400! font-bold mb-2"
-      />
+      <div className="text-xs uppercase tracking-widest text-yellow-700! dark:text-yellow-400! font-bold mb-2">
+        AI Summary
+      </div>
 
       <div className="text-sm font-semibold flex flex-col mt-1 md:mt-0 gap-1">
         <div>

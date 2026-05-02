@@ -2,9 +2,8 @@ import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 import { FaClock } from "react-icons/fa";
-import { TypeAnimation } from "react-type-animation";
 import { AISummary } from "@/components/AI/summary";
 import type { CalendarEvent } from "@/components/calendar/modal";
 import CustomiseBackground from "@/components/home/Customise";
@@ -30,8 +29,6 @@ export default function Home({
   openCalItem,
 }: HomeProps) {
   const rawEvents: CalendarItemRaw[] = JSON.parse(calendar ?? "[]");
-  const [showDate, setShowDate] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
   const router = useRouter();
 
   const events: CalendarEvent[] = rawEvents.map((x) => ({
@@ -65,41 +62,17 @@ export default function Home({
     <div className="h-full w-full flex flex-col text-slate-600 dark:text-slate-300 gap-1 -mt-4 md:-mt-2">
       <div className="h-fit w-full border-b-2 px-2 dark:border-slate-500 border-blue-400 pb-2">
         {/* Welcome part */}
-        {user?.username && (
-          <>
-            <div className="text-sm sm:text-lg md:text-xl font-semibold dark:text-slate-100 flex items-center gap-1">
-              <TypeAnimation
-                key={user.username}
-                sequence={["Welcome, ", 0, () => setShowWelcome(true)]}
-                speed={60}
-                cursor={false}
-              />
-              {showWelcome && (
-                <TypeAnimation
-                  sequence={[user.username, 100, () => setShowDate(true)]}
-                  speed={60}
-                  cursor={false}
-                  className="text-blue-400"
-                />
-              )}
-              <CustomiseBackground
-                className="ml-auto mr-0"
-                initialImage={user?.background_image}
-              />
-            </div>
-            {showDate && (
-              <div className="text-xs sm:text-sm text-slate-400 -mt-1 md:mt-0">
-                <TypeAnimation
-                  sequence={[
-                    `It is currently ${moment().format("dddd Do MMMM [-] HH:mm")}`,
-                  ]}
-                  speed={60}
-                  cursor={false}
-                />
-              </div>
-            )}
-          </>
-        )}
+        <div className="text-sm sm:text-lg md:text-xl font-semibold dark:text-slate-100 flex items-center gap-1">
+          <div>Welcome, </div>
+          <div className="text-blue-400">{user?.username}</div>
+          <CustomiseBackground
+            className="ml-auto mr-0"
+            initialImage={user?.background_image}
+          />
+        </div>
+        <div className="text-xs sm:text-sm text-slate-400 -mt-1 md:mt-0">
+          {`It is currently ${moment().format("dddd Do MMMM [-] HH:mm")}`}
+        </div>
       </div>
 
       {/* Second part */}
