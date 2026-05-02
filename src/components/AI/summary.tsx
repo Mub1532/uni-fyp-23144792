@@ -1,3 +1,5 @@
+import { HiSparkles } from "react-icons/hi";
+
 interface AISummaryCardProps {
   todayEvents: unknown[];
   upcomingEvents: unknown[];
@@ -11,11 +13,12 @@ export function AISummary({
 }: AISummaryCardProps) {
   return (
     <div className="md:rounded-md bg-blue-400/60 dark:bg-slate-600/60 py-2 px-2 md:p-4 mr-2 h-fit w-full text-center md:text-start">
-      <div className="text-xs uppercase tracking-widest text-yellow-700! dark:text-yellow-400! font-bold mb-2">
+      <div className="text-sm uppercase text-yellow-400 font-semibold flex items-center justify-center md:justify-start gap-2 pb-3 pt-2 md:pt-0">
+        <HiSparkles className="text-yellow-300 text-xl" />
         AI Summary
       </div>
 
-      <div className="text-sm font-semibold flex flex-col mt-1 md:mt-0 gap-1">
+      <div className="text-sm font-semibold flex flex-col gap-1">
         <div>
           Calendar:{" "}
           {todayEvents.length === 0

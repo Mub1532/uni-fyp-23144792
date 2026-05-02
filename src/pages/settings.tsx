@@ -213,19 +213,18 @@ export default function Settings({
 
       {/* second section, toggle stuff */}
       <div className="h-full w-full flex flex-col gap-4">
-        <div className="flex gap-2 flex-col">
-          <div className="text-lg font-bold text-blue-400 ">
-            Reminders & Notification Settings
-          </div>
-        </div>
+        {/* Future improvemnets, reminders */}
+        {/* <div className="text-lg font-bold text-blue-400 ">
+          Reminders & Notification Settings
+        </div> */}
 
-        <div className="mt-2 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <div className="text-lg font-bold text-blue-400">
             Calendar Sync Settings
           </div>
           {googleUser && (
             <>
-              <div>Currently Signed in as: </div>
+              <div className="font-medium">Currently Syncing as: </div>
               <div className="flex h-fit w-full gap-2 items-center">
                 <div className="relative aspect-square w-20!">
                   <Image
@@ -261,7 +260,9 @@ export default function Settings({
           </button>
           {googleUser && (
             <div className="w-fit max-w-full flex items-center h-fit">
-              <div className="mr-2">Use Google PFP as Profile Pic:</div>
+              <div className="mr-2 font-medium">
+                Use Google PFP as Profile Pic:
+              </div>
               <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
             </div>
           )}

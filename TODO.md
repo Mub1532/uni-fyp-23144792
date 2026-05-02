@@ -2,8 +2,6 @@
 
 main stuff:
 
-- reminders implementation not just some quick one, do a proper thing
-- add that to settings
 - do the movbile priperly
 - settings page mobile
 
@@ -15,7 +13,7 @@ Optional/ future improvements:
 - Add undo redo button maybe
 - Add proper landing page, branding etc, basically polish eg so its like a production website
 - Sync for other sites aswell except for Google, like outlook, apple calendar, others etc, so its all of them in one
-
+- reminders
 
 - dev currenrtly doing:
 - notes, fix the stuff where u select text,etc
