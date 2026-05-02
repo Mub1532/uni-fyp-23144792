@@ -10,7 +10,6 @@ type TopBarProps = {
   user?: userInfo;
   useGooglePic?: boolean;
   googlePic?: string | undefined;
-  useBG: boolean;
 };
 
 export default function TopBar({
@@ -18,10 +17,9 @@ export default function TopBar({
   user,
   useGooglePic = false,
   googlePic = undefined,
-  useBG = false,
 }: TopBarProps) {
   return (
-    <div className="flex gap-2 title-page text-2xl bg-slate-20 h-12 md:h-16 p-2 md:p-3 w-full items-center border-b-2 border-blue-200 dark:border-slate-600">
+    <div className="flex gap-2 title-page text-2xl bg-slate-20 h-12 md:h-16 p-2 md:p-3 w-full items-center border-b-2 dark:border-slate-500 border-blue-300">
       <div className="font-bold align-bottom text-lg md:text-xl w-full">
         {pageName}
       </div>
@@ -42,7 +40,7 @@ export default function TopBar({
           />
         )}
 
-        <ThemeToggle useBG={useBG} />
+        <ThemeToggle />
         {user?.id ? <NotifContainer /> : null}
       </div>
     </div>

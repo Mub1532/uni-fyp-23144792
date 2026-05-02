@@ -20,14 +20,16 @@ export default async function handler(
 
   const connection = await getDBConnection();
 
-  const response = await fetch(imageUrl);
-  const contentType = response.headers.get("content-type");
-  const isValidImage = contentType?.startsWith("image/") ?? false;
+  if (imageUrl !== null) {
+    const response = await fetch(imageUrl);
+    const contentType = response.headers.get("content-type");
+    const isValidImage = contentType?.startsWith("image/") ?? false;
 
-  if (!isValidImage)
-    return res.status(200).send({
-      code: USER_CODES.NOT_VALID_IMG,
-    });
+    if (!isValidImage)
+      return res.status(200).send({
+        code: USER_CODES.NOT_VALID_IMG,
+      });
+  }
 
   try {
     const [result] = await connection.query<ResultSetHeader>(

@@ -63,7 +63,7 @@ export default function Test({
 
   return (
     <div className="h-full w-full flex flex-col text-slate-600 dark:text-slate-300 gap-1">
-      <div className="h-fit w-full border-b-2 px-2 border-slate-200 dark:border-slate-700 pb-2">
+      <div className="h-fit w-full border-b-2 px-2 dark:border-slate-500 border-blue-400 pb-2">
         {/* Welcome part */}
         {user?.username && (
           <>
@@ -176,7 +176,7 @@ export function HomeSection({
   return (
     <div
       className={joinClasses(
-        "h-fit md:h-full w-full flex flex-col p-2 gap-4 border-b-2 md:border-b-0 border-slate-200 dark:border-slate-700",
+        "h-fit md:h-full w-full flex flex-col p-2 gap-4 border-b-2 md:border-b-0 dark:border-slate-500 border-blue-400",
         isFirst ? "md:border-r-2!" : "md:border-none",
         className,
       )}

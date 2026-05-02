@@ -19,7 +19,7 @@ export default function CustomiseBackground({
   const [imageUrl, setImageUrl] = useState(initialImage);
 
   async function setBG() {
-    if (!imageUrl) {
+    if (!imageUrl && !initialImage) {
       toast.warn("Please enter an image URL.");
       return;
     }
@@ -28,15 +28,20 @@ export default function CustomiseBackground({
       const res = await fetch("/api/auth/background", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl }),
+        body: JSON.stringify({ imageUrl: imageUrl || null }),
       });
       const data = await res.json();
 
       if (data.code === USER_CODES.NOT_VALID_IMG) {
         toast.info("That image is not accessible from the server.");
       } else if (data.code === USER_CODES.SAVE_SUCCESS) {
-        toast.info("Successfully set image, please refresh the page to see.");
+        if (!imageUrl || imageUrl?.length === 0) {
+          toast.info("Successfully removed image. Refreshing...");
+        } else {
+          toast.info("Successfully set image. Refreshing...");
+        }
         setOpen(false);
+        setTimeout(() => window.location.reload(), 2000);
       } else {
         toast.error("Failed to save background image.");
       }
@@ -83,7 +88,7 @@ export default function CustomiseBackground({
               <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                 Preview
               </label>
-              {/** biome-ignore lint/performance/noImgElement: preview url */}
+              {/** biome-ignore lint/performance/noImgElement: needed cuz of the preview for img, without makin next js just allow all hosts*/}
               <img
                 src={imageUrl}
                 alt="Preview"

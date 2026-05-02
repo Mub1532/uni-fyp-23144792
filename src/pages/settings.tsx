@@ -217,10 +217,6 @@ export default function Settings({
           <div className="text-lg font-bold text-blue-400 ">
             Reminders & Notification Settings
           </div>
-          {/* <div className="h-fit w-full gap-2 flex">
-            <div>test toggle</div>
-            <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
-          </div> */}
         </div>
 
         <div className="mt-2 flex flex-col gap-2">

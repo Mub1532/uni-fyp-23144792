@@ -52,8 +52,6 @@ export default function App({ Component, pageProps }: MyPageProps) {
     }
   }, [loading, loggedIn, currentPage, router.push, user?.background_image]);
 
-  console.log(user);
-
   const [pageName, setPageName] = useState("");
 
   useEffect(() => {
@@ -103,7 +101,6 @@ export default function App({ Component, pageProps }: MyPageProps) {
                   user={user}
                   useGooglePic={useGooglePic}
                   googlePic={googlePic}
-                  useBG={typeof bgImage === "string"}
                 />
                 <div
                   className={joinClasses(

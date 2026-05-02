@@ -60,11 +60,15 @@
 }
 
 .rbc-calendar {
-  @apply p-4 rounded-lg border-2 border-blue-300 dark:border-slate-500 dark:bg-slate-700 text-blue-900! dark:text-slate-200! font-semibold;
+  @apply p-4 rounded-lg border-2 border-blue-300 dark:border-slate-500 dark:bg-slate-700 text-blue-900! dark:text-slate-200! font-semibold transition-all! ease-in duration-300;
 }
 
 .rbc-calendar * {
   @apply border-blue-300! dark:border-slate-500! text-blue-900! dark:text-slate-200! transition-all! ease-in duration-300;
+}
+
+[class*="rbc-"] {
+  @apply transition-all! ease-in! duration-300!;
 }
 
 .rbc-off-range-bg {
@@ -194,4 +198,12 @@ button.rbc-active {
 
 .user-bg {
   @apply bg-cover bg-center;
-background-image: linear-gradient(to top left, rgba(15,23,42,0.8), rgba(15,23,42,0.9), rgba(15,23,42,0.8)), var(--bg-url);}
+}
+
+.dark .user-bg {
+  background-image: linear-gradient(to top left, color-mix(in oklab, var(--color-slate-900) 70%, transparent), color-mix(in oklab, var(--color-slate-900) 80%, transparent), color-mix(in oklab, var(--color-slate-900) 70%, transparent)), var(--bg-url);
+}
+
+.user-bg {
+  background-image: linear-gradient(to top left, color-mix(in oklab, var(--color-blue-50) 70%, transparent), color-mix(in oklab, var(--color-blue-50) 80%, transparent), color-mix(in oklab, var(--color-blue-50) 70%, transparent)), var(--bg-url);
+}
