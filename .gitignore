@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 src/styles/tailwind.css
+test.json
+src/pages/test.tsx
+src/pages/api/ai/test.ts
