@@ -49,8 +49,8 @@ export default async function handler(
   //   const { text } = req.body;
 
   //   if (!text) return res.status(400).send({ error: "text is required" });
-  const text = texts[Math.floor(Math.random() * texts.length)];
-  const response = await fetch(`${process.env.AI_HOST}/predict`, {
+  const text = texts[1];
+  const response = await fetch(`${process.env.AI_HOST}/api/ai/tasks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
