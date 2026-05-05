@@ -29,8 +29,14 @@ export default function Tos() {
       </div>
 
       <ul className="list-disc pl-6">
-        <li>You grant read-only access to your Google Calendar</li>
-        <li>You grant read-only access to your Google Username/Name</li>
+        <li>
+          You grant read-only access to your Google Calendar, for the purposes
+          of syncing calendars.
+        </li>
+        <li>
+          You grant read-only access to your Google Username/Name and profile
+          picture if enabled.
+        </li>
         <li>
           You can revoke access at any time via{" "}
           <a
@@ -46,7 +52,7 @@ export default function Tos() {
 
       <div>
         We (Mubashar Khan) do not sell any data, we do not have tracking, and
-        only data specifically enabled by you is stored, not any others.
+        only data specifically enabled by you is stored.
       </div>
     </div>
   );

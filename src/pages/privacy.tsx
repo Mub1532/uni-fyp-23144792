@@ -41,7 +41,7 @@ export default function Planner() {
 
       <div className="mt-4 font-semibold">
         We (Mubashar Khan) do not sell any data, we do not have tracking, and
-        only data specifically enabled by you is stored, not any others.
+        only data specifically enabled by you is stored
       </div>
     </div>
   );
