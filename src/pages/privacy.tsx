@@ -30,8 +30,12 @@ export default function Planner() {
       <ul className="list-disc pl-6">
         <li>Calendar items, so that it can be added to your calendar</li>
         <li>
-          (Not Stored, only used) Username/Name, so that you can see if you are
-          signed in, and to the correct account
+          Username/Name, so that you can see if you are signed in, and to the
+          correct account
+        </li>
+        <li>
+          Profile Picture if you enable the setting Use Google Profile Picture
+          as my profile pic.
         </li>
       </ul>
 
