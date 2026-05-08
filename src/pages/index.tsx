@@ -1,3 +1,4 @@
+import { isAfter, isBefore, isToday, startOfDay } from "date-fns";
 import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
@@ -41,16 +42,14 @@ export default function Home({
     type: x.type,
   }));
 
-  const todayEvents = events.filter((e) =>
-    moment(e.start).isSame(moment(), "day"),
-  );
+  const todayEvents = events.filter((e) => isToday(new Date(e.start)));
 
   const upcomingEvents = events.filter((e) =>
-    moment(e.start).isAfter(moment()),
+    isAfter(new Date(e.start), new Date()),
   );
 
   const pastEvents = events.filter((e) =>
-    moment(e.start).isBefore(moment(), "day"),
+    isBefore(new Date(e.start), startOfDay(new Date())),
   );
 
   async function selectCalendarEvent(event: CalendarEvent) {

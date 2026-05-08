@@ -1,4 +1,3 @@
-import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
 import Image from "next/image";
@@ -161,7 +160,7 @@ export default function Settings({
             <div className="text-md font-medium text-blue-500 dark:text-slate-300">
               User Since:{" "}
               <span className="font-bold">
-                {moment(userCreated).format("dddd Do MMMM [-] HH:mm")}
+                {format(new Date(userCreated), "EEEE do MMMM '-' HH:mm")}
               </span>
             </div>
           </div>
@@ -304,6 +303,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   };
 }
 
+import { format } from "date-fns";
 import type { IconType } from "react-icons";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaGoogle, FaLock, FaSave, FaUser } from "react-icons/fa";

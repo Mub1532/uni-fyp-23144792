@@ -1,11 +1,5 @@
-import moment from "moment";
 import { type Dispatch, type SetStateAction, useState } from "react";
-import {
-  Calendar,
-  momentLocalizer,
-  type SlotInfo,
-  type View,
-} from "react-big-calendar";
+import { Calendar, type SlotInfo, type View } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { toast } from "react-toastify";
 import EventModal, { type CalendarEvent } from "@/components/calendar/modal";
@@ -13,12 +7,20 @@ import { EMPTY_MODAL, type ModalState } from "@/types/calendar";
 import { NOTE_CAL_CODES } from "@/types/notes";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { format, getDay, parse, startOfWeek } from "date-fns";
+import { enGB } from "date-fns/locale";
+import { dateFnsLocalizer } from "react-big-calendar";
 import { CalendarEventItem } from "./CalendarEvent";
 import { CalendarToolbar } from "./Toolbar";
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(Calendar);
-const localiser = momentLocalizer(moment);
-
+const localiser = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  getDay,
+  locales: { "en-GB": enGB },
+});
 interface CalendarViewProps {
   initialEvents: CalendarEvent[];
   currentCalModal: ModalState;

@@ -1,4 +1,4 @@
-import moment from "moment";
+import { format } from "date-fns";
 import { getEventIcon } from "@/utils/calendar/eventIcon";
 import { joinClasses } from "@/utils/misc/classes";
 import type { CalendarEvent } from "../calendar/modal";
@@ -25,8 +25,8 @@ const emptyMap: Record<EventSection, string> = {
 
 const dateFormatMap: Record<EventSection, string> = {
   Today: "HH:mm",
-  Upcoming: "DD/MM/YY - HH:mm",
-  Past: "DD/MM/YY - HH:mm",
+  Upcoming: "dd/mm/yy - HH:mm",
+  Past: "dd/MM/yy - HH:mm",
 };
 
 export function EventLists({ type, events, onClick }: EventListSectionProps) {
@@ -57,8 +57,8 @@ export function EventLists({ type, events, onClick }: EventListSectionProps) {
                 className="text-xs font-medium w-fit"
               >
                 {type === "Today"
-                  ? `${moment(event.start).format("HH:mm")} - ${moment(event.end).format("HH:mm")}`
-                  : moment(event.start).format(dateFormatMap[type])}
+                  ? `${format(new Date(event.start), "HH:mm")} - ${format(new Date(event.end), "HH:mm")}`
+                  : format(new Date(event.start), dateFormatMap[type])}
               </span>
               {getEventIcon(event)}
               <span className="text-sm font-medium truncate">
