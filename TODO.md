@@ -14,10 +14,7 @@ Optional/ future improvements:
 - Add proper landing page, branding etc, basically polish eg so its like a production website
 - Sync for other sites aswell except for Google, like outlook, apple calendar, others etc, so its all of them in one
 - reminders
-
-- dev currenrtly doing:
-- notes, fix the stuff where u select text,etc
-- Make it so u cant remove title etc, separate the title and body fromt he user testing recommedntaion
+- use ORM for mysql
 
 AI Features:
 
