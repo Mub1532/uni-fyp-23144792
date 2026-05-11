@@ -14,6 +14,10 @@ export default function PageSEO({ title, description }: PageSEOProps) {
     <Head>
       <title>{fullTitle}</title>
       <meta name="description" content={description ?? defaultDescription} />
+      <meta
+        name="google-site-verification"
+        content="jcds2dS9NBwA2kAvHzMCpijshQQNSsbTmb_-WrsbSXc"
+      />
       <meta property="og:title" content={fullTitle} />
       <meta name="theme-color" content="#3b82f6" />
       <meta
