@@ -93,14 +93,14 @@ export const pages = [
     name: "Privacy Policy",
     path: "/privacy",
     icon: MdPrivacyTip,
-    hidden: false,
+    hidden: true,
     needAuth: false,
   }),
   new Page({
     name: "Terms Of Service",
     path: "/tos",
     icon: FaUserCheck,
-    hidden: false,
+    hidden: true,
     needAuth: false,
   }),
   new Page({
