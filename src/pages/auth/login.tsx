@@ -4,10 +4,11 @@ import type { InputHTMLAttributes, ReactNode, SubmitEvent } from "react";
 import { useEffect, useState } from "react";
 import { MdEmail, MdLock } from "react-icons/md";
 import { toast } from "react-toastify";
+import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { hashEmailPass } from "@/utils/auth/jwt";
 
-export default function LoginPage() {
+export default function LoginPage({ user }: MyPageProps) {
   const [currentMessage, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
@@ -19,6 +20,13 @@ export default function LoginPage() {
       toast.info("Successfully Logged out.");
     }
   }, [router.query.code]);
+
+  useEffect(() => {
+    if (user?.id) {
+      toast.info("Already logged in, directed to Home Page.");
+      router.push("/");
+    }
+  }, [user?.id, router.push]);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();

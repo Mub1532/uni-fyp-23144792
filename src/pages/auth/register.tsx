@@ -1,14 +1,26 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { SubmitEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdEmail, MdLock, MdPerson } from "react-icons/md";
+import { toast } from "react-toastify";
+import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { hashEmailPass } from "@/utils/auth/jwt";
 import { LoginInput } from "./login";
 
-export default function RegisterPage() {
+export default function RegisterPage({ user }: MyPageProps) {
   const [currentMessage, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user?.id) {
+      toast.info("Already logged in, directed to Home Page.");
+      router.push("/");
+    }
+  }, [user?.id, router.push]);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
