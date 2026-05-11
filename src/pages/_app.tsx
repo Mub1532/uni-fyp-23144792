@@ -16,6 +16,7 @@ import { textColor } from "@/utils/classes";
 import { pages } from "@/utils/data/pages";
 import { capitaliseFirstLetter } from "@/utils/misc/caps";
 import { defaultScrollbar, joinClasses } from "@/utils/misc/classes";
+import PageSEO from "./layout/seo";
 
 const font = Montserrat({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
 
   return (
     <>
+      <PageSEO title={currentPage?.name} />
       <Script src="/theme.js" strategy="beforeInteractive" />
       <main className={font.className}>
         <ToastContainer
