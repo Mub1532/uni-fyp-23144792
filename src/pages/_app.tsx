@@ -110,7 +110,8 @@ export default function App({ Component, pageProps }: MyPageProps) {
                     pageName === "Calendar" ||
                       pageName === "Login" ||
                       pageName === "Sign Up" ||
-                      pageName === "Notes"
+                      pageName === "Notes" ||
+                      pageName === "AI Planner"
                       ? "h-full"
                       : "h-fit md:h-full",
                   )}

@@ -1,4 +1,4 @@
-import { differenceInHours } from "date-fns";
+import { differenceInHours, format } from "date-fns";
 import { eq } from "drizzle-orm";
 import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
@@ -59,7 +59,9 @@ export default function Preferences({
 
   const [taskTitle, setTitle] = useState("");
   const [taskDesc, setDesc] = useState("");
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(
+    format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+  );
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -157,7 +159,7 @@ export default function Preferences({
     if (taskDesc !== exampleDesc) setDesc(exampleDesc);
     setStartDate(new Date().toISOString().slice(0, 16));
     setEndDate(
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
     );
   }
 
@@ -238,9 +240,9 @@ export default function Preferences({
         <div className="font-bold text-2xl text-center mb-4">
           Generate an AI Calendar Plan
         </div>
-        <div className="flex md:flex-row h-full w-full items-center justify-center gap-4 overflow-auto">
+        <div className="flex px-2 md:flex-row h-full w-full items-center justify-center gap-4 overflow-auto">
           {aiEvents?.length < 1 && (
-            <div className="flex flex-col gap-4 h-full w-fit md:min-w-1/2 pb-24">
+            <div className="flex flex-col gap-4 h-full w-full md:w-fit md:min-w-1/2 md:max-w-full pb-24">
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">
                   Title
@@ -251,11 +253,11 @@ export default function Preferences({
                   value={taskTitle}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Task title"
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
 
-              <div className="flex flex-col gap-1 h-full">
+              <div className="flex flex-col gap-1 h-full w-full">
                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">
                   Description
                 </label>
@@ -263,8 +265,8 @@ export default function Preferences({
                   minLength={10}
                   value={taskDesc}
                   onChange={(e) => setDesc(e.target.value)}
-                  placeholder="Type what you need to do in the task, can be messy, detailed, etc."
-                  className="w-full h-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+                  placeholder="Type what you need to do in the task, can be vague, messy detailed etc. Click example Plan for an example."
+                  className="w-full h-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
                 />
               </div>
 
@@ -277,7 +279,7 @@ export default function Preferences({
                     type="datetime-local"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   />
                 </div>
                 <div className="flex flex-col gap-1 flex-1">
@@ -288,7 +290,7 @@ export default function Preferences({
                     type="datetime-local"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   />
                 </div>
               </div>
@@ -306,7 +308,7 @@ export default function Preferences({
               <QuickButton
                 label="Example Plan"
                 icon={FaRegLightbulb}
-                className="w-full! flex items-center! justify-center! bg-yellow-600/40!"
+                className="w-full! flex items-center! justify-center! bg-yellow-500 font-bold dark:bg-yellow-600/40!"
                 onClick={generateScheduleExample}
               />
             </div>
@@ -380,7 +382,7 @@ export default function Preferences({
                     minStartTime: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <div className="flex flex-col gap-1 flex-1">
@@ -396,7 +398,7 @@ export default function Preferences({
                     maxEndTime: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
           </div>
@@ -418,7 +420,7 @@ export default function Preferences({
                 }))
               }
               placeholder="e.g. 8"
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             />
           </div>
         </div>

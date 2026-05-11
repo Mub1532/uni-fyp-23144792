@@ -13,7 +13,7 @@ export default function Planner() {
       <ul className="list-disc pl-6">
         <li>Username</li>
         <li>Email (hashed on database)</li>
-        <li>Password (encrypted)</li>
+        <li>Password (hashed)</li>
         <li>Calendar Events you explicitly create</li>
         <li>Tasks you explicitly create</li>
         <li>Notes you explicitly create</li>

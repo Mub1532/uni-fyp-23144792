@@ -292,12 +292,12 @@ export default function Settings({
               }
               label="Disconnect Google"
               onClick={resetGoogleAuth}
-              className="text-xs md:text-sm font-semibold! bg-red-600/60! text-white"
+              className="text-sm font-semibold! bg-red-600/60! text-white w-fit!"
               extraIconClass={joinClasses(
-                "text-sm! sm:text-lg! md:text-2xl!",
+                "text-xl! md:text-2xl!",
                 googleResetLoading && "animate-spin",
               )}
-              showText="onlyMd"
+              showText="yes"
             />
           )}
         </div>

@@ -12,8 +12,10 @@ export default function Tos() {
         <li>
           This is a univeristy project, so website may be offline any time
         </li>
-        <li>You use this app at your own risk</li>
-        <li>We are not liable for any data loss or issues arising from use</li>
+        <li>
+          We are not liable for any data loss or issues arising from use, this
+          is a project, it can be taken offline anytime.
+        </li>
         <li>
           Do not upload any sensitive or personal information beyond what is
           required
