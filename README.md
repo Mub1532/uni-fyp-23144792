@@ -1,40 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Mubashar Khan - 23144792 - University Final Project
+### AI Powered Student Planning Website
+#### This is one of the artefacts of my final year project
 
-## Getting Started
+---
 
-First, run the development server:
+## Live Website
+The website can be accessed at:  
+https://uniproject.mubkhan.me
 
+Note: To self host, please fill out example.env and rename to .env in order for the website to work, .env is the secrets which should not be shared
+
+---
+
+## Related Repositories
+- [AI Training + Server](https://github.com/Mub1532/23144792-fyp-ai-training)
+
+---
+
+## About
+A full-stack AI-powered student planning web application built as part of my final year project. The application is built using Next.js for both the frontend and backend, with MySQL as the database. Authentication uses JWE encrypted cookies via the `jose` library and bcrypt for password hashing. The backend connects to MySQL using Drizzle ORM (migration in progress). The UI is built with Tailwind CSS & SCSS and uses TypeScript throughout the project.
+
+---
+
+## Running Locally
+1. Install [Node.js](https://nodejs.org/)
+2. Install [MySQL](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/), or you can also use a docker container
+3. Set up the database by running the SQL script in MySQL:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   mysql -u  -p  < scripts/dbSetup.sql
+```
+3. Install dependencies (yarn preferred):
+```bash
+   yarn install
+   # or
+   npm install
+```
+3. Fill out `example.env` and rename it to `.env`
+4. Start the dev server:
+```bash
+   yarn dev
+   # or
+   npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Features
+- **Dashboard** — Overview of your day, upcoming tasks, and AI-generated summaries
+- **Calendar** — Full interactive calendar with drag-and-drop scheduling
+- **Calendar** — Full interactive calendar with drag-and-drop scheduling
+- **Schedule** — View and manage your timetable and planned sessions
+- **Rich Notes** — Create Notes with a rich live preview text editor
+- **AI Planner** — Automatically plans and schedules tasks and calendar based on your preferences and natural language descriptions of what you want to to do.
+- **Google Calendar Sync** — Sync your events with Google Calendar , More Providers added for future improvements
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+---
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Methods
+- **Frontend & Backend** — Next.js (TypeScript)
+- **Styling** — Tailwind CSS, SCSS
+- **Database** — MySQL via Drizzle ORM
+- **Auth** — JWE encrypted cookies (`jose`, A256GCM), bcrypt for hashing info such as email and password, Google OAuth for the integration
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+---
