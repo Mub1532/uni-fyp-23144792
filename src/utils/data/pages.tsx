@@ -1,6 +1,13 @@
 import type { IconType } from "react-icons";
-import { FaCalendarAlt, FaCalendarDay, FaCog, FaHome } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaCalendarDay,
+  FaCog,
+  FaHome,
+  FaUserCheck,
+} from "react-icons/fa";
 import { FaNoteSticky } from "react-icons/fa6";
+import { MdPrivacyTip } from "react-icons/md";
 
 export enum NavPosition {
   PRIMARY,
@@ -46,6 +53,7 @@ export const pages = [
     name: "Home",
     path: "/",
     icon: FaHome,
+    needAuth: false,
   }),
   new Page({
     name: "Calendar",
@@ -84,15 +92,22 @@ export const pages = [
   new Page({
     name: "Privacy Policy",
     path: "/privacy",
-    icon: FaCog,
+    icon: MdPrivacyTip,
     hidden: false,
     needAuth: false,
   }),
   new Page({
     name: "Terms Of Service",
     path: "/tos",
-    icon: FaCog,
+    icon: FaUserCheck,
     hidden: false,
+    needAuth: false,
+  }),
+  new Page({
+    name: "Mub Calendar",
+    path: "/landing",
+    icon: FaCog,
+    hidden: true,
     needAuth: false,
   }),
 ];

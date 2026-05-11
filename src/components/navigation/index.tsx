@@ -33,9 +33,7 @@ export default function Navigation({ loggedIn, className }: NavigationProps) {
       >
         {pages
           .filter((x) => !x.hidden)
-          .filter((x) =>
-            loggedIn !== undefined && loggedIn ? x.needAuth : false,
-          )
+          .filter((x) => (loggedIn ? true : !x.needAuth))
           .map((page) => (
             <NavItem showText={showText} {...page} key={page.path} />
           ))}
