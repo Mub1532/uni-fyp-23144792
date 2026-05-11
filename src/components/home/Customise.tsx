@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPalette } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -17,6 +17,10 @@ export default function CustomiseBackground({
 }: customiseProps) {
   const [open, setOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialImage);
+
+  useEffect(() => {
+    setImageUrl(initialImage);
+  }, [initialImage]);
 
   async function setBG() {
     if (!imageUrl && !initialImage) {

@@ -122,7 +122,10 @@ export default function App({ Component, pageProps }: MyPageProps) {
                     pageName !== "Mub Calendar" && "p-4 px-1 md:px-2",
                   )}
                 >
-                  <ProgressBar color="#3b82f6" />
+                  <ProgressBar
+                    color="#3b82f6"
+                    options={{ showSpinner: false }}
+                  />{" "}
                   <Component
                     {...pageProps}
                     user={user}
