@@ -18,7 +18,7 @@ Note: To self host, please fill out example.env and rename to .env in order for 
 ---
 
 ## About
-A full-stack AI-powered student planning web application built as part of my final year project. The application is built using Next.js for both the frontend and backend, with MySQL as the database. Authentication uses JWE encrypted cookies via the `jose` library and bcrypt for password hashing. The backend connects to MySQL using Drizzle ORM (migration in progress). The UI is built with Tailwind CSS & SCSS and uses TypeScript throughout the project.
+A full-stack AI-powered student planning web application built as part of my final year project. The application is built using Next.js for both the frontend and backend, with MySQL as the database. Authentication uses JWE encrypted cookies via the `jose` library and bcrypt for password hashing. The backend connects to MySQL using Drizzle ORM (full migration in progress). The UI is built with Tailwind CSS & SCSS and uses TypeScript throughout the project.
 
 ---
 
@@ -46,20 +46,20 @@ A full-stack AI-powered student planning web application built as part of my fin
 ---
 
 ## Features
-- **Dashboard** — Overview of your day, upcoming tasks, and AI-generated summaries
-- **Calendar** — Full interactive calendar with drag-and-drop scheduling
-- **Calendar** — Full interactive calendar with drag-and-drop scheduling
-- **Schedule** — View and manage your timetable and planned sessions
-- **Rich Notes** — Create Notes with a rich live preview text editor
-- **AI Planner** — Automatically plans and schedules tasks and calendar based on your preferences and natural language descriptions of what you want to to do.
-- **Google Calendar Sync** — Sync your events with Google Calendar , More Providers added for future improvements
+- **Dashboard** - Overview of your day, upcoming tasks, and AI-generated summaries
+- **Calendar** - Full interactive calendar with drag-and-drop scheduling
+- **Calendar** - Full interactive calendar with drag-and-drop scheduling
+- **Schedule** - View and manage your timetable and planned sessions easily in the dashboard.
+- **Rich Notes** - Create Notes with a rich live preview text editor
+- **AI Planner** - Automatically plans and schedules tasks and calendar based on your preferences and natural language descriptions of what you want to to do.
+- **Google Calendar Sync** - Sync your events with Google Calendar, soon will include more providers such as Outlook Calendar, iCloud
 
 ---
 
 ## Methods
-- **Frontend & Backend** — Next.js (TypeScript)
-- **Styling** — Tailwind CSS, SCSS
-- **Database** — MySQL via Drizzle ORM
-- **Auth** — JWE encrypted cookies (`jose`, A256GCM), bcrypt for hashing info such as email and password, Google OAuth for the integration
+- **Frontend & Backend** - Next.js (TypeScript)
+- **Styling** - Tailwind CSS, SCSS
+- **Database** - MySQL via Drizzle ORM
+- **Auth** - JWE encrypted cookies (`jose`, A256GCM), bcrypt for hashing info such as email and password, Google OAuth for the integration with Google Calendar
 
 ---
