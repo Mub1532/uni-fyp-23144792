@@ -7,8 +7,9 @@ interface PageSEOProps {
 
 export default function PageSEO({ title, description }: PageSEOProps) {
   const siteName = "Mub Calendar";
-  const fullTitle = title ? `${title} | ${siteName}` : siteName;
-  const defaultDescription = "AI-powered student planning app";
+  const fullTitle =
+    title && title !== siteName ? `${title} | ${siteName}` : siteName;
+  const defaultDescription = "MUb Calendar Planning website";
 
   return (
     <Head>
