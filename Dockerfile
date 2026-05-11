@@ -1,3 +1,5 @@
+#  taken from next js docs https://nextjs.org/docs/app/getting-started/deploying#docker
+
 # ============================================
 # Stage 1: Dependencies Installation Stage
 # ============================================
