@@ -45,7 +45,7 @@ export default function CustomiseBackground({
           toast.info("Successfully set image. Refreshing...");
         }
         setOpen(false);
-        setTimeout(() => window.location.reload(), 2000);
+        setTimeout(() => window.location.reload(), 500);
       } else {
         toast.error("Failed to save background image.");
       }
