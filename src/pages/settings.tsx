@@ -131,11 +131,29 @@ export default function Settings({
 
       if (data?.success === true) {
         toast.success("Successfully Synced Calendar.");
+      } else if (data?.err === "invalid_grant") {
+        router.push("/api/google/auth");
       } else {
         toast.error("Could not Sync Calendar.");
       }
       setSyncLoading(false);
     }
+  }
+
+  const [googleResetLoading, setResetLoading] = useState(false);
+
+  async function resetGoogleAuth() {
+    setResetLoading(true);
+    const res = await fetch("/api/google/reset");
+    const data = await res.json();
+
+    if (!data?.success) {
+      toast.error("Failed to logout Google");
+      return;
+    }
+
+    setResetLoading(false);
+    toast.success("Disconnected Google. Refresh to see changes.");
   }
 
   return (
@@ -217,7 +235,7 @@ export default function Settings({
           Reminders & Notification Settings
         </div> */}
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <div className="text-lg font-bold text-blue-400">
             Calendar Sync Settings
           </div>
@@ -238,12 +256,20 @@ export default function Settings({
                   <div className="font-medium">
                     Auto Syncs every 24h
                     <br />
-                    <span className="font-bold">Calendar Last Synced:</span> 23
-                    April 15:35pm
+                    <span className="font-bold">Calendar Last Synced: </span>
+                    {format(new Date(), "do MMMM '-' HH:mm")}{" "}
                   </div>
                 </div>
               </div>
             </>
+          )}
+          {googleUser && (
+            <div className="w-fit max-w-full flex items-center h-fit">
+              <div className="mr-2 font-medium">
+                Use Google PFP as Profile Pic:
+              </div>
+              <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
+            </div>
           )}
           <button
             onClick={syncGoogle}
@@ -258,16 +284,23 @@ export default function Settings({
             <div>{googleUser ? "Manual Sync" : "Login to Sync"}</div>
           </button>
           {googleUser && (
-            <div className="w-fit max-w-full flex items-center h-fit">
-              <div className="mr-2 font-medium">
-                Use Google PFP as Profile Pic:
-              </div>
-              <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
-            </div>
+            <QuickButton
+              icon={
+                googleResetLoading
+                  ? AiOutlineLoading3Quarters
+                  : MdOutlineSyncDisabled
+              }
+              label="Disconnect Google"
+              onClick={resetGoogleAuth}
+              className="text-xs md:text-sm font-semibold! bg-red-600/60! text-white"
+              extraIconClass={joinClasses(
+                "text-sm! sm:text-lg! md:text-2xl!",
+                googleResetLoading && "animate-spin",
+              )}
+              showText="onlyMd"
+            />
           )}
         </div>
-
-        <div className="text-lg font-bold text-blue-400 mt-2">AI Settings</div>
       </div>
     </div>
   );
@@ -307,10 +340,12 @@ import { format } from "date-fns";
 import type { IconType } from "react-icons";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaGoogle, FaLock, FaSave, FaUser } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
+import { MdEmail, MdOutlineSyncDisabled } from "react-icons/md";
 import { useDebounceCallback } from "usehooks-ts";
+import { QuickButton } from "@/components/home/QuickButton";
 import GooglePic from "@/components/misc/GooglePic";
 import Toggle from "@/components/misc/Toggle";
+import { joinClasses } from "@/utils/misc/classes";
 
 interface FormInputProps {
   title: string;

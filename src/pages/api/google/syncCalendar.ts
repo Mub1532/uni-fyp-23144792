@@ -54,53 +54,58 @@ export default async function handler(
     });
 
   const calendar = google.calendar({ version: "v3", auth: oauth2Client });
-  const { data } = await calendar.events.list({
-    calendarId: "primary",
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: "startTime",
-  });
-
-  const formattedEvents = data.items?.map((x) => ({
-    user_id: currentUser?.id,
-    title: x.summary ?? "No Title",
-    description: x?.description?.startsWith(
-      "Changes made to the title, description, or attachments will not be saved. To make edits, please go to:",
-    )
-      ? null
-      : x?.description,
-    start_time: new Date(x?.start?.dateTime ?? x?.start?.date ?? ""),
-    end_time: new Date(x?.end?.dateTime ?? x?.end?.date ?? ""),
-    type: "IMPORTED",
-    imported_type: "Google",
-    external_ical_id: x?.iCalUID ?? null,
-  }));
-
-  if (!formattedEvents) return res.status(500).json({ success: false });
-
-  const { sql, values } = insertHelperBulk(
-    "calendar_items",
-    formattedEvents,
-    undefined,
-    "replace",
-  );
-
-  const [result] = await connection.query<ResultSetHeader>(sql, values);
-
-  const amountUpdated = result.affectedRows;
-
-  const [userResult] = await connection.query<ResultSetHeader>(
-    "UPDATE users SET googleLastSync = ? WHERE id = ?;",
-    [new Date(), currentUser.id],
-  );
-
-  const success = userResult.affectedRows === 1;
-
-  if (success)
-    return res.status(200).json({
-      success: true,
-      updatedAmount: amountUpdated,
+  try {
+    const { data } = await calendar.events.list({
+      calendarId: "primary",
+      maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
     });
+
+    const formattedEvents = data.items?.map((x) => ({
+      user_id: currentUser?.id,
+      title: x.summary ?? "No Title",
+      description: x?.description?.startsWith(
+        "Changes made to the title, description, or attachments will not be saved. To make edits, please go to:",
+      )
+        ? null
+        : x?.description,
+      start_time: new Date(x?.start?.dateTime ?? x?.start?.date ?? ""),
+      end_time: new Date(x?.end?.dateTime ?? x?.end?.date ?? ""),
+      type: "IMPORTED",
+      imported_type: "Google",
+      external_ical_id: x?.iCalUID ?? null,
+    }));
+
+    if (!formattedEvents) return res.status(500).json({ success: false });
+
+    const { sql, values } = insertHelperBulk(
+      "calendar_items",
+      formattedEvents,
+      undefined,
+      "replace",
+    );
+
+    const [result] = await connection.query<ResultSetHeader>(sql, values);
+
+    const amountUpdated = result.affectedRows;
+
+    const [userResult] = await connection.query<ResultSetHeader>(
+      "UPDATE users SET googleLastSync = ? WHERE id = ?;",
+      [new Date(), currentUser.id],
+    );
+
+    const success = userResult.affectedRows === 1;
+
+    if (success)
+      return res.status(200).json({
+        success: true,
+        updatedAmount: amountUpdated,
+      });
+  } catch (err) {
+    const error = err as Error;
+    return res.status(400).json({ success: false, err: error?.message });
+  }
 
   return res.status(500).json({ success: false });
 }

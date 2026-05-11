@@ -87,7 +87,7 @@ export const userBlockedHours = mysqlTable(
   ],
 );
 
-type WorkDay =
+export type WorkDay =
   | "monday"
   | "tuesday"
   | "wednesday"

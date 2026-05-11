@@ -109,7 +109,8 @@ export default function App({ Component, pageProps }: MyPageProps) {
                     defaultScrollbar,
                     pageName === "Calendar" ||
                       pageName === "Login" ||
-                      pageName === "Sign Up"
+                      pageName === "Sign Up" ||
+                      pageName === "Notes"
                       ? "h-full"
                       : "h-fit md:h-full",
                   )}

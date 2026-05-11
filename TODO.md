@@ -1,10 +1,5 @@
 ## TODO
 
-main stuff:
-
-- do the movbile priperly
-- settings page mobile
-
 Optional/ future improvements:
 
 - Email verification
@@ -27,5 +22,6 @@ DONE:
 - sync stuff for calendar
 - Allow setting background image for a user
 
+- setting page cal last synced 
 
 

@@ -8,6 +8,7 @@ import {
   setMinutes,
 } from "date-fns";
 import type { CalendarEvent } from "@/components/calendar/modal";
+import type { WorkDay } from "@/db/schema";
 
 const DAYS = [
   "monday",
@@ -26,6 +27,19 @@ export type FreeTime = {
   maxDaily: string | undefined;
 };
 
+const defaultPreferences = {
+  work_days: [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+  ] as WorkDay[],
+  min_start_time: "09:00",
+  max_end_time: "23:00",
+  max_daily_hours: "8",
+};
+
 /**
  * Calculate the free time whcih does not go inside another calendar event, and also the users preferences
  * @param start
@@ -39,13 +53,13 @@ export function getFreeTime(
   end: Date,
   blockedTimes: { start_time: string; end_time: string }[],
   userPreferences: {
-    work_days: string;
+    work_days: WorkDay[];
     min_start_time: string;
     max_end_time: string;
     max_daily_hours: string;
-  },
+  } = defaultPreferences,
 ): FreeTime {
-  const workDays = userPreferences.work_days.split(",");
+  const workDays = userPreferences.work_days;
   const [workStart, workEnd] = [
     userPreferences.min_start_time,
     userPreferences.max_end_time,
@@ -56,7 +70,7 @@ export function getFreeTime(
   let totalMinutes = 0;
 
   for (const day of eachDayOfInterval({ start, end })) {
-    if (!workDays.includes(DAYS[getDay(day)])) continue;
+    if (!workDays.includes(DAYS[getDay(day)] as WorkDay)) continue;
 
     // the time user will start the day minimum and finish maximum
     const userMinStart = setMinutes(setHours(day, workStart[0]), workStart[1]);
@@ -128,7 +142,7 @@ export function spreadSubTasks(
   freeTime: FreeTime,
   title: string,
   subtasks: string[],
-  maxDaily: string,
+  maxDaily: string = "8",
 ): SpreadSubTasks {
   // minimu is 5 min max session is 60 min and have at least 1 hr break between each session and make sure dont go over the max daily hours from user prefernces
   const MIN_SESSION = 5;

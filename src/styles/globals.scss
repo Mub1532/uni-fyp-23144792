@@ -213,3 +213,36 @@ button.rbc-active {
 .user-bg {
   background-image: linear-gradient(to top left, color-mix(in oklab, var(--color-blue-50) 70%, transparent), color-mix(in oklab, var(--color-blue-50) 80%, transparent), color-mix(in oklab, var(--color-blue-50) 70%, transparent)), var(--bg-url);
 }
+
+.ai-glow {
+  @apply relative rounded-xl;
+}
+
+.ai-glow::before {
+  content: "";
+  @apply absolute -inset-1 rounded-2xl;
+  background: conic-gradient(from var(--angle, 0deg), var(--color-blue-500), var(--color-violet-500), var(--color-cyan-400), var(--color-blue-500));
+  animation: ai-rotate 3s linear infinite;
+  z-index: 0;
+}
+
+.ai-glow::after {
+  content: "";
+  @apply absolute inset-0 rounded-xl bg-inherit;
+  z-index: 1;
+}
+
+.ai-glow > * {
+  @apply relative;
+  z-index: 2;
+}
+
+@keyframes ai-rotate {
+  to { --angle: 360deg; }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}

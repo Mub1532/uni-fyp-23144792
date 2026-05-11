@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 export interface CalendarEvent {
   id?: string;
@@ -32,7 +32,7 @@ interface GenericModalProps extends BaseModalProps {
   title: string;
   onSave: () => void;
   submitLabel?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   mode?: never;
   event?: never;
   onChange?: never;
