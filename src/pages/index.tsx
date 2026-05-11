@@ -79,7 +79,7 @@ export default function Home({
 
       {/* Second part */}
 
-      <div className="h-full w-full min-h-0 flex flex-col md:flex-row gap-1 overflow-hidden">
+      <div className="h-full w-full min-h-0 flex flex-col md:flex-row gap-1 md:overflow-hidden">
         <HomeSection isFirst>
           <AISummary
             notes={notes}
@@ -89,7 +89,9 @@ export default function Home({
           <RecentNotes notes={notes} />
           <QuickActions className="hidden md:block " />{" "}
         </HomeSection>
-        <HomeSection className={joinClasses("overflow-auto", defaultScrollbar)}>
+        <HomeSection
+          className={joinClasses("md:overflow-auto", defaultScrollbar)}
+        >
           <div className="text-sm uppercase text-slate-800 dark:text-slate-300 font-semibold flex items-center justify-center gap-2 p-3">
             <FaClock className="text-blue-400 text-xl" />
             Your Schedule
