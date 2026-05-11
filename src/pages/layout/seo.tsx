@@ -18,6 +18,7 @@ export default function PageSEO({ title, description }: PageSEOProps) {
         name="google-site-verification"
         content="jcds2dS9NBwA2kAvHzMCpijshQQNSsbTmb_-WrsbSXc"
       />
+      <meta name="robots" content="noindex, nofollow" />
       <meta property="og:title" content={fullTitle} />
       <meta name="theme-color" content="#3b82f6" />
       <meta
