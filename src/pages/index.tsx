@@ -69,7 +69,10 @@ export default function Home({
             initialImage={user?.background_image}
           />
         </div>
-        <div className="text-xs sm:text-sm text-slate-400 -mt-1 md:mt-0">
+        <div
+          suppressHydrationWarning
+          className="text-xs sm:text-sm text-slate-400 -mt-1 md:mt-0"
+        >
           {`It is currently ${moment().format("dddd Do MMMM [-] HH:mm")}`}
         </div>
       </div>

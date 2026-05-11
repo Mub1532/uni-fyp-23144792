@@ -96,7 +96,9 @@ export default function App({ Component, pageProps }: MyPageProps) {
         >
           <div className="h-full w-full relative overflow-hidden">
             <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
-              <Navigation loggedIn={loggedIn} />
+              {pageName !== "Mub Calendar" && (
+                <Navigation loggedIn={loggedIn} />
+              )}
               <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
                 <TopBar
                   pageName={pageName}
@@ -106,16 +108,18 @@ export default function App({ Component, pageProps }: MyPageProps) {
                 />
                 <div
                   className={joinClasses(
-                    "p-4 px-1 md:px-2 w-full overflow-x-hidden overflow-y-auto",
+                    "w-full overflow-x-hidden overflow-y-auto",
                     textColor,
                     defaultScrollbar,
                     pageName === "Calendar" ||
                       pageName === "Login" ||
                       pageName === "Sign Up" ||
                       pageName === "Notes" ||
-                      pageName === "AI Planner"
+                      pageName === "AI Planner" ||
+                      pageName === "Mub Calendar"
                       ? "h-full"
                       : "h-fit md:h-full",
+                    pageName !== "Mub Calendar" && "p-4 px-1 md:px-2",
                   )}
                 >
                   <ProgressBar color="#3b82f6" />
