@@ -1,10 +1,8 @@
 import bcrypt from "bcrypt";
-import { serialize } from "cookie";
-import jwt from "jsonwebtoken";
 import type { RowDataPacket } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { USER_CODES, type userInfo } from "@/types/user";
-import { hashEmailPass } from "@/utils/auth/jwt";
+import { createEncryptedCookie, hashEmailPass } from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
@@ -47,34 +45,25 @@ export default async function handler(
     return res.status(401).json({
       success: false,
       code: USER_CODES.WRONG_PASSWORD,
-      // message: "Wrong password. Please try again.",
     });
 
-  // create the cookie in the users browser, so they dont need to login each time
   const cookiePayload = {
     username: user.username,
     id: user.id,
     email: plainEmail,
   };
 
-  // sign the token with my jwt token
-  const token = jwt.sign(cookiePayload, process.env.JWT_TOKEN!, {
-    expiresIn: "30d",
-  });
-
-  // create 30 days cookie
-  const cookie = serialize("userInfo", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30,
-    path: "/",
-  });
-
-  res.setHeader("Set-Cookie", cookie);
+  try {
+    await createEncryptedCookie(res, "userInfo", cookiePayload);
+  } catch (_) {
+    return res.status(500).json({
+      success: false,
+      code: USER_CODES.SAVE_FAIL,
+    });
+  }
 
   return res.status(200).json({
     success: true,
     code: USER_CODES.LOGGED_IN,
-    // message: "User logged in successfully.",
   });
 }

@@ -9,22 +9,33 @@ import NavItem from "./Item";
 
 type NavigationProps = {
   loggedIn: boolean;
+  className?: string;
 };
 
-export default function Navigation({ loggedIn }: NavigationProps) {
+export default function Navigation({ loggedIn, className }: NavigationProps) {
   const [showText, setText] = useState(true);
 
   return (
     <div
       className={joinClasses(
-        "bg-blue-200 dark:bg-slate-700 h-fit md:h-full md:min-w-fit md:w-fit md:max-w-42 py-1 md:pt-2 md:text-center px-4",
+        "h-fit md:h-full md:min-w-fit md:w-fit md:max-w-42 py-1 md:pt-2 md:text-center px-4",
         textColor,
+        className,
+        "bg-blue-300/40 dark:bg-slate-700/40",
       )}
     >
-      <div className="h-fit md:h-full w-full flex-row flex md:flex-col justify-evenly items-center md:mt-16 gap-4">
+      <div
+        className={joinClasses(
+          "h-fit min-h-9 sm:min-h-15 md:h-full w-full flex-row flex md:flex-col justify-evenly items-center md:mt-16 gap-4",
+          loggedIn === undefined ? "opacity-0" : "opacity-100",
+          showText ? "md:min-w-27" : "",
+        )}
+      >
         {pages
           .filter((x) => !x.hidden)
-          .filter((x) => (loggedIn ? x.needAuth : false))
+          .filter((x) =>
+            loggedIn !== undefined && loggedIn ? x.needAuth : false,
+          )
           .map((page) => (
             <NavItem showText={showText} {...page} key={page.path} />
           ))}

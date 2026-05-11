@@ -16,7 +16,7 @@ export default function NavItem({ icon, name, path, showText }: NavItemProps) {
   const router = useRouter();
 
   const currentPath = router.pathname;
-  const isActive = currentPath === path || currentPath.startsWith(path + "/");
+  const isActive = currentPath === path || currentPath.startsWith(`${path}/`);
 
   return (
     <ItemContainer

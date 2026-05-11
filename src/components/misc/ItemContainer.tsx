@@ -12,8 +12,7 @@ type ItemContainerProps<T extends ElementType> = {
   children: ReactNode;
   cleanClassName?: boolean;
   hoverClassName?: boolean;
-  // biome-ignore lint/suspicious/noExplicitAny: needed for react ref any type of ref
-  ref?: RefObject<any>;
+  ref?: RefObject<HTMLDivElement | null>;
 } & ComponentPropsWithoutRef<T>;
 
 function ItemContainer<T extends ElementType = "div">({

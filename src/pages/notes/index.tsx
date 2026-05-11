@@ -4,11 +4,13 @@ import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiStickyNoteAddLine } from "react-icons/ri";
+import type { NoteItem } from "@/components/home/RecentNotes";
 import ItemContainer from "@/components/misc/ItemContainer";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import verifyUser from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
+import { joinClasses } from "@/utils/misc/classes";
 
 interface NotesProps extends MyPageProps {
   notes: (RowDataPacket & { note: JSONContent; id: number })[];
@@ -29,23 +31,7 @@ export default function Notes({ notes }: NotesProps) {
         <RiStickyNoteAddLine />
         <div className="text-sm md:text-md font-semibold">Create New Note</div>
       </ItemContainer>
-      <div
-        className={
-          "px-2 h-fit w-full min-w-full grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] auto-rows-[10.5rem] overflow-y-auto overflow-x-hidden rounded-lg gap-y-4 gap-2.5"
-        }
-      >
-        {notes.map((item) => {
-          const { title, content } = extractNoteInfo(item.note);
-          return (
-            <StickyNote
-              key={item.id}
-              noteID={item.id}
-              title={title}
-              content={content}
-            />
-          );
-        })}
-      </div>
+      <StickyNoteContainer notes={notes} />
     </>
   );
 }
@@ -64,12 +50,12 @@ export function StickyNote({ noteID, title, content }: StickyProps) {
       aria-label={noteID as string}
       className="cursor-pointer hover:opacity-80 transition-all! ease-in duration-300 h-full aspect-square w-full dark:bg-blue-600/20 bg-yellow-200 flex flex-col gap-2 dark:text-slate-100 text-slate-700"
     >
-      <div className="items-center dark:bg-blue-500/30 bg-yellow-300 p-1 font-semibold h-fit truncate w-full">
+      <div className="text-sm md:text-lgitems-center dark:bg-blue-500/30 bg-yellow-300 p-1 font-semibold h-fit truncate w-full">
         {title}
       </div>
       <p
         className={
-          "px-1 text-sm font-medium h-fit w-full wrap-break-word line-clamp-6 overflow-hidden mb-2 text-start items-start"
+          "px-1 text-xs md:text-sm font-medium h-fit w-full wrap-break-word line-clamp-6 overflow-hidden mb-2 text-start items-start"
         }
       >
         {content}
@@ -78,14 +64,47 @@ export function StickyNote({ noteID, title, content }: StickyProps) {
   );
 }
 
-export async function getServerSideProps({
-  params,
-  req,
-}: GetServerSidePropsContext) {
-  const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+interface StickyNoteContainerProps {
+  notes: NoteItem[];
+  size?: "small" | "default";
+  className?: string;
+}
 
-  if (!user || !user?.id) {
+export function StickyNoteContainer({
+  notes,
+  size = "default",
+  className,
+}: StickyNoteContainerProps) {
+  return (
+    <div
+      className={joinClasses(
+        className,
+        "h-fit w-full min-w-full grid overflow-y-auto overflow-x-hidden gap-y-4 gap-2.5",
+        size === "small"
+          ? "auto-rows-[7.5rem] md:auto-rows-[10.5rem] grid-cols-[repeat(auto-fill,minmax(7rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]"
+          : "px-2 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] auto-rows-[10rem]",
+      )}
+    >
+      {notes.map((item) => {
+        const { title, content } = extractNoteInfo(item.note);
+        return (
+          <StickyNote
+            key={item.id}
+            noteID={item.id}
+            title={title}
+            content={content}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+  const rawCookie = req.headers.cookie;
+  const { currentUser } = await verifyUser(rawCookie as string);
+
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -98,7 +117,7 @@ export async function getServerSideProps({
 
   const [rows] = await connection.query<RowDataPacket[]>(
     "SELECT note, id from notes  WHERE user_id = ?;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   if (rows)

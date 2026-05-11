@@ -25,5 +25,12 @@ export function useUser() {
     fetchUser();
   }, []);
 
-  return { user: userInfo.user, loading, loggedIn: userInfo.loggedIn };
+  return {
+    user: userInfo.user,
+    loading,
+    loggedIn: userInfo.loggedIn,
+    googleUsername: userInfo.googleUsername,
+    googlePic: userInfo.googlePic,
+    useGooglePic: userInfo?.useGooglePic,
+  };
 }

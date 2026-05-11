@@ -1,23 +1,36 @@
 @use 'highlight.js/styles/atom-one-dark';
+
 @use "tailwindcss";
 
 @plugin "@tailwindcss/typography";
+
 @plugin 'tailwind-scrollbar';
 
-
 @custom-variant dark (&:where(.dark, .dark *));
-
 
 * {
   @apply transition-all! ease-in! duration-300!;
 }
 
+.tiptap {
+  h2.is-empty::before,
+  h3.is-empty::before,
+  h4.is-empty::before,
+  hr + p.is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    pointer-events: none;
+
+    @apply text-slate-500! dark:text-slate-300! h-0!;
+  }
+}
+
 .prose p {
-    @apply my-1;
+  @apply my-1;
 }
 
 .prose hr {
-    @apply border-blue-200 border! dark:border-slate-600 my-6!;
+  @apply border-blue-200 border! dark:border-slate-600 my-6!;
 }
 
 .prose h2 + hr {
@@ -29,33 +42,97 @@
 }
 
 ::-webkit-scrollbar {
-    height: 4px;
+  height: 4px;
 }
 
 @keyframes scroll-hint {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(-400px); }
-    100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-400px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .rbc-calendar {
-  @apply p-4 rounded-lg border-2 border-blue-300 dark:border-slate-500 dark:bg-slate-700 text-blue-900! dark:text-slate-200! font-semibold;
+  @apply p-4 rounded-lg border-2 border-blue-300 dark:border-slate-500 dark:bg-slate-700/60 text-blue-900! dark:text-slate-200! font-semibold transition-all! ease-in duration-300;
 }
 
 .rbc-calendar * {
   @apply border-blue-300! dark:border-slate-500! text-blue-900! dark:text-slate-200! transition-all! ease-in duration-300;
 }
 
+[class*="rbc-"] {
+  @apply transition-all! ease-in! duration-300!;
+}
+
 .rbc-off-range-bg {
   @apply bg-slate-300! dark:bg-slate-600! dark:text-blue-400! hover:opacity-80 transition-all! ease-in duration-300;
 }
 
-.rbc-day-bg, .rbc-timeslot-group {
-  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-all ease-in duration-300; 
+.rbc-day-bg,
+.rbc-timeslot-group {
+  @apply cursor-pointer! hover:bg-slate-200 dark:hover:bg-slate-600 transition-all ease-in duration-300;
 }
 
 .rbc-today {
-  @apply dark:bg-slate-600! bg-blue-200! hover:opacity-80 transition-all! ease-in duration-300;
+  @apply dark:bg-slate-900/60! bg-blue-300! cursor-pointer!;
+}
+
+
+.rbc-month-view .rbc-today, .rbc-agenda-event-cell {
+  @apply hover:opacity-60  transition-all! ease-in duration-100 cursor-pointer!;
+}
+
+.rbc-agenda-time-cell {
+  @apply border;
+}
+
+.rbc-agenda-date-cell, .rbc-agenda-time-cell {
+  @apply bg-blue-50! dark:bg-slate-700!;
+}
+
+.rbc-row,
+.rbc-addons-dnd-row-body,
+.rbc-row-content {
+  pointer-events: none;
+}
+
+
+.rbc-event,
+.rbc-show-more,
+.rbc-date-cell,
+.rbc-button-link {
+  pointer-events: all;
+}
+
+
+.rbc-current-time-indicator::before {
+  content: '';
+  @apply block w-0 h-0 absolute -top-1.5 border-t-8 border-b-8 border-l-16 border-t-transparent border-b-transparent border-l-blue-700;
+}
+
+.rbc-agenda-event-cell .event-time {
+  @apply hidden!;
+}
+.rbc-event-label {
+  @apply hidden!;
+}
+.dark .rbc-current-time-indicator::before {
+  @apply border-l-blue-300;
+}
+
+.rbc-events-container {
+  pointer-events: none;
+}
+
+.rbc-event {
+  pointer-events: all;
 }
 
 /*  buttons calendar */
@@ -74,11 +151,98 @@ button.rbc-active {
 
 /* Event pill */
 
-.rbc-event-content, .rbc-event-label {
+.rbc-event-content,
+.rbc-event-label {
   @apply text-slate-300!;
 }
 
-.rbc-event {
-  @apply hover:opacity-80 transition-all! ease-in duration-300;
+.rbc-current-time-indicator {
+  @apply bg-blue-500! h-1!;
 }
 
+.rbc-event, .rbc-time-slot {
+  @apply hover:opacity-80 transition-all! ease-in duration-100;
+}
+
+.Toastify__toast--info {
+  @apply bg-blue-500! border-none! font-black!;
+}
+
+.Toastify__toast--error {
+  @apply bg-red-500/90! border-none! font-black!;
+}
+
+.Toastify__toast--warning {
+  @apply bg-amber-500/90! border-none! font-black!;
+}
+
+.Toastify__toast-icon {
+    @apply text-white! shadow-md! text-2xl!;
+}
+
+.Toastify__toast-container {
+  @apply px-4! py-4;
+}
+
+.Toastify__toast {
+  @apply rounded-sm! my-1! sm:my-0 hover:opacity-80!;
+}
+
+.Toastify__progress-bar--wrp {
+  @apply bg-transparent!;
+}
+
+.Toastify__progress-bar {
+  @apply bg-white! rounded-full!;
+}
+
+@keyframes bg-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.user-bg {
+  @apply bg-cover bg-center;
+  animation: bg-fade 0.5s ease-in-out;
+}
+
+.dark .user-bg {
+  background-image: linear-gradient(to top left, color-mix(in oklab, var(--color-slate-900) 70%, transparent), color-mix(in oklab, var(--color-slate-900) 80%, transparent), color-mix(in oklab, var(--color-slate-900) 70%, transparent)), var(--bg-url);
+}
+
+.user-bg {
+  background-image: linear-gradient(to top left, color-mix(in oklab, var(--color-blue-50) 70%, transparent), color-mix(in oklab, var(--color-blue-50) 80%, transparent), color-mix(in oklab, var(--color-blue-50) 70%, transparent)), var(--bg-url);
+}
+
+.ai-glow {
+  @apply relative rounded-xl;
+}
+
+.ai-glow::before {
+  content: "";
+  @apply absolute -inset-1 rounded-2xl;
+  background: conic-gradient(from var(--angle, 0deg), var(--color-blue-500), var(--color-violet-500), var(--color-cyan-400), var(--color-blue-500));
+  animation: ai-rotate 3s linear infinite;
+  z-index: 0;
+}
+
+.ai-glow::after {
+  content: "";
+  @apply absolute inset-0 rounded-xl bg-inherit;
+  z-index: 1;
+}
+
+.ai-glow > * {
+  @apply relative;
+  z-index: 2;
+}
+
+@keyframes ai-rotate {
+  to { --angle: 360deg; }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}

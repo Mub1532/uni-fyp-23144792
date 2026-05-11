@@ -6,8 +6,10 @@ import { Montserrat } from "next/font/google";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import ProgressBar from "nextjs-progressbar";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
+import type { CalendarEvent } from "@/components/calendar/modal";
+import { EMPTY_MODAL, type ModalState } from "@/types/calendar";
 import type { MyPageProps } from "@/types/props";
 import { USER_CODES } from "@/types/user";
 import { textColor } from "@/utils/classes";
@@ -20,7 +22,16 @@ const font = Montserrat({
 });
 
 export default function App({ Component, pageProps }: MyPageProps) {
-  const { user, loading, loggedIn } = useUser();
+  const { user, loading, loggedIn, googleUsername, googlePic, useGooglePic } =
+    useUser();
+
+  const [bgImage, setBGImage] = useState<string | null>(null);
+
+  // current selected calendar item
+  const [calModal, setCalModal] = useState<ModalState>(EMPTY_MODAL);
+
+  const openCalModal = (event: CalendarEvent) =>
+    setCalModal({ open: true, mode: "edit", event: { ...event } });
 
   const router = useRouter();
   const currentPage = pages.find(
@@ -35,7 +46,11 @@ export default function App({ Component, pageProps }: MyPageProps) {
     if (currentPage?.needAuth && !loggedIn) {
       router.push(`/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`);
     }
-  }, [loading, loggedIn, currentPage, router.push]);
+
+    if (user?.background_image) {
+      setBGImage(user?.background_image);
+    }
+  }, [loading, loggedIn, currentPage, router.push, user?.background_image]);
 
   const [pageName, setPageName] = useState("");
 
@@ -53,7 +68,7 @@ export default function App({ Component, pageProps }: MyPageProps) {
       <main className={font.className}>
         <ToastContainer
           position="bottom-right"
-          autoClose={5000}
+          autoClose={6000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -64,21 +79,55 @@ export default function App({ Component, pageProps }: MyPageProps) {
           theme="colored"
           transition={Bounce}
         />
-        <div className="fixed h-full mb-auto w-full overflow-hidden bg-blue-50 dark:bg-slate-800 dark:text-slate-300 text-blue-500">
+        <div
+          style={
+            bgImage
+              ? ({
+                  "--bg-url": `url(${bgImage})`,
+                } as CSSProperties)
+              : undefined
+          }
+          className={joinClasses(
+            "fixed h-full mb-auto w-full overflow-hidden bg-blue-50 dark:bg-slate-800 dark:text-slate-300 text-blue-500",
+            bgImage ? "user-bg" : "",
+          )}
+        >
           <div className="h-full w-full relative overflow-hidden">
             <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden">
               <Navigation loggedIn={loggedIn} />
               <div className=" h-full w-full overflow-hidden flex flex-col gap-2">
-                <TopBar pageName={pageName} user={user} />
+                <TopBar
+                  pageName={pageName}
+                  user={user}
+                  useGooglePic={useGooglePic}
+                  googlePic={googlePic}
+                />
                 <div
                   className={joinClasses(
-                    "p-4 px-1 md:px-2 h-full w-full overflow-x-hidden overflow-y-auto",
+                    "p-4 px-1 md:px-2 w-full overflow-x-hidden overflow-y-auto",
                     textColor,
                     defaultScrollbar,
+                    pageName === "Calendar" ||
+                      pageName === "Login" ||
+                      pageName === "Sign Up" ||
+                      pageName === "Notes" ||
+                      pageName === "AI Planner"
+                      ? "h-full"
+                      : "h-fit md:h-full",
                   )}
                 >
                   <ProgressBar color="#3b82f6" />
-                  <Component {...pageProps} user={user} userLoading={loading} />
+                  <Component
+                    {...pageProps}
+                    user={user}
+                    userLoading={loading}
+                    googleUser={googleUsername}
+                    googlePic={googlePic}
+                    useGooglePic={useGooglePic}
+                    openCalItem={openCalModal}
+                    currentCalModal={calModal}
+                    setCurrentCalModal={setCalModal}
+                  />
                 </div>
               </div>
             </div>

@@ -1,7 +1,9 @@
-import moment from "moment";
 import type { RowDataPacket } from "mysql2";
 import type { GetServerSidePropsContext } from "next";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { toDateTimeLocal } from "@/components/calendar/modal";
 import LoginButton from "@/components/misc/LoginButton";
 import type { MyPageProps } from "@/types/props";
@@ -13,19 +15,32 @@ interface SettingsProps extends MyPageProps {
   userCreated: string;
 }
 
-export default function Settings({ user, userCreated }: SettingsProps) {
+export default function Settings({
+  user,
+  userCreated,
+  googlePic,
+  googleUser,
+  useGooglePic,
+}: SettingsProps) {
   const [email, setEmail] = useState<string | undefined>(user?.email);
   const [username, setUsername] = useState<string | undefined>(user?.username);
   const [password, setPassword] = useState<string | undefined>();
+  const [showGooglePic, setShowGooglePic] = useState(useGooglePic);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
     setUsername(user?.username);
     setEmail(user?.email);
-  }, [user]);
+    setShowGooglePic(useGooglePic);
+  }, [user, useGooglePic]);
 
   async function updateUser() {
-    if (!username && !email && password)
+    if (
+      (!username && !email && password) ||
+      (username === user?.username && email === user?.email && !password)
+    )
       return toast.warn(
         "Please change at least 1 setting to update the user info.",
       );
@@ -68,66 +83,223 @@ export default function Settings({ user, userCreated }: SettingsProps) {
 
   const debouncedSave = useDebounceCallback(updateUser, 500);
 
+  const [lastToggledPic, setLastToggledPic] = useState<number | null>(null);
+
+  async function toggleGooglePicPref() {
+    if (lastToggledPic && Date.now() - lastToggledPic < 60000) {
+      toast.warning("Please wait a minute before toggling again.");
+      return;
+    }
+
+    const res = await fetch("/api/google/togglePicPref", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ newValue: !showGooglePic }),
+    });
+
+    const { success, code } = await res.json();
+
+    if (success) {
+      toast.info("Successfully toggled preference.");
+      setShowGooglePic(!showGooglePic);
+      setLastToggledPic(Date.now());
+      return;
+    }
+
+    switch (code) {
+      case USER_CODES.NOT_LOGGED_IN:
+        toast.error("Could not verify login, please refresh.");
+        break;
+      case USER_CODES.SAVE_FAIL:
+        toast.error("Could not toggle, please refresh & try again.");
+        break;
+      default:
+        toast.error("Unknown error, please try again later.");
+        break;
+    }
+  }
+
+  const [googleSyncLoading, setSyncLoading] = useState(false);
+
+  async function syncGoogle() {
+    if (!googleUser) {
+      router.push("/api/google/auth");
+    } else {
+      setSyncLoading(true);
+      const res = await fetch("/api/google/syncCalendar?isManual=true");
+      const data = await res.json();
+
+      if (data?.success === true) {
+        toast.success("Successfully Synced Calendar.");
+      } else if (data?.err === "invalid_grant") {
+        router.push("/api/google/auth");
+      } else {
+        toast.error("Could not Sync Calendar.");
+      }
+      setSyncLoading(false);
+    }
+  }
+
+  const [googleResetLoading, setResetLoading] = useState(false);
+
+  async function resetGoogleAuth() {
+    setResetLoading(true);
+    const res = await fetch("/api/google/reset");
+    const data = await res.json();
+
+    if (!data?.success) {
+      toast.error("Failed to logout Google");
+      return;
+    }
+
+    setResetLoading(false);
+    toast.success("Disconnected Google. Refresh to see changes.");
+  }
+
   return (
-    <div className="h-full w-full flex gap-4 px-4 flex-col">
-      <div className="flex gap-2 h-fit w-full text-slate-200">
-        <div className="rounded-md bg-blue-500 aspect-square w-24 flex items-center justify-center text-6xl font-bold">
-          {user?.username[0].toUpperCase().trimEnd()}
-        </div>
-        <div className="flex flex-col gap-1 h-full w-full justify-center">
-          <div className="text-xl font-semibold text-blue-500 dark:text-slate-300">
-            {username}
+    <div className="h-full w-full flex md:flex-row gap-6 px-1 md:px-4 flex-col">
+      {/* first section, user settings etc */}
+      <div className="h-full w-full lg:mr-12">
+        <div className="flex gap-2 h-fit w-full text-slate-200">
+          {useGooglePic && googlePic ? (
+            <GooglePic
+              pic={googlePic}
+              size="w-24 border-4 rounded-md! border-blue-500"
+            />
+          ) : (
+            <div className="rounded-md bg-blue-500 aspect-square w-24 flex items-center justify-center text-6xl font-bold">
+              {user?.username[0].toUpperCase().trimEnd()}
+            </div>
+          )}
+          <div className="flex flex-col gap-1 h-full w-full justify-center">
+            <div className="text-xl font-semibold text-blue-500 dark:text-slate-300">
+              {username}
+            </div>
+            <div className="text-md font-medium text-blue-500 dark:text-slate-300">
+              User Since:{" "}
+              <span className="font-bold">
+                {format(new Date(userCreated), "EEEE do MMMM '-' HH:mm")}
+              </span>
+            </div>
           </div>
-          <div className="text-md font-medium text-blue-500 dark:text-slate-300">
-            User Since:{" "}
-            <span className="font-bold">
-              {moment(userCreated).format("dddd Do MMMM [-] HH:mm")}
-            </span>
+        </div>
+        <div className="h-fit w-full flex flex-col gap-2">
+          <div className="text-lg font-bold text-blue-400 mt-2">
+            Change Account Settings
+          </div>
+          <FormInput
+            icon={MdEmail}
+            title="Email"
+            value={email}
+            placeholder="Change Email"
+            type="email"
+            onChange={setEmail}
+          />
+          <FormInput
+            icon={FaUser}
+            title="Username"
+            value={username}
+            placeholder="Change Username"
+            onChange={setUsername}
+          />
+          <FormInput
+            icon={FaLock}
+            title="Password"
+            type="password"
+            value={password}
+            placeholder="Change Password"
+            onChange={setPassword}
+          />
+          <div className="h-fit w-full max-w-fit flex flex-col md:flex-row gap-2">
+            <button
+              onClick={debouncedSave}
+              type="button"
+              className="w-fit h-full p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-lg rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
+            >
+              <FaSave className="text-2xl text-slate-100!" />
+              <div className="text-sm md:text-lg">Save Account Settings</div>
+            </button>
+            <LoginButton
+              type="logout"
+              extraClass="p-2 w-fit text-sm! md:text-lg!"
+              extraIconClass="text-2xl dark:text-slate-300 text-slate-100"
+            />
           </div>
         </div>
       </div>
 
-      <div className="h-fit w-full sm:w-3/4 lg:w-1/2 flex flex-col gap-2">
-        <div className="text-lg font-bold text-blue-400">
-          Change Account Settings
-        </div>
-        <FormInput
-          icon={MdEmail}
-          title="Email"
-          value={email}
-          placeholder="Change Email"
-          type="email"
-          onChange={setEmail}
-        />
-        <FormInput
-          icon={FaUser}
-          title="Username"
-          value={username}
-          placeholder="Change Username"
-          onChange={setUsername}
-        />
-        <FormInput
-          icon={FaLock}
-          title="Password"
-          type="password"
-          value={password}
-          placeholder="Change Password"
-          onChange={setPassword}
-        />
-        <div className="h-fit w-full max-w-fit flex flex-col md:flex-row gap-2">
+      {/* second section, toggle stuff */}
+      <div className="h-full w-full flex flex-col gap-4">
+        {/* Future improvemnets, reminders */}
+        {/* <div className="text-lg font-bold text-blue-400 ">
+          Reminders & Notification Settings
+        </div> */}
+
+        <div className="flex flex-col gap-3">
+          <div className="text-lg font-bold text-blue-400">
+            Calendar Sync Settings
+          </div>
+          {googleUser && (
+            <>
+              <div className="font-medium">Currently Syncing as: </div>
+              <div className="flex h-fit w-full gap-2 items-center">
+                <div className="relative aspect-square w-20!">
+                  <Image
+                    src={googlePic ?? ""}
+                    alt="Google Profile Pic"
+                    fill
+                    className="rounded-md border-3 border-blue-500"
+                  />
+                </div>
+                <div>
+                  <span className="font-bold">{googleUser}</span>
+                  <div className="font-medium">
+                    Auto Syncs every 24h
+                    <br />
+                    <span className="font-bold">Calendar Last Synced: </span>
+                    {format(new Date(), "do MMMM '-' HH:mm")}{" "}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+          {googleUser && (
+            <div className="w-fit max-w-full flex items-center h-fit">
+              <div className="mr-2 font-medium">
+                Use Google PFP as Profile Pic:
+              </div>
+              <Toggle toggle={showGooglePic} onToggle={toggleGooglePicPref} />
+            </div>
+          )}
           <button
-            onClick={debouncedSave}
+            onClick={syncGoogle}
             type="button"
-            className="w-fit h-full p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-lg rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
+            className="w-fit h-fit p-2 bg-blue-300 dark:bg-slate-600 flex items-center justify-center gap-2 font-medium text-md rounded-md cursor-pointer hover:bg-blue-400 hover:dark:bg-slate-700 transition-all! ease-in duration-100 text-blue-800 dark:text-slate-300"
           >
-            <FaSave className="text-2xl text-slate-100!" />
-            <div>Save Account Settings</div>
+            {googleSyncLoading ? (
+              <AiOutlineLoading3Quarters className="text-2xl text-slate-100! animate-spin" />
+            ) : (
+              <FaGoogle className="text-2xl text-slate-100!" />
+            )}
+            <div>{googleUser ? "Manual Sync" : "Login to Sync"}</div>
           </button>
-          <LoginButton
-            type="logout"
-            extraClass="p-2 w-fit text-xl!"
-            extraIconClass="text-2xl dark:text-slate-300 text-slate-100"
-          />
+          {googleUser && (
+            <QuickButton
+              icon={
+                googleResetLoading
+                  ? AiOutlineLoading3Quarters
+                  : MdOutlineSyncDisabled
+              }
+              label="Disconnect Google"
+              onClick={resetGoogleAuth}
+              className="text-sm font-semibold! bg-red-600/60! text-white w-fit!"
+              extraIconClass={joinClasses(
+                "text-xl! md:text-2xl!",
+                googleResetLoading && "animate-spin",
+              )}
+              showText="yes"
+            />
+          )}
         </div>
       </div>
     </div>
@@ -136,9 +308,9 @@ export default function Settings({ user, userCreated }: SettingsProps) {
 
 export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user || !user?.id) {
+  if (!currentUser?.id) {
     return {
       redirect: {
         destination: `/auth/login?code=${USER_CODES.NOT_LOGGED_IN}`,
@@ -151,7 +323,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 
   const [[rows]] = await connection.query<RowDataPacket[]>(
     "SELECT created_at from users WHERE id = ?;",
-    [user?.id],
+    [currentUser?.id],
   );
 
   if (rows?.created_at)
@@ -164,11 +336,16 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   };
 }
 
+import { format } from "date-fns";
 import type { IconType } from "react-icons";
-import { FaLock, FaSave, FaUser } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { toast } from "react-toastify";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FaGoogle, FaLock, FaSave, FaUser } from "react-icons/fa";
+import { MdEmail, MdOutlineSyncDisabled } from "react-icons/md";
 import { useDebounceCallback } from "usehooks-ts";
+import { QuickButton } from "@/components/home/QuickButton";
+import GooglePic from "@/components/misc/GooglePic";
+import Toggle from "@/components/misc/Toggle";
+import { joinClasses } from "@/utils/misc/classes";
 
 interface FormInputProps {
   title: string;

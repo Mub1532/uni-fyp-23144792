@@ -2,16 +2,23 @@ import { type RefObject, useRef, useState } from "react";
 import { useDebounceCallback, useOnClickOutside } from "usehooks-ts";
 import { hoverClass } from "@/utils/classes";
 import { joinClasses } from "@/utils/misc/classes";
+import GooglePic from "./GooglePic";
 import ItemContainer from "./ItemContainer";
 
 type userContainerProps = {
   username: string;
+  useGooglePic?: boolean;
+  googlePic?: string;
 };
 
-export default function UserContainer({ username }: userContainerProps) {
+export default function UserContainer({
+  username,
+  useGooglePic,
+  googlePic,
+}: userContainerProps) {
   const [open, setOpenPlain] = useState(false);
   const setOpen = useDebounceCallback(setOpenPlain, 100);
-  const ref = useRef<HTMLElement>(null) as RefObject<HTMLElement>;
+  const ref = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
 
   async function logoutUser() {
     if (!open) return;
@@ -32,9 +39,7 @@ export default function UserContainer({ username }: userContainerProps) {
       )}
       hoverClassName={false}
     >
-      {/** biome-ignore lint/a11y/noStaticElementInteractions: needed for overlay */}
-      {/** biome-ignore lint/a11y/useKeyWithClickEvents: needed for overlay */}
-      <div
+      <button
         className={joinClasses(
           "w-full h-full flex items-center gap-1.5 cursor-pointer px-1.5 rounded-md",
           hoverClass,
@@ -42,11 +47,15 @@ export default function UserContainer({ username }: userContainerProps) {
         )}
         onClick={() => (open ? null : setOpen(true))}
       >
-        <div className="rounded-sm bg-blue-500 aspect-square w-5 md:w-7 flex items-center justify-center text-sm">
-          {username[0]?.toUpperCase().trimEnd()}
-        </div>
+        {useGooglePic && googlePic ? (
+          <GooglePic pic={googlePic} rounded />
+        ) : (
+          <div className="rounded-sm bg-blue-500 aspect-square w-5 md:w-7 flex items-center justify-center text-sm">
+            {username[0]?.toUpperCase().trimEnd()}
+          </div>
+        )}
         <div className="text-xs md:text-sm">{username}</div>
-      </div>
+      </button>
       <ItemContainer
         hoverClassName={false}
         onClick={logoutUser}

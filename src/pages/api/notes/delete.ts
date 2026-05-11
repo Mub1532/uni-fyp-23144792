@@ -7,14 +7,14 @@ import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any>,
+  res: NextApiResponse<unknown>,
 ) {
   const { noteID } = req.body;
 
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user)
+  if (!currentUser)
     return res.status(401).send({
       code: USER_CODES.NOT_LOGGED_IN,
     });
@@ -24,7 +24,7 @@ export default async function handler(
   try {
     const [result] = await connection.query<ResultSetHeader>(
       "DELETE FROM notes WHERE id = ? AND user_id = ?",
-      [noteID, user?.id],
+      [noteID, currentUser?.id],
     );
 
     const success = result.affectedRows === 1;

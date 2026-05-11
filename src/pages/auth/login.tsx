@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import type { SubmitEvent } from "react";
+import type { InputHTMLAttributes, ReactNode, SubmitEvent } from "react";
 import { useEffect, useState } from "react";
 import { MdEmail, MdLock } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -74,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-evenly h-full min-h-0 pb-42">
+    <div className="flex items-center justify-center h-full min-h-0 pb-42">
       <div className="border-2 border-blue-300 rounded-xl p-10 w-full max-w-sm">
         <h1 className="text-xl font-semibold text-blue-400 mb-6 text-center">
           Login
@@ -124,7 +124,7 @@ export default function LoginPage() {
 export function LoginInput({
   icon,
   ...props
-}: { icon: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>) {
+}: { icon: ReactNode } & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="text-white placeholder:text-white flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-blue-400 transition-colors">
       <span className="text-gray-400 text-lg shrink-0">{icon}</span>

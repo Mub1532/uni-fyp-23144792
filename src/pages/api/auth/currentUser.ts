@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import verifyUser from "@/utils/auth/jwt";
+import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,9 +10,22 @@ export default async function handler(
 
   if (!rawCookie) return res.status(401).json({ loggedIn: false });
 
-  const payload = await verifyUser(rawCookie);
+  const connection = await getDBConnection();
 
-  if (!payload) return res.status(401).json({ loggedIn: false });
+  const { currentUser, googleUser } = await verifyUser(
+    rawCookie,
+    connection,
+    true,
+  );
 
-  res.status(200).json({ loggedIn: true, user: payload });
+  if (!currentUser) return res.status(401).json({ loggedIn: false });
+
+  res.status(200).json({
+    loggedIn: true,
+    user: currentUser,
+    googleUsername: googleUser?.googleName,
+    googlePic: googleUser?.googlePic,
+    useGooglePic: !!googleUser?.useGooglePic,
+    backgroundImage: currentUser?.background_image,
+  });
 }

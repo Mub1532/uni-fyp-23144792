@@ -1,22 +1,23 @@
 import bcrypt from "bcrypt";
-import { serialize } from "cookie";
-import jwt from "jsonwebtoken";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { USER_CODES } from "@/types/user";
-import verifyUser, { hashEmailPass } from "@/utils/auth/jwt";
+import verifyUser, {
+  createEncryptedCookie,
+  hashEmailPass,
+} from "@/utils/auth/jwt";
 import { getDBConnection } from "@/utils/database";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any>,
+  res: NextApiResponse<unknown>,
 ) {
   const { email, username, password } = req.body;
 
   const rawCookie = req.headers.cookie;
-  const user = await verifyUser(rawCookie as string);
+  const { currentUser } = await verifyUser(rawCookie as string);
 
-  if (!user)
+  if (!currentUser)
     return res.status(401).send({
       code: USER_CODES.NOT_LOGGED_IN,
     });
@@ -32,7 +33,7 @@ export default async function handler(
 
       const [rows] = await connection.query<RowDataPacket[]>(
         "SELECT email FROM users WHERE email = ? AND id != ?;",
-        [hashedEmail, user?.id],
+        [hashedEmail, currentUser?.id],
       );
       if (rows.length !== 0) {
         return res.status(409).send({
@@ -63,7 +64,7 @@ export default async function handler(
       });
     }
 
-    values.push(user?.id);
+    values.push(currentUser?.id);
 
     const [result] = await connection.query<ResultSetHeader>(
       `UPDATE users SET ${updates.join(", ")} WHERE id = ?;`,
@@ -75,24 +76,18 @@ export default async function handler(
     if (success) {
       const cookiePayload = {
         username: username,
-        id: user.id,
+        id: currentUser.id,
         email: email,
       };
 
-      // sign the token with my jwt token
-      const token = jwt.sign(cookiePayload, process.env.JWT_TOKEN!, {
-        expiresIn: "30d",
-      });
-
-      // create 30 days cookie
-      const cookie = serialize("userInfo", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/",
-      });
-
-      res.setHeader("Set-Cookie", cookie);
+      try {
+        await createEncryptedCookie(res, "userInfo", cookiePayload);
+      } catch (_) {
+        return res.status(500).json({
+          success: false,
+          code: USER_CODES.SAVE_FAIL,
+        });
+      }
 
       return res.status(200).send({
         code: USER_CODES.SAVE_SUCCESS,
@@ -102,7 +97,6 @@ export default async function handler(
         code: USER_CODES.SAVE_FAIL,
       });
   } catch (err) {
-    console.log(err);
     return res.status(200).send({
       code: USER_CODES.SAVE_FAIL,
     });
