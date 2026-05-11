@@ -246,3 +246,12 @@ button.rbc-active {
   initial-value: 0deg;
   inherits: false;
 }
+
+main {
+  animation: fadeIn 30ms ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

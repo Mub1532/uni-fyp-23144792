@@ -253,7 +253,7 @@ export default function Preferences({
                   value={taskTitle}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Task title"
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
 
@@ -266,7 +266,7 @@ export default function Preferences({
                   value={taskDesc}
                   onChange={(e) => setDesc(e.target.value)}
                   placeholder="Type what you need to do in the task, can be vague, messy detailed etc. Click example Plan for an example."
-                  className="w-full h-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+                  className="w-full h-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
                 />
               </div>
 
@@ -279,7 +279,7 @@ export default function Preferences({
                     type="datetime-local"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   />
                 </div>
                 <div className="flex flex-col gap-1 flex-1">
@@ -290,7 +290,7 @@ export default function Preferences({
                     type="datetime-local"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   />
                 </div>
               </div>
@@ -308,7 +308,7 @@ export default function Preferences({
               <QuickButton
                 label="Example Plan"
                 icon={FaRegLightbulb}
-                className="w-full! flex items-center! justify-center! bg-yellow-500 font-bold dark:bg-yellow-600/40!"
+                className="w-full! flex items-center! justify-center! bg-yellow-500 hover:bg-yellow-400 hover:opacity-80! transition-all ease-in duration-100 font-bold dark:bg-yellow-600/40!"
                 onClick={generateScheduleExample}
               />
             </div>
@@ -359,7 +359,7 @@ export default function Preferences({
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     (userPref.workDays as WorkDay[])?.includes(day)
                       ? "bg-blue-500 text-white"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      : "bg-gray-100 dark:bg-slate-800/70 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
                   }`}
                 >
                   {day.slice(0, 3)}
@@ -382,7 +382,7 @@ export default function Preferences({
                     minStartTime: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <div className="flex flex-col gap-1 flex-1">
@@ -398,7 +398,7 @@ export default function Preferences({
                     maxEndTime: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
           </div>
@@ -420,7 +420,7 @@ export default function Preferences({
                 }))
               }
               placeholder="e.g. 8"
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-800/70 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             />
           </div>
         </div>

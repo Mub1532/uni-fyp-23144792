@@ -34,7 +34,17 @@ export default function Settings({
     setUsername(user?.username);
     setEmail(user?.email);
     setShowGooglePic(useGooglePic);
-  }, [user, useGooglePic]);
+
+    //
+
+    if (Number(router.query.code) === USER_CODES.GOOGLE_INFO_NOT_GRANTED) {
+      toast.warn("Please enable calendar viewing permission in Google.");
+    } else if (Number(router.query.code) === USER_CODES.SAVE_FAIL) {
+      toast.error("Failed to sync Google.");
+    } else if (Number(router.query.code) === USER_CODES.SAVE_SUCCESS) {
+      toast.success("Successfully synced with Google.");
+    }
+  }, [user, useGooglePic, router.query.code]);
 
   async function updateUser() {
     if (

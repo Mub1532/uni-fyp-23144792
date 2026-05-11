@@ -18,7 +18,7 @@ export default function Navigation({ loggedIn, className }: NavigationProps) {
   return (
     <div
       className={joinClasses(
-        "h-fit md:h-full md:min-w-fit md:w-fit md:max-w-42 py-1 md:pt-2 md:text-center px-4",
+        "h-fit md:h-full md:min-w-40 md:w-fit md:max-w-42 py-1 md:pt-2 md:text-center px-4",
         textColor,
         className,
         "bg-blue-300/40 dark:bg-slate-700/40",

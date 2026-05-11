@@ -27,9 +27,9 @@ const emptyMap: Record<EventSection, string> = {
 
 const dateFormatMap: Record<EventSection, string> = {
   Today: "HH:mm",
-  Upcoming: "dd/mm/yy - HH:mm",
-  Past: "dd/MM/yy - HH:mm",
-  AISchedule: "dd/MM/yy - HH:mm",
+  Upcoming: "dd/MM/yy: HH:mm",
+  Past: "dd/MM/yy: HH:mm",
+  AISchedule: "dd/MM/yy: HH:mm",
 };
 
 export function EventLists({ type, events, onClick }: EventListSectionProps) {
@@ -62,10 +62,10 @@ export function EventLists({ type, events, onClick }: EventListSectionProps) {
             <div className="flex gap-2 items-center">
               <span
                 suppressHydrationWarning
-                className="text-xs font-medium w-fit"
+                className="text-xs font-semibold w-fit"
               >
-                {type === "Today"
-                  ? `${format(new Date(event.start), "HH:mm")} - ${format(new Date(event.end), "HH:mm")}`
+                {type !== "Today"
+                  ? `${format(new Date(event.start), dateFormatMap[type])} - ${format(new Date(event.end), "HH:mm")}`
                   : format(new Date(event.start), dateFormatMap[type])}
               </span>
               {getEventIcon(event)}
